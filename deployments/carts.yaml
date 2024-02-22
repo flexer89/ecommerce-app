@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: carts
+  labels:
+    app: carts
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: carts
+  template:
+    metadata:
+      labels:
+        app: carts
+    spec:
+      containers:
+      - name: carts
+        image: carts
+        ports:
+        - containerPort: 5040
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: carts-service
+spec:
+  selector:
+    app: carts
+  ports:
+    - port: 5040
+      protocol: TCP
+      name: tcp-5040
+      targetPort: 5040
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: carts
+  annotations:
+    konghq.com/strip-path: 'true'
+spec:
+  parentRefs:
+  - name: kong
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /carts
+    backendRefs:
+    - name: carts-service
+      kind: Service
+      port: 5040

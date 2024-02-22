@@ -1,0 +1,6 @@
+fastapi
+prometheus_fastapi_instrumentator
+uvicorn
+pymongo
+mongomock
+pydantic
