@@ -9,26 +9,27 @@ router = APIRouter()
 
 # TODO: migrate to a separate file
 collection = None
-if os.getenv("ENV") == "live":
+if os.getenv("ENV", "live") == "live":
     mongo_client = MongoClient("mongodb://products-db-service:27017/")
     db = mongo_client["products_db"]
     collection = db["products"]
     collection.create_index("name", unique=True)
 
 
-@router.get('/k8s', include_in_schema=False)
+@router.get("/k8s", include_in_schema=False)
 def k8s():
     env_vars = {
-        'HOSTNAME': os.getenv('HOSTNAME'),
-        'KUBERNETES_PORT': os.getenv('KUBERNETES_PORT')
+        "HOSTNAME": os.getenv("HOSTNAME"),
+        "KUBERNETES_PORT": os.getenv("KUBERNETES_PORT"),
     }
     return env_vars
 
-@router.get('/health')
+
+@router.get("/health")
 def health():
     return {"status": "ok"}
 
-    
+
 @router.post("/add")
 async def add_product(product: Product):
     try:
@@ -36,11 +37,14 @@ async def add_product(product: Product):
         return {"message": "Product added successfully", "id": str(result.inserted_id)}
     # TODO: create custom exceptions
     except DuplicateKeyError:
-        raise HTTPException(status_code=400, detail="Product with this name already exists")
+        raise HTTPException(
+            status_code=400, detail="Product with this name already exists"
+        )
     except ConnectionError:
         raise HTTPException(status_code=503, detail="Database connection error")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.get("/get")
 async def get_products():
@@ -52,6 +56,7 @@ async def get_products():
         return products
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.get("/get/{product_id}")
 async def get_product_by_id(product_id: str):
@@ -78,6 +83,7 @@ async def update_product(product_id: str, product: Product):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @router.post("/filter")
 async def filter_products(product: Product):
     products = []
@@ -85,6 +91,7 @@ async def filter_products(product: Product):
         product["_id"] = str(product["_id"])
         products.append(product)
     return products
+
 
 @router.get("/get/{product_id}")
 async def get_products_by_id(product_id: str):
@@ -94,4 +101,3 @@ async def get_products_by_id(product_id: str):
         return product
     else:
         raise HTTPException(status_code=404, detail="Product not found")
-

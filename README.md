@@ -64,7 +64,7 @@ To run tests, you need to run the following command:
 ## Carts service
 - GET Health Status `carts/health`
 - POST Create a Cart `carts/`
-- GET Get specified cart `/carts/{cart_id}`
+- GET Get user cart `/carts/{user_email}`
 - PUT Update a cart `carts/{cart_id}`
 - DELETE Delete a cart `carts/{cart_id}`
 
