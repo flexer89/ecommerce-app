@@ -4,6 +4,7 @@ from src.app import app
 
 client = TestClient(app)
 
+
 @patch("src.routes.redis_client")
 def test_get_cart(mock_redis_client):
     mock_redis_client.hgetall.return_value = {"item1": "value1", "item2": "value2"}
