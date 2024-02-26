@@ -2,8 +2,8 @@
 
 cd "$(dirname "$0")"
 
-IMAGE_NAME="product-service-unit-tests"
-CONTAINER_NAME="product-service-unit-tests"
+IMAGE_NAME="carts-service-unit-tests"
+CONTAINER_NAME="carts-service-unit-tests"
 DOCKERFILE_PATH="../tests/Dockerfile"
 
 docker build -t $IMAGE_NAME -f $DOCKERFILE_PATH ..

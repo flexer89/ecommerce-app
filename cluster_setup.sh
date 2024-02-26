@@ -21,7 +21,7 @@ kubectl apply -f deployments/users.yaml
 kubectl apply -f deployments/carts.yaml
 
 kubectl apply -f deployments/products_db.yaml
-kubectl apply -f deployments/cart_db.yaml
+kubectl apply -f deployments/carts_db.yaml
 
 # Deploy Monitoring
 kubectl create namespace monitoring

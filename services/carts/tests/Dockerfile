@@ -8,6 +8,4 @@ COPY tests/ /app/tests/
 
 RUN pip install --no-cache-dir -r tests/requirements.txt
 
-ENV ENV=testing
-
 CMD ["pytest", "--color=yes"]

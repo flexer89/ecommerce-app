@@ -62,11 +62,34 @@ To run tests, you need to run the following command:
 - ...
 
 ## Carts service
-- GET Health Status `carts/health`
-- POST Create a Cart `carts/`
-- GET Get user cart `/carts/{user_email}`
-- PUT Update a cart `carts/{cart_id}`
-- DELETE Delete a cart `carts/{cart_id}`
+### Description
+This service is responsible for managing products in the store. It allows to add, update, delete and filter products.
+
+### Routes
+- **GET** Health Status `carts/health`
+- **POST** Create a Cart `carts/add`
+- **GET** Get user cart `/carts`
+- **POST** Add to cart `carts/`
+- **DELETE** Delete a cart `carts/`
+
+### Run as a standalone service
+To run the service as a standalone service, you need to run the following command:
+```
+./products/scripts/run.sh
+```
+Make sure that you have installed all the required dependencies and have free port 5000.
+
+To stop the service, you need to run the following command:
+```
+./products/scripts/stop.sh
+```
+It will stop the service and remove the container.
+
+### Testing
+To run tests, you need to run the following command:
+```
+./products/scripts/test.sh
+```
 
 ## Payments service
 - GET Health Status `payments/health`
