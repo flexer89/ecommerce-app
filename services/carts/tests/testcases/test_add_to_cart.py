@@ -11,8 +11,8 @@ def test_add_to_cart(mock_redis_client):
 
     response = client.post(
         "/add",
-        params = {"email": "test@example.com"},
-        json = [
+        params={"email": "test@example.com"},
+        json=[
             {"product_id": "product1", "quantity": 2},
             {"product_id": "product2", "quantity": 3},
         ],
@@ -29,8 +29,8 @@ def test_add_to_cart(mock_redis_client):
 def test_add_to_cart_invalid_quantity():
     response = client.post(
         "/add",
-        params = {"email": "test@example.com"},
-        json = [
+        params={"email": "test@example.com"},
+        json=[
             {"product_id": "product1", "quantity": -1},
             {"product_id": "product2", "quantity": 3},
         ],
@@ -46,8 +46,8 @@ def test_add_to_cart_cart_does_not_exist(mock_redis_client):
 
     response = client.post(
         "/add",
-        params = {"email": "test@example.com"},
-        json = [
+        params={"email": "test@example.com"},
+        json=[
             {"product_id": "product1", "quantity": 2},
             {"product_id": "product2", "quantity": 3},
         ],

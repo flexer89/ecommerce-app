@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 from src.models import Product
 from bson import ObjectId
+from bson.errors import InvalidId
 
 router = APIRouter()
 
@@ -76,10 +77,14 @@ async def update_product(product_id: str, product: Product):
     try:
         product = product.model_dump(exclude_unset=True)
         result = collection.update_one({"_id": ObjectId(product_id)}, {"$set": product})
-        if result.modified_count == 1:
+        if result.matched_count == 1 and result.modified_count == 1:
             return {"message": "Product updated successfully"}
         else:
-            raise HTTPException(status_code=404, detail="Product not found")
+            raise HTTPException(
+                status_code=404, detail="Product not found or not modified"
+            )
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -101,3 +106,9 @@ async def get_products_by_id(product_id: str):
         return product
     else:
         raise HTTPException(status_code=404, detail="Product not found")
+
+
+# only for debug
+@router.get("/callback")
+def callback():
+    return {"auth": "ok"}

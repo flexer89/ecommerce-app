@@ -65,4 +65,3 @@ grafana:
       kic-dash:
         gnetId: 15662
         datasource: Prometheus
-   
