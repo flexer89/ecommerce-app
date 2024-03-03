@@ -1,20 +1,19 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 import os
-from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 from src.models import Product
 from bson import ObjectId
-from bson.errors import InvalidId
+from src.exceptions import (
+    ProductNotFound,
+    ProductsNotFound,
+    ProductNotModified,
+    ProductExists,
+    DatabaseConnectionError,
+    SomethingWentWrong,
+)
+from src.database import collection
 
 router = APIRouter()
-
-# TODO: migrate to a separate file
-collection = None
-if os.getenv("ENV", "live") == "live":
-    mongo_client = MongoClient("mongodb://products-db-service:27017/")
-    db = mongo_client["products_db"]
-    collection = db["products"]
-    collection.create_index("name", unique=True)
 
 
 @router.get("/k8s", include_in_schema=False)
@@ -32,65 +31,66 @@ def health():
 
 
 @router.post("/add")
-async def add_product(product: Product):
+def add_product(product: Product):
     try:
         result = collection.insert_one(product.model_dump())
         return {"message": "Product added successfully", "id": str(result.inserted_id)}
-    # TODO: create custom exceptions
     except DuplicateKeyError:
-        raise HTTPException(
-            status_code=400, detail="Product with this name already exists"
-        )
+        raise ProductExists(details=f"Product name: {product.name}")
     except ConnectionError:
-        raise HTTPException(status_code=503, detail="Database connection error")
+        raise DatabaseConnectionError()
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise SomethingWentWrong(str(e))
 
 
 @router.get("/get")
-async def get_products():
+def get_products():
     try:
         products = []
         for product in collection.find():
             product["_id"] = str(product["_id"])
             products.append(product)
+        if not products:
+            raise ProductsNotFound()
         return products
+    except ProductsNotFound:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise SomethingWentWrong(str(e))
 
 
 @router.get("/get/{product_id}")
-async def get_product_by_id(product_id: str):
+def get_product_by_id(product_id: str):
     try:
         product = collection.find_one({"_id": ObjectId(product_id)})
         if product:
             product["_id"] = str(product["_id"])
             return product
         else:
-            raise HTTPException(status_code=404, detail="Product not found")
+            raise ProductNotFound(details=f"Product id: {product_id}")
+    except ProductNotFound:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise SomethingWentWrong(str(e))
 
 
 @router.put("/update/{product_id}")
-async def update_product(product_id: str, product: Product):
+def update_product(product_id: str, product: Product):
     try:
         product = product.model_dump(exclude_unset=True)
         result = collection.update_one({"_id": ObjectId(product_id)}, {"$set": product})
         if result.matched_count == 1 and result.modified_count == 1:
             return {"message": "Product updated successfully"}
         else:
-            raise HTTPException(
-                status_code=404, detail="Product not found or not modified"
-            )
-    except HTTPException:
+            raise ProductNotModified(details=f"Product id: {product_id}")
+    except ProductNotModified:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise SomethingWentWrong(str(e))
 
 
 @router.post("/filter")
-async def filter_products(product: Product):
+def filter_products(product: Product):
     products = []
     for product in collection.find(product.model_dump()):
         product["_id"] = str(product["_id"])
@@ -99,13 +99,13 @@ async def filter_products(product: Product):
 
 
 @router.get("/get/{product_id}")
-async def get_products_by_id(product_id: str):
+def get_products_by_id(product_id: str):
     product = collection.find_one({"_id": ObjectId(product_id)})
     if product:
         product["_id"] = str(product["_id"])
         return product
     else:
-        raise HTTPException(status_code=404, detail="Product not found")
+        raise ProductNotFound(details=f"Product id: {product_id}")
 
 
 # only for debug

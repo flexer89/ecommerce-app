@@ -27,7 +27,9 @@ def test_get_product_by_id_nonexistent_product(mock_collection):
     response = client.get("/get/60a6e2e8a9e7a9a7a9e7a9a7")
 
     assert response.status_code == 404
-    assert response.json() == {"detail": "Product not found"}
+    assert response.json() == {
+        "detail": "Product not found. Product id: 60a6e2e8a9e7a9a7a9e7a9a7"
+    }
 
 
 @patch("src.routes.collection")

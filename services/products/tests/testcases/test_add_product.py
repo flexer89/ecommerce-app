@@ -55,7 +55,9 @@ def test_add_product_duplicate_name(mock_collection):
     response = client.post("/add", json=product_data)
 
     assert response.status_code == 400
-    assert response.json()["detail"] == "Product with this name already exists"
+    assert response.json() == {
+        "detail": "Product with this name already exists. Product name: duplicated product"
+    }
 
 
 @patch("src.routes.collection")
@@ -79,7 +81,7 @@ def test_add_product_database_error(mock_collection):
     response = client.post("/add", json=product_data)
 
     assert response.status_code == 503
-    assert response.json()["detail"] == "Database connection error"
+    assert response.json()["detail"] == "Database connection error."
 
 
 @patch("src.routes.collection")
