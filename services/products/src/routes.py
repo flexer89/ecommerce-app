@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 import os
 from pymongo.errors import DuplicateKeyError
-from src.models import Product
+from src.models import Product, ProductOptional
 from bson import ObjectId
 from src.exceptions import (
     ProductNotFound,
@@ -74,8 +74,8 @@ def get_product_by_id(product_id: str):
         raise SomethingWentWrong(str(e))
 
 
-@router.put("/update/{product_id}")
-def update_product(product_id: str, product: Product):
+@router.patch("/update/{product_id}")
+def update_product(product_id: str, product: ProductOptional):
     try:
         product = product.model_dump(exclude_unset=True)
         result = collection.update_one({"_id": ObjectId(product_id)}, {"$set": product})
@@ -90,9 +90,9 @@ def update_product(product_id: str, product: Product):
 
 
 @router.post("/filter")
-def filter_products(product: Product):
+def filter_products(product: ProductOptional):
     products = []
-    for product in collection.find(product.model_dump()):
+    for product in collection.find(product.model_dump(exclude_unset=True)):
         product["_id"] = str(product["_id"])
         products.append(product)
     return products

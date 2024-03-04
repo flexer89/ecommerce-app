@@ -10,7 +10,7 @@ def test_update_product_existing_product(mock_collection):
     mock_collection.update_one.return_value.matched_count = 1
     mock_collection.update_one.return_value.modified_count = 1
 
-    response = client.put(
+    response = client.patch(
         "/update/60a6e2e8a9e7a9a7a9e7a9a7", json={"name": "Updated Product"}
     )
 
@@ -23,7 +23,7 @@ def test_update_product_nonexistent_product(mock_collection):
     mock_collection.update_one.return_value.matched_count = 0
     mock_collection.update_one.return_value.modified_count = 0
 
-    response = client.put(
+    response = client.patch(
         "/update/60a6e2e8a9e7a9a7a9e7a9a7", json={"name": "Updated Product"}
     )
 
@@ -37,7 +37,7 @@ def test_update_product_nonexistent_product(mock_collection):
 def test_update_product_exception(mock_collection):
     mock_collection.update_one.side_effect = Exception("Something went wrong")
 
-    response = client.put(
+    response = client.patch(
         "/update/60a6e2e8a9e7a9a7a9e7a9a7", json={"name": "Updated Product"}
     )
 

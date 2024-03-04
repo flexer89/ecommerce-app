@@ -1,9 +1,7 @@
 from pydantic import BaseModel
-from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 
-# TODO: add optional fields
 class Product(BaseModel):
     name: str
     price: float = 0.0
@@ -14,3 +12,14 @@ class Product(BaseModel):
     images: List[str] = []
     weight: float = 0.0
     dimensions: List[float] = [0.0, 0.0, 0.0]
+
+class ProductOptional(BaseModel):
+    name: Optional[str] = None
+    price: Optional[float] = None
+    quantity: Optional[int] = None
+    description: Optional[str] = None
+    category: Optional[str] = None
+    brand: Optional[str] = None
+    images: Optional[List[str]] = None
+    weight: Optional[float] = None    
+    dimensions: Optional[List[float]] = None

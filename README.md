@@ -95,6 +95,23 @@ To run tests, you need to run the following command:
 - GET Health Status `payments/health`
 - ...
 
+# Load Tests
+To run load tests, you need to run the following command:
+```
+cd services{SERVICE_NAME}/tests     # only products service has tests for now
+```
+Then you need to install locust:
+```
+pip install locust
+```
+And then run the following command:
+```
+locust -f locustfile.py
+```
+It will start the locust server and you can access it at `http://localhost:8089`
+Then you can set the number of users and hatch rate and start the test.
+
+
 # Access Grafana
 
 To access dashboards you need firstly forward a port
