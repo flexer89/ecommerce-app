@@ -2,9 +2,11 @@ from locust import HttpUser, task, constant_throughput
 from time import time_ns
 import random
 
+
 class User(HttpUser):
     service = "/products"
     wait_time = constant_throughput(1)  # 1 rps
+
     @task
     def send_add_request(self):
         product_data = {
@@ -32,7 +34,9 @@ class User(HttpUser):
             "weight": random.uniform(0.1, 10.0),
             "dimensions": [random.uniform(1.0, 10.0) for _ in range(3)],
         }
-        self.client.patch(f"{self.service}/update/65e588bf2dc79d953066597a", json=product_data)
+        self.client.patch(
+            f"{self.service}/update/65e588bf2dc79d953066597a", json=product_data
+        )
 
     @task
     def send_filter_request(self):
@@ -44,7 +48,6 @@ class User(HttpUser):
     @task
     def send_get_request(self):
         self.client.get(f"{self.service}/get/65e588bf2dc79d953066597a")
-    
+
     def send_get_all_request(self):
         self.client.get(f"{self.service}/get")
-

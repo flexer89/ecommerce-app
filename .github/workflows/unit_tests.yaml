@@ -15,30 +15,30 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.11' 
-      
+          python-version: '3.11'
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r service/${{ matrix.service }}/tests/requirements.txt
+          pip install -r services/${{ matrix.services}}/tests/requirements.txt
           pip install mypy
           pip install pre-commit
 
       - name: Run pre-commit checks
         run: |
-          cd service/${{ matrix.service }}
+          cd services/${{ matrix.services}}
           pre-commit run --all-files
 
       - name: Run unit tests for the updated service
         run: |
-          cd service/${{ matrix.service }}
+          cd services/${{ matrix.services}}
           ./tests/test.sh
 
       - name: Check typing
         run: |
-          cd service/${{ matrix.service }}
+          cd services/${{ matrix.services}}
           mypy --strict .
-      
+
     strategy:
       matrix:
-        service: [products, carts, orders, payments, users]
+        services: [products, carts, orders, payments, users]

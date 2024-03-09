@@ -13,6 +13,7 @@ class Product(BaseModel):
     weight: float = 0.0
     dimensions: List[float] = [0.0, 0.0, 0.0]
 
+
 class ProductOptional(BaseModel):
     name: Optional[str] = None
     price: Optional[float] = None
@@ -21,5 +22,5 @@ class ProductOptional(BaseModel):
     category: Optional[str] = None
     brand: Optional[str] = None
     images: Optional[List[str]] = None
-    weight: Optional[float] = None    
+    weight: Optional[float] = None
     dimensions: Optional[List[float]] = None

@@ -11,35 +11,35 @@ prometheus:
       relabel_configs:
       - source_labels: [__meta_kubernetes_service_name]
         action: keep
-        regex: products-service 
+        regex: products-service
     - job_name: 'orders'
       kubernetes_sd_configs:
       - role: service
       relabel_configs:
       - source_labels: [__meta_kubernetes_service_name]
         action: keep
-        regex: orders-service 
+        regex: orders-service
     - job_name: 'payments'
       kubernetes_sd_configs:
       - role: service
       relabel_configs:
       - source_labels: [__meta_kubernetes_service_name]
         action: keep
-        regex: payments-service 
+        regex: payments-service
     - job_name: 'users'
       kubernetes_sd_configs:
       - role: service
       relabel_configs:
       - source_labels: [__meta_kubernetes_service_name]
         action: keep
-        regex: users-service 
+        regex: users-service
     - job_name: 'carts'
       kubernetes_sd_configs:
       - role: service
       relabel_configs:
       - source_labels: [__meta_kubernetes_service_name]
         action: keep
-        regex: carts-service 
+        regex: carts-service
 
 grafana:
   persistence:

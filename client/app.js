@@ -13,8 +13,8 @@ auth0.createAuth0Client({
     auth0Client.loginWithRedirect();
   });
 
-  if (location.search.includes("state=") && 
-      (location.search.includes("code=") || 
+  if (location.search.includes("state=") &&
+      (location.search.includes("code=") ||
       location.search.includes("error="))) {
     await auth0Client.handleRedirectCallback();
     window.history.replaceState({}, document.title, "/");

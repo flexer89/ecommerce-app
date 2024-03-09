@@ -122,5 +122,5 @@ kubectl -n monitoring port-forward services/promstack-grafana 3000:80
 Grafana is available at `http://localhost:3000`
 
 To log in, type:
-- Username: admin 
+- Username: admin
 - Password: prom-operator
