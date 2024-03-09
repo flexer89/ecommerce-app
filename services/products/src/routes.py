@@ -25,7 +25,7 @@ def k8s():
     return env_vars
 
 
-@router.get("/health", description="Check the health status.")
+@router.get("/health", description="Check the health status test")
 def health():
     return {"status": "ok"}
 

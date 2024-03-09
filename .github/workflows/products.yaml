@@ -1,0 +1,41 @@
+name: Run Unit Tests (Products)
+
+on:
+  push:
+    paths:
+      - 'services/products/**'
+
+jobs:
+  unit_tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r services/products/tests/requirements.txt
+          pip install mypy
+          pip install pre-commit
+
+      - name: Run pre-commit checks
+        run: |
+          cd services/products
+          pre-commit run 
+
+      - name: Run unit tests for the updated service
+        run: |
+          cd services/products
+          ./scripts/test.sh
+
+      - name: Check typing
+        run: |
+          cd services/products
+          mypy --strict .
