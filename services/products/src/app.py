@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 from src.routes import router
@@ -7,6 +7,7 @@ import contextvars
 import time
 import uuid
 import os
+from typing import Any, Callable, Awaitable
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -35,11 +36,12 @@ instrumentator.instrument(app).expose(app, include_in_schema=False)
 
 
 @app.middleware("http")
-async def log_requests_and_responses(request: Request, call_next):
+async def log_requests_and_responses(request: Request, call_next: Callable[[Request], Awaitable[Response]]) -> Any:
+    request_id: contextvars.ContextVar[str] = contextvars.ContextVar("Request id")
     if "/metrics" in request.url.path:
         return await call_next(request)
-    request_id = str(uuid.uuid4())
-    request_id_contextvar.set(request_id)
+    req_id = str(uuid.uuid4())
+    request_id.set(req_id)
 
     start_time = time.time()
     incoming_json = {
@@ -48,12 +50,12 @@ async def log_requests_and_responses(request: Request, call_next):
         # "headers": dict(request.headers),
         # "body": dict(request),
     }
-    logger.info(f"{request_id} | Incoming Request: {incoming_json}")
+    logger.info(f"{request_id.get()} | Incoming Request: {incoming_json}")
 
     try:
         response = await call_next(request)
     finally:
-        assert request_id_contextvar.get() == request_id
+        assert req_id == request_id.get()
 
     end_time = time.time()
     outcoming_json = {
@@ -62,6 +64,6 @@ async def log_requests_and_responses(request: Request, call_next):
         # "body": dict(request),
         "time": end_time - start_time,
     }
-    logger.info(f"{request_id} | Outcoming Response: {outcoming_json}")
+    logger.info(f"{request_id.get()} | Outcoming Response: {outcoming_json}")
 
     return response

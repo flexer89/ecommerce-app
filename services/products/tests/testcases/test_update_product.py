@@ -1,12 +1,12 @@
 from fastapi.testclient import TestClient
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from src.app import app
 
 client = TestClient(app)
 
 
 @patch("src.routes.collection")
-def test_update_product_existing_product(mock_collection):
+def test_update_product_existing_product(mock_collection: MagicMock) -> None:
     mock_collection.update_one.return_value.matched_count = 1
     mock_collection.update_one.return_value.modified_count = 1
 
@@ -19,7 +19,7 @@ def test_update_product_existing_product(mock_collection):
 
 
 @patch("src.routes.collection")
-def test_update_product_nonexistent_product(mock_collection):
+def test_update_product_nonexistent_product(mock_collection: MagicMock) -> None:
     mock_collection.update_one.return_value.matched_count = 0
     mock_collection.update_one.return_value.modified_count = 0
 
@@ -34,7 +34,7 @@ def test_update_product_nonexistent_product(mock_collection):
 
 
 @patch("src.routes.collection")
-def test_update_product_exception(mock_collection):
+def test_update_product_exception(mock_collection: MagicMock) -> None:
     mock_collection.update_one.side_effect = Exception("Something went wrong")
 
     response = client.patch(

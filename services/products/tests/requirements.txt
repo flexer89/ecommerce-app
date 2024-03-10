@@ -5,3 +5,5 @@ pymongo
 pydantic
 pytest
 httpx
+mongomock
+locust

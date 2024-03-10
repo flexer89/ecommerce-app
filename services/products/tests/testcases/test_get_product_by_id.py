@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from bson import ObjectId
 from src.app import app
 
@@ -7,7 +7,7 @@ client = TestClient(app)
 
 
 @patch("src.routes.collection")
-def test_get_product_by_id_existing_product(mock_collection):
+def test_get_product_by_id_existing_product(mock_collection: MagicMock) -> None:
 
     mock_collection.find_one.return_value = {
         "_id": ObjectId("60a6e2e8a9e7a9a7a9e7a9a7"),
@@ -21,7 +21,7 @@ def test_get_product_by_id_existing_product(mock_collection):
 
 
 @patch("src.routes.collection")
-def test_get_product_by_id_nonexistent_product(mock_collection):
+def test_get_product_by_id_nonexistent_product(mock_collection: MagicMock) -> None:
     mock_collection.find_one.return_value = None
 
     response = client.get("/get/60a6e2e8a9e7a9a7a9e7a9a7")
@@ -33,7 +33,7 @@ def test_get_product_by_id_nonexistent_product(mock_collection):
 
 
 @patch("src.routes.collection")
-def test_get_product_by_id_exception(mock_collection):
+def test_get_product_by_id_exception(mock_collection: MagicMock) -> None:
     mock_collection.find_one.side_effect = Exception("Something went wrong")
 
     response = client.get("/get/60a6e2e8a9e7a9a7a9e7a9a7")

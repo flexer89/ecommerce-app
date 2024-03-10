@@ -5,3 +5,4 @@ pymongo
 mongomock
 pydantic
 typing
+pymongo-stubs

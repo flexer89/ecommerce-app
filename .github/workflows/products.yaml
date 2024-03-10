@@ -30,7 +30,7 @@ jobs:
           cd services/products
           pre-commit run 
 
-      - name: Run unit tests for the updated service
+      - name: Run unit tests 
         run: |
           cd services/products
           ./scripts/test.sh

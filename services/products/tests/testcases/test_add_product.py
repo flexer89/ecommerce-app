@@ -7,7 +7,7 @@ client = TestClient(app)
 
 
 @patch("src.routes.collection")
-def test_add_product_success(mock_collection):
+def test_add_product_success(mock_collection: MagicMock) -> None:
     product_data = {
         "name": "test product",
         "price": 0,
@@ -34,7 +34,7 @@ def test_add_product_success(mock_collection):
 
 
 @patch("src.routes.collection")
-def test_add_product_duplicate_name(mock_collection):
+def test_add_product_duplicate_name(mock_collection: MagicMock) -> None:
     product_data = {
         "name": "duplicated product",
         "price": 0,
@@ -61,7 +61,7 @@ def test_add_product_duplicate_name(mock_collection):
 
 
 @patch("src.routes.collection")
-def test_add_product_database_error(mock_collection):
+def test_add_product_database_error(mock_collection: MagicMock) -> None:
     product_data = {
         "name": "test product",
         "price": 0,
@@ -85,7 +85,7 @@ def test_add_product_database_error(mock_collection):
 
 
 @patch("src.routes.collection")
-def test_add_product_unknown_error(mock_collection):
+def test_add_product_unknown_error(mock_collection: MagicMock) -> None:
     product_data = {
         "name": "test product",
         "price": 0,
