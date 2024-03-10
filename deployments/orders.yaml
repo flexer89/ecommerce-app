@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,10 +16,14 @@ spec:
         app: orders
     spec:
       containers:
-      - name: orders
-        image: orders
-        ports:
-        - containerPort: 5010
+        - name: orders
+          image: orders
+          ports:
+            - containerPort: 5010
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
 ---
 apiVersion: v1
 kind: Service
@@ -41,13 +46,13 @@ metadata:
     konghq.com/strip-path: 'true'
 spec:
   parentRefs:
-  - name: kong
+    - name: kong
   rules:
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /orders
-    backendRefs:
-    - name: orders-service
-      kind: Service
-      port: 5010
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /orders
+      backendRefs:
+        - name: orders-service
+          kind: Service
+          port: 5010

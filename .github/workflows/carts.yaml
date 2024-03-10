@@ -1,6 +1,7 @@
+---
 name: Run Unit Tests (Carts)
 
-on:
+on:   # yamllint disable-line rule:truthy
   push:
     paths:
       - 'services/carts/**'
@@ -28,7 +29,7 @@ jobs:
       - name: Run pre-commit checks
         run: |
           cd services/carts
-          pre-commit run 
+          pre-commit run
 
       - name: Run unit tests
         run: |

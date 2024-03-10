@@ -1,3 +1,4 @@
+---
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
 metadata:
@@ -15,6 +16,6 @@ metadata:
 spec:
   gatewayClassName: kong
   listeners:
-  - name: proxy
-    port: 80
-    protocol: HTTP
+    - name: proxy
+      port: 80
+      protocol: HTTP

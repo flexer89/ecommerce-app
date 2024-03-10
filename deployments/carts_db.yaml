@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,10 +16,14 @@ spec:
         app: carts-db
     spec:
       containers:
-      - name: carts-db
-        image: redis
-        ports:
-        - containerPort: 6379
+        - name: carts-db
+          image: redis
+          ports:
+            - containerPort: 6379
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
 ---
 apiVersion: v1
 kind: Service
@@ -41,7 +46,7 @@ spec:
     matchLabels:
       app: carts-db
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: carts
+    - from:
+        - podSelector:
+            matchLabels:
+              app: carts

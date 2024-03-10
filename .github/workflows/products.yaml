@@ -1,6 +1,7 @@
+---
 name: Run Unit Tests (Products)
 
-on:
+on:   # yamllint disable-line rule:truthy
   push:
     paths:
       - 'services/products/**'
@@ -28,9 +29,9 @@ jobs:
       - name: Run pre-commit checks
         run: |
           cd services/products
-          pre-commit run 
+          pre-commit run
 
-      - name: Run unit tests 
+      - name: Run unit tests
         run: |
           cd services/products
           ./scripts/test.sh
