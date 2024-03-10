@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 import os
-from typing import List, Dict
+from typing import List, Dict, Awaitable
 from redis import Redis
 from src.models import CartItem
 from src.exceptions import InvalidQuantityError, CartNotFound
@@ -11,7 +11,7 @@ redis_client = Redis(host="carts-db-service", port=6379, decode_responses=True)
 
 
 @router.get("/k8s")
-async def k8s() -> Dict[str, str]:
+async def k8s() -> Dict[str, str | None]:
     env_vars = {
         "HOSTNAME": os.getenv("HOSTNAME"),
         "KUBERNETES_PORT": os.getenv("KUBERNETES_PORT"),
@@ -25,7 +25,7 @@ async def health() -> Dict[str, str]:
 
 
 @router.get("/get")
-async def get_cart(email: str) -> Dict[str, str]:
+async def get_cart(email: str) -> Awaitable[Dict[str, str]] | Dict[str, str]:
     cart_key = f"email:{email}"
     cart_data = redis_client.hgetall(cart_key)
     return cart_data
@@ -40,20 +40,20 @@ async def add_to_cart(email: str, items: List[CartItem]) -> Dict[str, str]:
     cart_key = f"email:{email}"
     cart_data = {item.product_id: item.quantity for item in items}
 
-    existing_cart = redis_client.hgetall(cart_key)
+    existing_cart = await redis_client.hgetall(cart_key)   # type: ignore
     if existing_cart:
         for product_id, quantity in cart_data.items():
             if product_id in existing_cart:
                 cart_data[product_id] = int(existing_cart[product_id]) + quantity
 
-    redis_client.hset(cart_key, mapping=cart_data)
+    await redis_client.hset(cart_key, mapping=cart_data)   # type: ignore
     return {"status": "ok"}
 
 
 @router.post("/remove")
 async def remove_from_cart(email: str, product_id: str) -> Dict[str, str]:
     cart_key = f"email:{email}"
-    existing_cart = redis_client.hgetall(cart_key)
+    existing_cart = await redis_client.hgetall(cart_key)    # type: ignore
 
     if not existing_cart:
         raise CartNotFound(details=f"Email: {email}")
@@ -61,7 +61,7 @@ async def remove_from_cart(email: str, product_id: str) -> Dict[str, str]:
     if product_id in existing_cart:
         existing_cart[product_id] = int(existing_cart[product_id]) - 1
         if existing_cart[product_id] == 0:
-            redis_client.hdel(cart_key, product_id)
+            await redis_client.hdel(cart_key, product_id)   # type: ignore
 
     return {"status": "ok"}
 
@@ -69,5 +69,5 @@ async def remove_from_cart(email: str, product_id: str) -> Dict[str, str]:
 @router.delete("/delete")
 async def delete_cart(email: str) -> Dict[str, str]:
     cart_key = f"email:{email}"
-    redis_client.delete(cart_key)
+    await redis_client.delete(cart_key)
     return {"status": "ok"}
