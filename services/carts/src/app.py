@@ -28,7 +28,9 @@ instrumentator.instrument(app).expose(app, include_in_schema=False)
 
 
 @app.middleware("http")
-async def log_requests_and_responses(request: Request, call_next: Callable[[Request], Awaitable[Response]]) -> Any:
+async def log_requests_and_responses(
+    request: Request, call_next: Callable[[Request], Awaitable[Response]]
+) -> Any:
     request_id: contextvars.ContextVar[str] = contextvars.ContextVar("Request id")
     if "/metrics" in request.url.path:
         return await call_next(request)

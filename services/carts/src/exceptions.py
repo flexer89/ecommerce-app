@@ -8,7 +8,8 @@ class HTTPException(BaseHTTPException):
         self.status_code = status_code
         self.message = message
         super().__init__(status_code, message)
-        
+
+
 class ProductNotFound(HTTPException):
     def __init__(self, details: Optional[str] = None):
         super().__init__(status.HTTP_404_NOT_FOUND, f"Product not found. {details}")
@@ -16,9 +17,11 @@ class ProductNotFound(HTTPException):
 
 class InvalidQuantityError(HTTPException):
     def __init__(self) -> None:
-        super().__init__(status.HTTP_400_BAD_REQUEST, f"Quantity must be greater than 0")
-        
+        super().__init__(
+            status.HTTP_400_BAD_REQUEST, f"Quantity must be greater than 0"
+        )
+
+
 class CartNotFound(HTTPException):
     def __init__(self, details: Optional[str] = None):
         super().__init__(status.HTTP_404_NOT_FOUND, f"Cart not found. {details}")
-

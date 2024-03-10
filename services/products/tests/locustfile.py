@@ -5,7 +5,7 @@ import random
 
 class User(HttpUser):
     service = "/products"
-    wait_time = constant_throughput(1)   # type: ignore
+    wait_time = constant_throughput(1)  # type: ignore
 
     @task
     def send_add_request(self) -> None:

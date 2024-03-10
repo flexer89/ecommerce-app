@@ -79,7 +79,9 @@ def get_product_by_id(product_id: str) -> Any:
 def update_product(product_id: str, product: ProductOptional) -> Dict[str, str]:
     try:
         updated_product = product.model_dump(exclude_unset=True)
-        result = collection.update_one({"_id": ObjectId(product_id)}, {"$set": updated_product})
+        result = collection.update_one(
+            {"_id": ObjectId(product_id)}, {"$set": updated_product}
+        )
         if result.matched_count == 1 and result.modified_count == 1:
             return {"message": "Product updated successfully"}
         else:

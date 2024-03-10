@@ -45,5 +45,5 @@ class DatabaseConnectionError(HTTPException):
 
 
 class SomethingWentWrong(HTTPException):
-    def __init__(self, message: str) :
+    def __init__(self, message: str):
         super().__init__(status.HTTP_500_INTERNAL_SERVER_ERROR, message)
