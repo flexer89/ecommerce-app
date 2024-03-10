@@ -1,0 +1,24 @@
+---
+version: '3.8'
+
+services:
+  redis:
+    image: redis:latest
+    container_name: carts-db-service
+    ports:
+      - "6379:6379"
+
+  product-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: carts-service
+    ports:
+      - "5040:5040"
+    environment:
+      ENV: dev
+    depends_on:
+      - redis
+
+volumes:
+  redis_data:

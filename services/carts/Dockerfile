@@ -8,6 +8,7 @@ RUN pip3 install -r requirements.txt
 COPY . .
 
 ENV DEBUG_METRICS=1
+ENV ENV=dev
 EXPOSE 5040
 
 CMD [ "uvicorn", "src.app:app", "--host=0.0.0.0", "--port=5040", "--root-path", "/carts", "--reload"]

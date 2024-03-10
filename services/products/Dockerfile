@@ -10,5 +10,6 @@ COPY . .
 EXPOSE 5000
 
 ENV ENV=dev
+ENV DEBUG_METRICS=1
 
 CMD [ "uvicorn", "src.app:app", "--host=0.0.0.0", "--port=5000", "--root-path", "/products", "--reload"]

@@ -1,12 +1,12 @@
 from fastapi.testclient import TestClient
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from src.app import app
 
 client = TestClient(app)
 
 
 @patch("src.routes.redis_client")
-def test_add_to_cart(mock_redis_client):
+def test_add_to_cart(mock_redis_client: MagicMock) -> None:
     mock_redis_client.hgetall.return_value = {"item1": "value1", "item2": "value2"}
 
     response = client.post(
@@ -26,7 +26,7 @@ def test_add_to_cart(mock_redis_client):
     )
 
 
-def test_add_to_cart_invalid_quantity():
+def test_add_to_cart_invalid_quantity() -> None:
     response = client.post(
         "/add",
         params={"email": "test@example.com"},
@@ -41,7 +41,7 @@ def test_add_to_cart_invalid_quantity():
 
 
 @patch("src.routes.redis_client")
-def test_add_to_cart_cart_does_not_exist(mock_redis_client):
+def test_add_to_cart_cart_does_not_exist(mock_redis_client: MagicMock) -> None:
     mock_redis_client.hgetall.return_value = {}
 
     response = client.post(

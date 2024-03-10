@@ -36,13 +36,14 @@ This service is responsible for managing products in the store. It allows to add
 ### Run as a standalone service
 To run the service as a standalone service, you need to run the following command:
 ```
-./products/scripts/run.sh
+cd services/products
+docker compose up
 ```
 Make sure that you have installed all the required dependencies and have free port 5000.
 
 To stop the service, you need to run the following command:
 ```
-./products/scripts/stop.sh
+docker compose down
 ```
 It will stop the service and remove the container.
 
@@ -75,13 +76,14 @@ This service is responsible for managing user carts. It allows to add, remove an
 ### Run as a standalone service
 To run the service as a standalone service, you need to run the following command:
 ```
-./carts/scripts/run.sh
+cd services/carts
+docker compose up
 ```
 Make sure that you have installed all the required dependencies and have free port 5040.
 
 To stop the service, you need to run the following command:
 ```
-./carts/scripts/stop.sh
+docker compose down
 ```
 It will stop the service and remove the container.
 

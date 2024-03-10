@@ -1,16 +1,17 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 import os
-from typing import List
-from redis import StrictRedis
+from typing import List, Dict
+from redis import Redis
 from src.models import CartItem
+from src.exceptions import InvalidQuantityError, CartNotFound
 
 router = APIRouter()
 
-redis_client = StrictRedis(host="carts-db-service", port=6379, decode_responses=True)
+redis_client = Redis(host="carts-db-service", port=6379, decode_responses=True)
 
 
 @router.get("/k8s")
-def k8s():
+async def k8s() -> Dict[str, str]:
     env_vars = {
         "HOSTNAME": os.getenv("HOSTNAME"),
         "KUBERNETES_PORT": os.getenv("KUBERNETES_PORT"),
@@ -19,25 +20,22 @@ def k8s():
 
 
 @router.get("/health")
-def health():
+async def health() -> Dict[str, str]:
     return {"status": "ok"}
 
 
 @router.get("/get")
-def get_cart(email: str):
+async def get_cart(email: str) -> Dict[str, str]:
     cart_key = f"email:{email}"
     cart_data = redis_client.hgetall(cart_key)
-
     return cart_data
 
 
 @router.post("/add")
-def add_to_cart(email: str, items: List[CartItem]):
+async def add_to_cart(email: str, items: List[CartItem]) -> Dict[str, str]:
     for item in items:
         if item.quantity <= 0:
-            raise HTTPException(
-                status_code=400, detail="Quantity must be greater than 0"
-            )
+            raise InvalidQuantityError()
 
     cart_key = f"email:{email}"
     cart_data = {item.product_id: item.quantity for item in items}
@@ -49,17 +47,16 @@ def add_to_cart(email: str, items: List[CartItem]):
                 cart_data[product_id] = int(existing_cart[product_id]) + quantity
 
     redis_client.hset(cart_key, mapping=cart_data)
-
     return {"status": "ok"}
 
 
 @router.post("/remove")
-def remove_from_cart(email: str, product_id: str):
+async def remove_from_cart(email: str, product_id: str) -> Dict[str, str]:
     cart_key = f"email:{email}"
     existing_cart = redis_client.hgetall(cart_key)
 
     if not existing_cart:
-        raise HTTPException(status_code=404, detail="Product not found in cart")
+        raise CartNotFound(details=f"Email: {email}")
 
     if product_id in existing_cart:
         existing_cart[product_id] = int(existing_cart[product_id]) - 1
@@ -70,7 +67,7 @@ def remove_from_cart(email: str, product_id: str):
 
 
 @router.delete("/delete")
-def delete_cart(email: str):
+async def delete_cart(email: str) -> Dict[str, str]:
     cart_key = f"email:{email}"
     redis_client.delete(cart_key)
     return {"status": "ok"}
