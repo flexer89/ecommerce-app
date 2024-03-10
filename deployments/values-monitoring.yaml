@@ -41,7 +41,6 @@ prometheus:
           - source_labels: [__meta_kubernetes_service_name]
             action: keep
             regex: carts-service
-
   grafana:
     persistence:
       enabled: true

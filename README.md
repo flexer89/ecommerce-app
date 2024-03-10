@@ -126,3 +126,17 @@ Grafana is available at `http://localhost:3000`
 To log in, type:
 - Username: admin
 - Password: prom-operator
+
+## Adding Prometheus data source
+1. Go to Data Sources
+2. Click Add data source
+3. Choose Prometheus
+4. Set URL to `http://promstack-kube-prometheus-prometheus:9090`
+5. Click Save & Test
+
+## Creating a dashboard
+1. Go to Dashboards
+2. Click Manage
+3. Click Import
+4. Choose a JSON file with a dashboard
+5. Click Import
