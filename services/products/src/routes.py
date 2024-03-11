@@ -115,3 +115,12 @@ def get_products_by_id(product_id: str) -> Any:
 @router.get("/callback")
 def callback() -> Dict[str, str]:
     return {"auth": "ok"}
+
+
+@router.delete("/delete/{product_id}")
+def delete_product(product_id: str) -> Dict[str, str]:
+    result = collection.delete_one({"_id": ObjectId(product_id)})
+    if result.deleted_count == 1:
+        return {"message": "Product deleted successfully"}
+    else:
+        raise ProductNotFound(details=f"Product id: {product_id}")

@@ -30,6 +30,7 @@ This service is responsible for managing products in the store. It allows to add
 - **POST** Add a Product: `products/add`
 - **POST** Filter Products: `products/filter`
 - **GET** Get Product by ID: `products/get/{product_id}`
+- **GET** Get All Products: `products/get`
 - **PATCH** Update Product by ID: `products/update/{product_id}`
 - **DELETE** Delete Product by ID: `products/delete/{product_id}`
 
@@ -71,7 +72,7 @@ This service is responsible for managing user carts. It allows to add, remove an
 - **POST** Remove item from cart `carts/remove`
 - **GET** Get user cart `carts/get`
 - **POST** Add to cart `carts/add`
-- **DELETE** Delete a cart `carts/`
+- **DELETE** Delete a cart `carts/delete`
 
 ### Run as a standalone service
 To run the service as a standalone service, you need to run the following command:
