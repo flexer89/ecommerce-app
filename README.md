@@ -34,27 +34,6 @@ This service is responsible for managing products in the store. It allows to add
 - **PATCH** Update Product by ID: `products/update/{product_id}`
 - **DELETE** Delete Product by ID: `products/delete/{product_id}`
 
-### Run as a standalone service
-To run the service as a standalone service, you need to run the following command:
-```
-cd services/products
-docker compose up
-```
-Make sure that you have installed all the required dependencies and have free port 5000.
-
-To stop the service, you need to run the following command:
-```
-docker compose down
-```
-It will stop the service and remove the container.
-
-### Testing
-To run tests, you need to run the following command:
-```
-./products/scripts/test.sh
-```
-
-
 ## Orders service
 - GET Health Status `orders/health`
 - ...
@@ -74,13 +53,18 @@ This service is responsible for managing user carts. It allows to add, remove an
 - **POST** Add to cart `carts/add`
 - **DELETE** Delete a cart `carts/delete`
 
-### Run as a standalone service
+
+## Payments service
+- GET Health Status `payments/health`
+- ...
+
+# Run as a standalone service
 To run the service as a standalone service, you need to run the following command:
 ```
-cd services/carts
+cd services/{SERVICE_NAME}
 docker compose up
 ```
-Make sure that you have installed all the required dependencies and have free port 5040.
+Make sure that you have installed all the required dependencies and have a proper port available.
 
 To stop the service, you need to run the following command:
 ```
@@ -88,15 +72,12 @@ docker compose down
 ```
 It will stop the service and remove the container.
 
-### Testing
+# Unit Tests
 To run tests, you need to run the following command:
 ```
-./carts/scripts/test.sh
+cd services/{SERVICE_NAME}
+./scripts/test.sh
 ```
-
-## Payments service
-- GET Health Status `payments/health`
-- ...
 
 # Load Tests
 To run load tests, you need to run the following command:
