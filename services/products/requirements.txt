@@ -1,8 +1,8 @@
 fastapi
 prometheus_fastapi_instrumentator
 uvicorn
+motor
 pymongo
 mongomock
 pydantic
 typing
-pymongo-stubs

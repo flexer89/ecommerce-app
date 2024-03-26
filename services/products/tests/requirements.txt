@@ -2,6 +2,7 @@ fastapi
 prometheus_fastapi_instrumentator
 uvicorn
 pymongo
+motor
 pydantic
 pytest
 httpx

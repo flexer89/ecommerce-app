@@ -1,9 +1,6 @@
-from pymongo import MongoClient
+from motor.motor_asyncio import AsyncIOMotorClient as MongoClient
 from mongomock import MongoClient as MockMongoClient
 import os
-from typing import Union
-
-mongo_client: Union[MockMongoClient, MongoClient]
 
 if os.getenv("ENV") == "test":
     mongo_client = MockMongoClient()

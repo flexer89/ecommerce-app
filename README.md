@@ -122,3 +122,10 @@ To log in, type:
 3. Click Import
 4. Choose a JSON file with a dashboard
 5. Click Import
+
+
+# TODO
+- [ ] make tests asynchrounous
+- [ ] add keycloak as an authentication service
+- [ ] add token validation to services
+- [ ] add dashboard for keycloak
