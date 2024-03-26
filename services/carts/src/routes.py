@@ -58,9 +58,11 @@ async def remove_from_cart(email: str, product_id: str) -> Dict[str, str]:
     if not existing_cart:
         raise CartNotFound(details=f"Email: {email}")
 
-    if product_id in existing_cart.keys(): 
+    if product_id in existing_cart.keys():
         existing_cart[product_id] = int(existing_cart[product_id]) - 1
-        await redis_client.hset(cart_key, mapping={product_id: existing_cart[product_id]})
+        await redis_client.hset(
+            cart_key, mapping={product_id: existing_cart[product_id]}
+        )
         if existing_cart[product_id] == 0:
             await redis_client.hdel(cart_key, product_id)
 

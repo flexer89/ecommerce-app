@@ -1,15 +1,16 @@
-from fastapi.testclient import TestClient
-from unittest.mock import patch, MagicMock
+from httpx import AsyncClient
+from unittest.mock import patch, AsyncMock
 from src.app import app
+import pytest
 
-client = TestClient(app)
 
-
+@pytest.mark.asyncio
 @patch("src.routes.redis_client")
-def test_get_cart(mock_redis_client: MagicMock) -> None:
+async def test_get_cart(mock_redis_client: AsyncMock) -> None:
     mock_redis_client.hgetall.return_value = {"item1": "value1", "item2": "value2"}
 
-    response = client.get("/get?email=test@example.com")
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        response = await client.get("/get?email=test@example.com")
 
     assert response.status_code == 200
     assert response.json() == {"item1": "value1", "item2": "value2"}

@@ -3,6 +3,7 @@ prometheus_fastapi_instrumentator
 uvicorn
 pydantic
 pytest
+pytest-asyncio
 httpx
 redis
 locust

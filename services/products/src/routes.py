@@ -93,7 +93,9 @@ async def update_product(product_id: str, product: ProductOptional) -> Dict[str,
 
 
 @router.post("/filter")
-async def filter_products_by_criteria(criteria: ProductOptional) -> List[ProductOptional]:
+async def filter_products_by_criteria(
+    criteria: ProductOptional,
+) -> List[ProductOptional]:
     filtered_products = []
     async for product in collection.find(criteria.model_dump(exclude_unset=True)):
         product["_id"] = str(product["_id"])
