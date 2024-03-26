@@ -1,13 +1,13 @@
-from fastapi.testclient import TestClient
+from httpx import AsyncClient
 from pymongo.errors import DuplicateKeyError
 from src.app import app
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch, AsyncMock
+import pytest
 
-client = TestClient(app)
 
-
-@patch("src.routes.collection")
-def test_add_product_success(mock_collection: MagicMock) -> None:
+@pytest.mark.asyncio
+@patch("src.routes.collection", new_callable=AsyncMock)
+async def test_add_product_success(mock_collection: AsyncMock) -> None:
     product_data = {
         "name": "test product",
         "price": 0,
@@ -21,11 +21,12 @@ def test_add_product_success(mock_collection: MagicMock) -> None:
     }
 
     # mock mongo collection
-    mock_insert_result = MagicMock()
+    mock_insert_result = AsyncMock()
     mock_insert_result.inserted_id = "60f3e3e3e4b3f3e"
     mock_collection.insert_one.return_value = mock_insert_result
 
-    response = client.post("/add", json=product_data)
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        response = await client.post("/add", json=product_data)
     assert response.status_code == 200
     assert response.json() == {
         "message": "Product added successfully",
@@ -33,8 +34,9 @@ def test_add_product_success(mock_collection: MagicMock) -> None:
     }
 
 
-@patch("src.routes.collection")
-def test_add_product_duplicate_name(mock_collection: MagicMock) -> None:
+@pytest.mark.asyncio
+@patch("src.routes.collection", new_callable=AsyncMock)
+async def test_add_product_duplicate_name(mock_collection: AsyncMock) -> None:
     product_data = {
         "name": "duplicated product",
         "price": 0,
@@ -52,7 +54,8 @@ def test_add_product_duplicate_name(mock_collection: MagicMock) -> None:
         "Mocked duplicate key error"
     )
 
-    response = client.post("/add", json=product_data)
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        response = await client.post("/add", json=product_data)
 
     assert response.status_code == 400
     assert response.json() == {
@@ -60,8 +63,9 @@ def test_add_product_duplicate_name(mock_collection: MagicMock) -> None:
     }
 
 
-@patch("src.routes.collection")
-def test_add_product_database_error(mock_collection: MagicMock) -> None:
+@pytest.mark.asyncio
+@patch("src.routes.collection", new_callable=AsyncMock)
+async def test_add_product_database_error(mock_collection: AsyncMock) -> None:
     product_data = {
         "name": "test product",
         "price": 0,
@@ -78,14 +82,16 @@ def test_add_product_database_error(mock_collection: MagicMock) -> None:
         "Mocked database connection error"
     )
 
-    response = client.post("/add", json=product_data)
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        response = await client.post("/add", json=product_data)
 
     assert response.status_code == 503
     assert response.json()["detail"] == "Database connection error."
 
 
-@patch("src.routes.collection")
-def test_add_product_unknown_error(mock_collection: MagicMock) -> None:
+@pytest.mark.asyncio
+@patch("src.routes.collection", new_callable=AsyncMock)
+async def test_add_product_unknown_error(mock_collection: AsyncMock) -> None:
     product_data = {
         "name": "test product",
         "price": 0,
@@ -100,7 +106,8 @@ def test_add_product_unknown_error(mock_collection: MagicMock) -> None:
 
     mock_collection.insert_one.side_effect = Exception("mocked unknown error")
 
-    response = client.post("/add", json=product_data)
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        response = await client.post("/add", json=product_data)
 
     assert response.status_code == 500
     assert response.json()["detail"] == "mocked unknown error"

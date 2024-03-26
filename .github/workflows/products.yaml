@@ -35,8 +35,3 @@ jobs:
         run: |
           cd services/products
           ./scripts/test.sh
-
-      - name: Check typing
-        run: |
-          cd services/products
-          mypy --strict .

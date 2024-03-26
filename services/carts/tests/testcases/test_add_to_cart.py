@@ -5,7 +5,7 @@ import pytest
 
 
 @pytest.mark.asyncio
-@patch("src.routes.redis_client")
+@patch("src.routes.redis_client", new_callable=AsyncMock)
 async def test_add_to_cart(mock_redis_client: AsyncMock) -> None:
     mock_redis_client.hgetall.return_value = {"item1": "value1", "item2": "value2"}
 
@@ -44,7 +44,7 @@ async def test_add_to_cart_invalid_quantity() -> None:
 
 
 @pytest.mark.asyncio
-@patch("src.routes.redis_client")
+@patch("src.routes.redis_client", new_callable=AsyncMock)
 async def test_add_to_cart_cart_does_not_exist(mock_redis_client: AsyncMock) -> None:
     mock_redis_client.hgetall.return_value = {}
 

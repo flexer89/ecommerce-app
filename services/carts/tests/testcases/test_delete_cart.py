@@ -5,7 +5,7 @@ import pytest
 
 
 @pytest.mark.asyncio
-@patch("src.routes.redis_client")
+@patch("src.routes.redis_client", new_callable=AsyncMock)
 async def test_delete_cart(mock_redis_client: AsyncMock) -> None:
     mock_redis_client.delete.return_value = 1
 

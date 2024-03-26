@@ -5,7 +5,7 @@ import pytest
 
 
 @pytest.mark.asyncio
-@patch("src.routes.redis_client")
+@patch("src.routes.redis_client", new_callable=AsyncMock)
 async def test_remove_and_delete_from_cart(mock_redis_client: AsyncMock) -> None:
     mock_redis_client.hgetall.return_value = {"product1": "1", "product2": "1"}
 
@@ -21,7 +21,7 @@ async def test_remove_and_delete_from_cart(mock_redis_client: AsyncMock) -> None
 
 
 @pytest.mark.asyncio
-@patch("src.routes.redis_client")
+@patch("src.routes.redis_client", new_callable=AsyncMock)
 async def test_remove_from_cart(mock_redis_client: AsyncMock) -> None:
     mock_redis_client.hgetall.return_value = {"product1": "2", "product2": "1"}
 
@@ -37,7 +37,7 @@ async def test_remove_from_cart(mock_redis_client: AsyncMock) -> None:
 
 
 @pytest.mark.asyncio
-@patch("src.routes.redis_client")
+@patch("src.routes.redis_client", new_callable=AsyncMock)
 async def test_remove_nonexistent_cart(mock_redis_client: AsyncMock) -> None:
     mock_redis_client.hgetall.return_value = {}
 

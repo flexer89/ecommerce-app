@@ -5,7 +5,7 @@ import pytest
 
 
 @pytest.mark.asyncio
-@patch("src.routes.redis_client")
+@patch("src.routes.redis_client", new_callable=AsyncMock)
 async def test_get_cart(mock_redis_client: AsyncMock) -> None:
     mock_redis_client.hgetall.return_value = {"item1": "value1", "item2": "value2"}
 
