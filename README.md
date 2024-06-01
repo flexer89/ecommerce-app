@@ -115,17 +115,3 @@ To log in, type:
 3. Choose Prometheus
 4. Set URL to `http://promstack-kube-prometheus-prometheus:9090`
 5. Click Save & Test
-
-## Creating a dashboard
-1. Go to Dashboards
-2. Click Manage
-3. Click Import
-4. Choose a JSON file with a dashboard
-5. Click Import
-
-
-# TODO
-- [ ] make tests asynchrounous
-- [ ] add keycloak as an authentication service
-- [ ] add token validation to services
-- [ ] add dashboard for keycloak

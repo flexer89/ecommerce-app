@@ -1,12 +1,13 @@
----
 prometheus:
   prometheusSpec:
-    scrapeInterval: 10s
+    scrapeInterval: 30s  # Increase the scrapeInterval to ensure scrapeTimeout fits
     evaluationInterval: 30s
     podMonitorSelectorNilUsesHelmValues: false
     serviceMonitorSelectorNilUsesHelmValues: false
     additionalScrapeConfigs:
       - job_name: 'products'
+        scrape_interval: 30s  # Align scrape_interval with prometheusSpec
+        scrape_timeout: 10s  # Ensure scrape_timeout is less than scrape_interval
         kubernetes_sd_configs:
           - role: service
         relabel_configs:
@@ -14,6 +15,8 @@ prometheus:
             action: keep
             regex: products-service
       - job_name: 'orders'
+        scrape_interval: 30s  # Align scrape_interval with prometheusSpec
+        scrape_timeout: 10s  # Ensure scrape_timeout is less than scrape_interval
         kubernetes_sd_configs:
           - role: service
         relabel_configs:
@@ -21,6 +24,8 @@ prometheus:
             action: keep
             regex: orders-service
       - job_name: 'payments'
+        scrape_interval: 30s  # Align scrape_interval with prometheusSpec
+        scrape_timeout: 10s  # Ensure scrape_timeout is less than scrape_interval
         kubernetes_sd_configs:
           - role: service
         relabel_configs:
@@ -28,6 +33,8 @@ prometheus:
             action: keep
             regex: payments-service
       - job_name: 'users'
+        scrape_interval: 30s  # Align scrape_interval with prometheusSpec
+        scrape_timeout: 10s  # Ensure scrape_timeout is less than scrape_interval
         kubernetes_sd_configs:
           - role: service
         relabel_configs:
@@ -35,6 +42,8 @@ prometheus:
             action: keep
             regex: users-service
       - job_name: 'carts'
+        scrape_interval: 30s  # Align scrape_interval with prometheusSpec
+        scrape_timeout: 10s  # Ensure scrape_timeout is less than scrape_interval
         kubernetes_sd_configs:
           - role: service
         relabel_configs:
@@ -65,3 +74,7 @@ prometheus:
         kic-dash:
           gnetId: 15662
           datasource: Prometheus
+    additionalDataSources:
+      dashboard1:
+        configMapName: fastapi-dashboard-configmap
+        file: fastapi-dashboard.json

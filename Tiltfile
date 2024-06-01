@@ -1,3 +1,10 @@
+docker_build('client-app','client-app/',
+    live_update=[
+        sync('./client-app', '/app'),
+        run('cd /app && npm install', trigger='./client-app/package.json')
+    ]
+)
+
 docker_build('products', 'services/products',
     live_update=[
         sync('services/products', '/products'),
@@ -28,3 +35,4 @@ k8s_yaml('deployments/orders.yaml')
 k8s_yaml('deployments/payments.yaml')
 k8s_yaml('deployments/users.yaml')
 k8s_yaml('deployments/carts.yaml')
+k8s_yaml('deployments/client-app.yaml')
