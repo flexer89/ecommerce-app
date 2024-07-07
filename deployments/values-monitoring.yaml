@@ -67,10 +67,10 @@ prometheus:
               path: /var/lib/grafana/dashboards/default
     dashboards:
       default:
-        kong-dash:
-          gnetId: 7424
-          revision: 11
-          datasource: Prometheus
+        # kong-dash:
+        #   gnetId: 7424
+        #   revision: 11
+        #   datasource: Prometheus
         kic-dash:
           gnetId: 15662
           datasource: Prometheus

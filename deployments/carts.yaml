@@ -39,22 +39,22 @@ spec:
       name: tcp-5040
       targetPort: 5040
 
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: carts
-  annotations:
-    konghq.com/strip-path: 'true'
-spec:
-  parentRefs:
-    - name: kong
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /carts
-      backendRefs:
-        - name: carts-service
-          kind: Service
-          port: 5040
+# ---
+# apiVersion: gateway.networking.k8s.io/v1
+# kind: HTTPRoute
+# metadata:
+#   name: carts
+#   annotations:
+#     konghq.com/strip-path: 'true'
+# spec:
+#   parentRefs:
+#     - name: kong
+#   rules:
+#     - matches:
+#         - path:
+#             type: PathPrefix
+#             value: /carts
+#       backendRefs:
+#         - name: carts-service
+#           kind: Service
+#           port: 5040

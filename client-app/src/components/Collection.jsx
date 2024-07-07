@@ -9,34 +9,25 @@ const Collection = () => (
       <ul className="collection-list">
         <li>
           <div className="collection-card has-before hover:shine">
-            <h2 className="h2 card-title">Summer Collection</h2>
-            <p className="card-text">Starting at $17.99</p>
-            <a href="#" className="btn-link">
-              <span className="span">Shop Now</span>
-              <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
-            </a>
+            <h2 className="h2 card-title">Ekskluzywne kawy</h2>
+            <p className="card-text">Już od 99.99 zł</p>
+            <button className="collection-card-button">Sprawdź</button>
             <div className="has-bg-image" style={{ backgroundImage: `url(${collection1})` }}></div>
           </div>
         </li>
         <li>
           <div className="collection-card has-before hover:shine">
-            <h2 className="h2 card-title">What’s New?</h2>
-            <p className="card-text">Get the glow</p>
-            <a href="#" className="btn-link">
-              <span className="span">Discover Now</span>
-              <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
-            </a>
+            <h2 className="h2 card-title">Co nowego?</h2>
+            <p className="card-text">Zobacz nasze nowości</p>
+            <button className="collection-card-button">Sprawdź</button>
             <div className="has-bg-image" style={{ backgroundImage: `url(${collection2})` }}></div>
           </div>
         </li>
         <li>
           <div className="collection-card has-before hover:shine">
-            <h2 className="h2 card-title">Buy 1 Get 1</h2>
-            <p className="card-text">Starting at $7.99</p>
-            <a href="#" className="btn-link">
-              <span className="span">Discover Now</span>
-              <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
-            </a>
+            <h2 className="h2 card-title">Kup 1 otrzymaj 2</h2>
+            <p className="card-text">Gorące promocje</p>
+            <button className="collection-card-button">Sprawdź</button>
             <div className="has-bg-image" style={{ backgroundImage: `url(${collection3})` }}></div>
           </div>
         </li>

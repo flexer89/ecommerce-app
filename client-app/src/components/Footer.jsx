@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../assets/images/logo.png';
+import logo from '../assets/images/logo-white.png';
 
 const Footer = () => (
   <footer className="footer" data-section>
@@ -7,49 +7,38 @@ const Footer = () => (
       <div className="footer-top">
         <ul className="footer-list">
           <li>
-            <p className="footer-list-title">Company</p>
+            <p className="footer-list-title">Kontakt</p>
           </li>
           <li>
-            <p className="footer-list-text">
-              Find a location nearest you. See <a href="#" className="link">Our Stores</a>
-            </p>
+            <p className="footer-list-text bold">+48 123 456 789</p>
           </li>
           <li>
-            <p className="footer-list-text bold">+391 (0)35 2568 4593</p>
-          </li>
-          <li>
-            <p className="footer-list-text">hello@domain.com</p>
+            <p className="footer-list-text bold">jolszak@jolszak.com</p>
           </li>
         </ul>
         <ul className="footer-list">
           <li>
-            <p className="footer-list-title">Useful links</p>
+            <p className="footer-list-title">Obserwuj nas</p>
           </li>
-          <li><a href="#" className="footer-link">New Products</a></li>
-          <li><a href="#" className="footer-link">Best Sellers</a></li>
-          <li><a href="#" className="footer-link">Bundle & Save</a></li>
-          <li><a href="#" className="footer-link">Online Gift Card</a></li>
+          <li><a href="#" className="footer-link">TikTok</a></li>
+          <li><a href="#" className="footer-link">Instagram</a></li>
+          <li><a href="#" className="footer-link">Facebook</a></li>
+          <li><a href="#" className="footer-link">YouTube</a></li>
         </ul>
         <ul className="footer-list">
           <li>
-            <p className="footer-list-title">Information</p>
+            <p className="footer-list-title">Informacje</p>
           </li>
-          <li><a href="#" className="footer-link">About Us</a></li>
-          <li><a href="#" className="footer-link">Privacy Policy</a></li>
-          <li><a href="#" className="footer-link">Terms & Conditions</a></li>
-          <li><a href="#" className="footer-link">Contact Us</a></li>
+          <li><a href="#" className="footer-link">Regulamin</a></li>
+          <li><a href="#" className="footer-link">Płatności</a></li>
+          <li><a href="#" className="footer-link">FAQ</a></li>
         </ul>
       </div>
       <div className="footer-bottom">
         <a href="#" className="logo">
           <img src={logo} width="179" height="26" alt="Glowing" />
         </a>
-        <ul className="social-list">
-          <li><a href="#" className="social-link">Facebook</a></li>
-          <li><a href="#" className="social-link">Twitter</a></li>
-          <li><a href="#" className="social-link">Instagram</a></li>
-        </ul>
-        <p className="copyright">© 2022 Glowing. All Rights Reserved.</p>
+        <p className="copyright">© 2024 Jakub Olszak</p>
       </div>
     </div>
   </footer>
