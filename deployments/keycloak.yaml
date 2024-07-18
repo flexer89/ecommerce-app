@@ -28,6 +28,7 @@ spec:
             - --db-url-host=postgres
             - --db-username=keycloak
             - --db-password=keycloak
+            - --metrics-enabled=true
           env:
             - name: KEYCLOAK_ADMIN
               value: admin

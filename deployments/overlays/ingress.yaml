@@ -25,27 +25,27 @@ spec:
             name: kraken
             port:
               number: 8080
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: keycloak
-#   annotations:
-#     nginx.ingress.kubernetes.io/enable-cors: "true"
-#     nginx.ingress.kubernetes.io/cors-allow-origin: "https://jolszak.test"
-#     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-# spec:
-#   tls:
-#     - hosts:
-#         - auth.jolszak.test
-#   rules:
-#     - host: auth.jolszak.test
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: keycloak
-#                 port:
-#                   number: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://jolszak.test"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  tls:
+    - hosts:
+        - auth.jolszak.test
+  rules:
+    - host: auth.jolszak.test
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: keycloak
+                port:
+                  number: 8080

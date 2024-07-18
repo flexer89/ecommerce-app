@@ -7,20 +7,20 @@ import '../assets/style/style.css'; // Ensure the path is correct
 import image1 from '../assets/images/product-01.png';
 
 const mockedProducts = [
-  { id: 1, name: '111', price: '£7.95', description: 'Blackcurrant • Lemongrass • Wine', image: image1 },
-  { id: 2, name: '222', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
-  { id: 3, name: '333', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
-  { id: 4, name: '444', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
-  { id: 5, name: '555', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
-  { id: 6, name: '666', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
-  { id: 7, name: '777', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
-  { id: 8, name: '888', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
-  { id: 9, name: '999', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
+  { id: 1, name: '111', price: '7.95', description: 'Blackcurrant • Lemongrass • Wine', image: image1 },
+  { id: 2, name: '222', price: '8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
+  { id: 3, name: '333', price: '8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
+  { id: 4, name: '444', price: '8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
+  { id: 5, name: '555', price: '8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
+  { id: 6, name: '666', price: '8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
+  { id: 7, name: '777', price: '8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
+  { id: 8, name: '888', price: '8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
+  { id: 9, name: '999', price: '8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
   // Add more mocked products here
 ];
 
 const getMaxPrice = (products) => {
-  return Math.max(...products.map(product => parseFloat(product.price.replace('£', ''))));
+  return Math.max(...products.map(product => parseFloat(product.price)));
 };
 
 const ProductListPage = () => {
@@ -56,7 +56,7 @@ const ProductListPage = () => {
 
     if (filters.priceRange) {
       filtered = filtered.filter(product => {
-        const productPrice = parseFloat(product.price.replace('£', ''));
+        const productPrice = parseFloat(product.price);
         return productPrice >= filters.priceRange[0] && productPrice <= filters.priceRange[1];
       });
     }
@@ -73,8 +73,8 @@ const ProductListPage = () => {
   };
 
   return (
-    <div className="product-list-page">
-      <FilterPanel onFilterChange={handleFilterChange} maxPrice={maxPrice} />
+    <div className="product-list-page container">
+      {/* <FilterPanel onFilterChange={handleFilterChange} maxPrice={maxPrice} /> */}
       <div className='product-list-container'>
         <div className="product-list">
             {filteredProducts.map(product => (

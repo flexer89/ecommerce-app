@@ -20,10 +20,6 @@ spec:
           image: payments
           ports:
             - containerPort: 5020
-          resources:
-            limits:
-              memory: "128Mi"
-              cpu: "200m"
 ---
 apiVersion: v1
 kind: Service

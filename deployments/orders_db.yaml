@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders-db
+  template:
+    metadata:
+      labels:
+        app: orders-db
+    spec:
+      containers:
+      - name: orders-db
+        image: postgres:16.2-alpine3.19
+        env:
+          - name: POSTGRES_USER
+            value: orders
+          - name: POSTGRES_PASSWORD
+            value: password
+          - name: POSTGRES_DB
+            value: orders
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: init-script
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: init-script 
+        configMap:
+          name: init-sql-configmap-orders
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders-db
+spec:
+  selector:
+    app: orders-db
+  ports:
+    - protocol: TCP
+      port: 5432
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-sql-configmap-orders
+data:
+  init.sql: |
+    -- Drop tables if they already exist
+    DROP TABLE IF EXISTS order_items;
+    DROP TABLE IF EXISTS orders;
+    DROP TYPE IF EXISTS status_enum;
+
+    -- Create enum type for order status
+    CREATE TYPE status_enum AS ENUM ('pending', 'processing', 'shipped');
+
+    -- Create orders table
+    CREATE TABLE orders (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR NOT NULL,
+        total_price FLOAT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        status status_enum DEFAULT 'pending'
+    );
+
+    -- Create order_items table
+    CREATE TABLE order_items (
+        id SERIAL PRIMARY KEY,
+        order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
+        product_id INTEGER,
+        quantity INTEGER,
+        price FLOAT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- Add sample data
+    INSERT INTO orders (user_id, total_price, status) VALUES ('aaa', 100.50, 'pending');
+    INSERT INTO orders (user_id, total_price, status) VALUES ('bbb', 200.75, 'processing');
+
+    INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (1, 101, 2, 50.25);
+    INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (1, 102, 1, 100.50);
+    INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (2, 103, 5, 40.15);

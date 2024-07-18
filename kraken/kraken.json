@@ -1,27 +1,101 @@
 {
-    "version": 3,
-    "timeout": "3s",
-    "endpoints": [
-      {
-        "endpoint": "/api/products/{get1}",
-        "input_headers": [
-          "*"
-        ],
-        "method": "GET",
-        "output_encoding": "no-op",
-        "backend": [
-          {
-            "url_pattern": "/{get1}",
-            "encoding": "no-op",
-            "sd": "static",
-            "method": "GET",
-            "host": [
-              "http://products-service:5000"
-            ],
-            "disable_host_sanitize": false
-          }
-        ]
-      }
-    ],
-    "output_encoding": "json"
-  }
+  "version": 3,
+  "timeout": "3s",
+  "endpoints": [
+    {
+      "endpoint": "/api/products/{get1}",
+      "input_headers": [
+        "*"
+      ],
+      "method": "GET",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/{get1}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://products-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/products/{get1}/{get2}",
+      "input_headers": [
+        "*"
+      ],
+      "method": "GET",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/{get1}/{get2}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://products-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/orders/{get1}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/{get1}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://orders-service:5010"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/orders/{get1}/{get2}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/{get1}/{get2}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://orders-service:5010"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/payments/{get1}",
+      "input_headers": [
+        "*"
+      ],
+      "method": "POST",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/{get1}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "POST",
+          "host": [
+            "http://payments-service:5020"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    }
+  ],
+  "output_encoding": "json"
+}

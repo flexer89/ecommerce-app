@@ -1,20 +1,21 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
+from fastapi.responses import FileResponse
 import os
-from pymongo.errors import DuplicateKeyError
-from src.models import Product, ProductOptional
-from bson import ObjectId
-from src.exceptions import (
-    ProductNotFound,
-    ProductsNotFound,
-    ProductNotModified,
-    ProductExists,
-    DatabaseConnectionError,
-    SomethingWentWrong,
-)
-from src.database import collection
-from typing import Dict, List, Any
+from src.models import Product, Base
+from typing import Dict
+from sqlalchemy.orm import Session
+from src.database import *
+from src.schemas import *
 
+Base.metadata.create_all(bind=engine)
 router = APIRouter()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 @router.get("/k8s", include_in_schema=False)
@@ -31,98 +32,63 @@ async def health() -> Dict[str, str]:
     return {"status": "ok"}
 
 
-@router.post("/add")
-async def add_product(product: Product) -> Dict[str, str]:
-    try:
-        result = await collection.insert_one(product.model_dump())
-        return {"message": "Product added successfully", "id": str(result.inserted_id)}
-    except DuplicateKeyError:
-        raise ProductExists(details=f"Product name: {product.name}")
-    except ConnectionError:
-        raise DatabaseConnectionError()
-    except Exception as e:
-        raise SomethingWentWrong(str(e))
+@router.get("/getall", response_model=list[Product])
+def read_products(limit: int = 10, db: Session = Depends(get_db)):
+    products = get_products_db(db, limit=limit)
+    return products
 
+@router.get("/getbyid/{product_id}", response_model=Product)
+def read_product(product_id: int, db: Session = Depends(get_db)):
+    product = get_product_db(db, product_id=product_id)
+    if product is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return product
 
-@router.get("/get")
-async def get_products() -> List[Product]:
-    try:
-        products = []
-        async for product in collection.find():
-            product["_id"] = str(product["_id"])
-            products.append(product)
-        if not products:
-            raise ProductsNotFound()
-        return products
-    except ProductsNotFound:
-        raise
-    except Exception as e:
-        raise SomethingWentWrong(str(e))
+@router.post("/create", response_model=Product)
+async def create_product(
+    name: str = Form(...),
+    description: str = Form(...),
+    price: float = Form(...),
+    image: UploadFile = File(...),
+    db: Session = Depends(get_db)
+):
+    image_data = await image.read() if image else None
+    product_data = ProductCreate(name=name, description=description, price=price, image=image_data)
+    return create_product_db(db=db, product=product_data)
 
+@router.put("/update/{product_id}", response_model=Product)
+async def update_product(
+    product_id: int,
+    name: str = Form(...),
+    description: str = Form(...),
+    price: float = Form(...),
+    image: UploadFile = File(None),
+    db: Session = Depends(get_db)
+):
+    image_data = await image.read() if image else None
+    product_data = ProductUpdate(name=name, description=description, price=price, image=image_data)
+    db_product = update_product_db(db=db, product_id=product_id, product=product_data)
+    if db_product is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return db_product
 
-@router.get("/get/{product_id}")
-async def get_product_by_id(product_id: str) -> Any:
-    try:
-        product = await collection.find_one({"_id": ObjectId(product_id)})
-        if product:
-            product["_id"] = str(product["_id"])
-            return product
-        else:
-            raise ProductNotFound(details=f"Product id: {product_id}")
-    except ProductNotFound:
-        raise
-    except Exception as e:
-        raise SomethingWentWrong(str(e))
+@router.delete("/delete/{product_id}", response_model=Product)
+def delete_product(product_id: int, db: Session = Depends(get_db)):
+    db_product = delete_product_db(db, product_id=product_id)
+    if db_product is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return db_product
 
-
-@router.patch("/update/{product_id}")
-async def update_product(product_id: str, product: ProductOptional) -> Dict[str, str]:
-    try:
-        updated_product = product.model_dump(exclude_unset=True)
-        result = await collection.update_one(
-            {"_id": ObjectId(product_id)}, {"$set": updated_product}
-        )
-        if result.matched_count == 1 and result.modified_count == 1:
-            return {"message": "Product updated successfully"}
-        else:
-            raise ProductNotModified(details=f"Product id: {product_id}")
-    except ProductNotModified:
-        raise
-    except Exception as e:
-        raise SomethingWentWrong(str(e))
-
-
-@router.post("/filter")
-async def filter_products_by_criteria(
-    criteria: ProductOptional,
-) -> List[ProductOptional]:
-    filtered_products = []
-    async for product in collection.find(criteria.model_dump(exclude_unset=True)):
-        product["_id"] = str(product["_id"])
-        filtered_products.append(product)
-    return filtered_products
-
-
-@router.get("/get/{product_id}")
-async def get_products_by_id(product_id: str) -> Any:
-    product = await collection.find_one({"_id": ObjectId(product_id)})
-    if product:
-        product["_id"] = str(product["_id"])
-        return product
-    else:
-        raise ProductNotFound(details=f"Product id: {product_id}")
-
-
-# only for debug
-@router.get("/callback")
-async def callback() -> Dict[str, str]:
-    return {"auth": "ok"}
-
-
-@router.delete("/delete/{product_id}")
-async def delete_product(product_id: str) -> Dict[str, str]:
-    result = await collection.delete_one({"_id": ObjectId(product_id)})
-    if result.deleted_count == 1:
-        return {"message": "Product deleted successfully"}
-    else:
-        raise ProductNotFound(details=f"Product id: {product_id}")
+# Endpoint to return a file
+@router.get("/download/{product_id}", response_class=FileResponse)
+async def download_product_image(product_id: int, db: Session = Depends(get_db)):
+    product = get_product_db(db, product_id=product_id)
+    if not product or not product.image:
+        raise HTTPException(status_code=404, detail="Image not found")
+    
+    # Save the image to a temporary file
+    temp_file_path = f"/tmp/product_{product_id}_image"
+    with open(temp_file_path, "wb") as file:
+        file.write(product.image)
+    
+    return FileResponse(temp_file_path, media_type="application/octet-stream", filename=f"product_{product_id}_image.bin")

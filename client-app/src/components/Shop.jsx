@@ -31,9 +31,6 @@ const Shop = () => (
               <div className="price">
                 <span className="span">$39.00</span>
               </div>
-              <h3>
-                <a href="#" className="card-title">Colombia</a>
-              </h3>
             </div>
           </div>
           </a>
@@ -54,9 +51,6 @@ const Shop = () => (
               <div className="price">
                 <span className="span">$39.00</span>
               </div>
-              <h3>
-                <a href="#" className="card-title">Colombia</a>
-              </h3>
             </div>
           </div>
           </a>
@@ -77,9 +71,6 @@ const Shop = () => (
               <div className="price">
                 <span className="span">$39.00</span>
               </div>
-              <h3>
-                <a href="#" className="card-title">Colombia</a>
-              </h3>
             </div>
           </div>
           </a>

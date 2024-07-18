@@ -18,7 +18,7 @@ export const CartProvider = ({ children }) => {
   const addItemToCart = (product, grind, weight) => {
     const existingProduct = cart.items.find(item => item.id === product.id && item.grind === grind && item.weight === weight);
     let updatedCart;
-    const productPrice = parseFloat(product.price.replace('£', '').trim());
+    const productPrice = parseFloat(product.price);  // No need to trim, assuming it's a number
 
     if (existingProduct) {
       updatedCart = {
@@ -40,8 +40,33 @@ export const CartProvider = ({ children }) => {
     setCart(updatedCart);
   };
 
+  const removeItemFromCart = (productId, grind, weight, quantityToRemove) => {
+    const productPrice = parseFloat(cart.items.find(item => item.id === productId && item.grind === grind && item.weight === weight).price);
+    const existingProduct = cart.items.find(item => item.id === productId && item.grind === grind && item.weight === weight);
+    
+    if (existingProduct.quantity > quantityToRemove) {
+      const updatedCart = {
+        items: cart.items.map(item => 
+          item.id === productId && item.grind === grind && item.weight === weight 
+            ? { ...item, quantity: item.quantity - quantityToRemove } 
+            : item
+        ),
+        total: cart.total - (productPrice * quantityToRemove),
+        quantity: cart.quantity - quantityToRemove
+      };
+      setCart(updatedCart);
+    } else {
+      const updatedCart = {
+        items: cart.items.filter(item => !(item.id === productId && item.grind === grind && item.weight === weight)),
+        total: cart.total - (productPrice * existingProduct.quantity),
+        quantity: cart.quantity - existingProduct.quantity
+      };
+      setCart(updatedCart);
+    }
+  };
+
   return (
-    <CartContext.Provider value={{ cart, addItemToCart }}>
+    <CartContext.Provider value={{ cart, addItemToCart, removeItemFromCart }}>
       {children}
     </CartContext.Provider>
   );

@@ -4,7 +4,7 @@
 minikube delete
 
 # Start Minikube cluster
-minikube start
+minikube start --cpus 6 --memory 6144
 
 # Add addons
 minikube addons enable metrics-server
@@ -25,7 +25,7 @@ kubectl apply -f deployments/orders.yaml
 kubectl apply -f deployments/payments.yaml
 kubectl apply -f deployments/users.yaml
 kubectl apply -f deployments/carts.yaml
-kubectl apply -f deployments/client.yaml
+kubectl apply -f deployments/client_app.yaml
 kubectl apply -f deployments/keycloak.yaml
 
 kubectl apply -f deployments/products_db.yaml
@@ -33,6 +33,7 @@ kubectl apply -f deployments/carts_db.yaml
 kubectl apply -f deployments/keycloak_db.yaml
 
 # Deploy Monitoring
+helm repo update
 kubectl create namespace monitoring
 helm install loki grafana/loki-stack --namespace monitoring -f deployments/values-loki.yaml
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts

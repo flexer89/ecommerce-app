@@ -58,6 +58,30 @@ This service is responsible for managing user carts. It allows to add, remove an
 - GET Health Status `payments/health`
 - ...
 
+# Start/Setup Cluster
+To setup the cluster, you need to run the following command:
+```
+./cluster_setup.sh
+```
+It will start the minikube cluster and install all the required dependencies.
+If you want to start the cluster, you need to run the following command:
+```
+./start.sh
+```
+
+If cluster is running, you need to add ingress addon:
+```
+minikube addons enable ingress
+```
+And then create a tunnel:
+```
+minikube tunnel
+```
+If you want to stop the cluster, you need to run the following command:
+```
+./stop.sh
+```
+
 # Run as a standalone service
 To run the service as a standalone service, you need to run the following command:
 ```

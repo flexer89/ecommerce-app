@@ -1,10 +1,7 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: products-db
-  labels:
-    app: products-db
 spec:
   replicas: 1
   selector:
@@ -16,37 +13,64 @@ spec:
         app: products-db
     spec:
       containers:
-        - name: products-db
-          image: mongo
-          ports:
-            - containerPort: 27017
-          resources:
-            limits:
-              memory: "128Mi"
-              cpu: "200m"
+      - name: products-db
+        image: postgres:16.2-alpine3.19
+        env:
+          - name: POSTGRES_USER
+            value: products
+          - name: POSTGRES_PASSWORD
+            value: password
+          - name: POSTGRES_DB
+            value: products
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: init-script
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: init-script 
+        configMap:
+          name: init-sql-configmap-products
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: products-db-service
+  name: products-db
 spec:
   selector:
     app: products-db
   ports:
-    - port: 27017
-      protocol: TCP
-      name: mongo
+    - protocol: TCP
+      port: 5432
 ---
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: products-db-policy
-spec:
-  podSelector:
-    matchLabels:
-      app: products-db
-  ingress:
-    - from:
-        - podSelector:
-            matchLabels:
-              app: products
+  name: init-sql-configmap-products
+data:
+  init.sql: |
+    -- Drop tables if they already exist
+    DROP TABLE IF EXISTS products CASCADE;
+
+    -- Create products table
+    CREATE TABLE products (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        description TEXT,
+        price FLOAT NOT NULL,
+        image BYTEA,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- Add sample data
+    INSERT INTO products (name, description, price, image) VALUES 
+    ('111', 'Blackcurrant • Lemongrass • Wine', 7.95, NULL),
+    ('222', 'Orange • Cocoa • Nutmeg', 8.95, NULL),
+    ('333', 'Orange • Cocoa • Nutmeg', 8.95, NULL),
+    ('444', 'Orange • Cocoa • Nutmeg', 8.95, NULL),
+    ('555', 'Orange • Cocoa • Nutmeg', 8.95, NULL),
+    ('666', 'Orange • Cocoa • Nutmeg', 8.95, NULL),
+    ('777', 'Orange • Cocoa • Nutmeg', 8.95, NULL),
+    ('888', 'Orange • Cocoa • Nutmeg', 8.95, NULL),
+    ('999', 'Orange • Cocoa • Nutmeg', 8.95, NULL);

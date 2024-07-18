@@ -26,8 +26,9 @@ const FilterPanel = ({ onFilterChange, maxPrice }) => {
           min={0}
           max={maxPrice}
           step={0.01}
+          color=" " 
         />
-        <p>£{priceRange[0].toFixed(2)} - £{priceRange[1].toFixed(2)}</p>
+        <p>{priceRange[0].toFixed(2)} - {priceRange[1].toFixed(2)}</p>
       </div>
       <div className="filter-section">
         <label>

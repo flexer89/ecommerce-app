@@ -1,31 +1,41 @@
 // src/components/ProductPageComponent.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import axios from 'axios';
 import '../assets/style/style.css';
-
-import image1 from '../assets/images/product-01.png';
-
-const products = [
-  { id: 1, name: '111', price: '£7.95', description: 'Blackcurrant • Lemongrass • Wine', image: image1 },
-  { id: 2, name: '222', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
-  { id: 3, name: '333', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
-  { id: 4, name: '444', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
-  { id: 5, name: '555', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
-  { id: 6, name: '666', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
-  { id: 7, name: '777', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
-  { id: 8, name: '888', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
-  { id: 9, name: '999', price: '£8.95', description: 'Orange • Cocoa • Nutmeg', image: image1 },
-  // Add more mocked products here
-];
 
 const ProductPageComponent = () => {
   const { id } = useParams();
   const { addItemToCart } = useCart();
-  const product = products.find((p) => p.id === parseInt(id));
-
+  const [product, setProduct] = useState(null);
   const [selectedGrind, setSelectedGrind] = useState(null);
   const [selectedWeight, setSelectedWeight] = useState(null);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(`https://jolszak.test/api/products/getbyid/${id}`);
+        const productData = response.data;
+
+        // Fetch image separately if needed
+        const imageResponse = await axios.get(`https://jolszak.test/api/products/download/${id}`, {
+          responseType: 'arraybuffer'
+        });
+        const base64Image = btoa(
+          new Uint8Array(imageResponse.data)
+            .reduce((data, byte) => data + String.fromCharCode(byte), '')
+        );
+        productData.image = base64Image;
+
+        setProduct(productData);
+      } catch (error) {
+        console.error('Error fetching product:', error);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
 
   const handleGrindClick = (grind) => {
     setSelectedGrind(grind);
@@ -46,10 +56,18 @@ const ProductPageComponent = () => {
     }
   };
 
+  if (!product) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="product-page">
       <div className="product-image">
-        <img src={product.image} alt={product.name} />
+        {product.image ? (
+          <img src={`data:image/${product.file_extension};base64,${product.image}`} alt={product.name} />
+        ) : (
+          <div>No image available</div>
+        )}
       </div>
       <div className="product-details">
         <h1>{product.name}</h1>
@@ -60,19 +78,19 @@ const ProductPageComponent = () => {
             <h2>Grind</h2>
             <button 
               className={selectedGrind === 'Całe ziarna' ? 'selected' : ''} 
-              onClick={() => handleGrindClick('Whole bean')}
+              onClick={() => handleGrindClick('Całe ziarna')}
             >
-              Whole bean
+              Całe ziarna
             </button>
             <button 
               className={selectedGrind === 'Grubo mielone' ? 'selected' : ''} 
-              onClick={() => handleGrindClick('Coarse')}
+              onClick={() => handleGrindClick('Grubo mielone')}
             >
               Grubo mielone
             </button>
             <button 
               className={selectedGrind === 'Mocno zmielone' ? 'selected' : ''} 
-              onClick={() => handleGrindClick('Fine')}
+              onClick={() => handleGrindClick('Mocno zmielone')}
             >
               Mocno zmielone
             </button>

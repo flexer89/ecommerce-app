@@ -1,26 +1,17 @@
-from pydantic import BaseModel
-from typing import List, Optional
+# models.py
+from datetime import datetime
+from sqlalchemy import Column, Integer, String, Float, Text, LargeBinary, DateTime
+from sqlalchemy.orm import declarative_base
 
+Base = declarative_base()
 
-class Product(BaseModel):
-    name: str
-    price: float = 0.0
-    quantity: int = 0
-    description: str = ""
-    category: str = "uncategorized"
-    brand: str = "default"
-    images: List[str] = []
-    weight: float = 0.0
-    dimensions: List[float] = [0.0, 0.0, 0.0]
+class Product(Base):
+    __tablename__ = 'products'
 
-
-class ProductOptional(BaseModel):
-    name: Optional[str] = None
-    price: Optional[float] = None
-    quantity: Optional[int] = None
-    description: Optional[str] = None
-    category: Optional[str] = None
-    brand: Optional[str] = None
-    images: Optional[List[str]] = None
-    weight: Optional[float] = None
-    dimensions: Optional[List[float]] = None
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), nullable=False)
+    description = Column(Text)
+    price = Column(Float, nullable=False)
+    image = Column(LargeBinary)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

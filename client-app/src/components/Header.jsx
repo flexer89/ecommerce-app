@@ -1,18 +1,32 @@
-// src/components/Header.jsx
 import React, { useState } from 'react';
 import { IonIcon } from '@ionic/react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { personOutline, bagHandleOutline } from 'ionicons/icons';
 import { useCart } from '../contexts/CartContext';
+import { useKeycloakAuth } from '../contexts/KeycloakContext';
 import '../assets/style/style.css';
 import logo from '../assets/images/logo-brown.png';
 
 const Header = () => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const { cart } = useCart();
+  const { isLogin, login, logout } = useKeycloakAuth();
+  const navigate = useNavigate();
 
   const togglePanel = () => {
     setIsPanelOpen(!isPanelOpen);
+  };
+
+  const handleUserIconClick = () => {
+    if (isLogin) {
+      navigate('/profile');
+    } else {
+      login();
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -43,24 +57,43 @@ const Header = () => {
             </ul>
           </nav>
           <div className="header-actions">
-            <button className="header-action-btn" aria-label="user">
-              <IonIcon icon={personOutline} aria-hidden="true" />
-            </button>
-            <button className="header-action-btn" aria-label="cart item">
+            {isLogin ? (
+              <>
+                <button className="header-action-btn" aria-label="user" onClick={handleUserIconClick}>
+                  <IonIcon icon={personOutline} aria-hidden="true" />
+                </button>
+                <button className="header-action-btn" aria-label="logout" onClick={handleLogout}>
+                  <IonIcon icon="log-out-outline" aria-hidden="true" />
+                </button>
+              </>
+            ) : (
+              <button className="header-action-btn" aria-label="user" onClick={handleUserIconClick}>
+                <IonIcon icon={personOutline} aria-hidden="true" />
+              </button>
+            )}
+            <Link to="/cart" className="header-action-btn" aria-label="cart item">
               <data className="btn-text" value={cart.total}>{cart.total.toFixed(2)} zł</data>
               <IonIcon icon={bagHandleOutline} aria-hidden="true" />
               <span className="btn-badge">{cart.quantity}</span>
-            </button>
+            </Link>
           </div>
         </div>
       </div>
       <div className={`panel ${isPanelOpen ? 'active' : ''}`}>
+        <button 
+          className="nav-close-btn" 
+          aria-label="close menu" 
+          onClick={togglePanel}
+        >
+          &times;
+        </button>
         <nav className="navbar-mobile">
           <ul className="navbar-list">
-            <li><a href="#" className="navbar-link has-after" onClick={togglePanel}>Strona główna</a></li>
-            <li><a href="#shop" className="navbar-link has-after" onClick={togglePanel}>Bestsellery</a></li>
-            <li><a href="#shop" className="navbar-link has-after" onClick={togglePanel}>Oferta</a></li>
-            <li><a href="#feature" className="navbar-link has-after" onClick={togglePanel}>O nas</a></li>
+            <li><a href="/" className="navbar-link has-after" onClick={togglePanel}>Strona główna</a></li>
+            <li><a href="/cart" className="navbar-link has-after" onClick={togglePanel}>Koszyk</a></li>
+            <li><a href="/products" className="navbar-link has-after" onClick={togglePanel}>Oferta</a></li>
+            <li><a href="/bestsellers" className="navbar-link has-after" onClick={togglePanel}>Bestsellery</a></li>
+            <li><a href="/our-mission" className="navbar-link has-after" onClick={togglePanel}>O nas</a></li>
           </ul>
         </nav>
       </div>
