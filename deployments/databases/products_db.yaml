@@ -17,11 +17,20 @@ spec:
         image: postgres:16.2-alpine3.19
         env:
           - name: POSTGRES_USER
-            value: products
+            valueFrom:
+              secretKeyRef:
+                name: products-db-secret
+                key: postgres-user
           - name: POSTGRES_PASSWORD
-            value: password
+            valueFrom:
+              secretKeyRef:
+                name: products-db-secret
+                key: postgres-password
           - name: POSTGRES_DB
-            value: products
+            valueFrom:
+              secretKeyRef:
+                name: products-db-secret
+                key: postgres-db
         ports:
         - containerPort: 5432
         volumeMounts:

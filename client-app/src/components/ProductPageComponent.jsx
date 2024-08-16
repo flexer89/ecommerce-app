@@ -15,7 +15,7 @@ const ProductPageComponent = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`https://jolszak.test/api/products/getbyid/${id}`);
+        const response = await axios.get(`https://jolszak.test/api/products/getbyid/${id}`); //TODO change to client
         const productData = response.data;
 
         // Fetch image separately if needed

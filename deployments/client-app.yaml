@@ -17,6 +17,32 @@ spec:
         image: client-app
         ports:
         - containerPort: 8080
+        env:
+        - name: VITE_KEYCLOAK_URL
+          valueFrom:
+            secretKeyRef:
+              name: client-app-secret
+              key: keycloak-url
+        - name: VITE_KEYCLOAK_REALM
+          valueFrom:
+            secretKeyRef:
+              name: client-app-secret
+              key: keycloak-realm
+        - name: VITE_KEYCLOAK_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: client-app-secret
+              key: keycloak-client-id
+        - name: VITE_KEYCLOAK_REDIRECT_URI
+          valueFrom:
+            secretKeyRef:
+              name: client-app-secret
+              key: keycloak-redirect-uri
+        - name: VITE_KEYCLOAK_CHECKOUT_REDIRECT_URI
+          valueFrom:
+            secretKeyRef:
+              name: client-app-secret
+              key: keycloak-checkout-redirect-uri
 ---
 apiVersion: v1
 kind: Service

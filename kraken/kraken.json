@@ -95,7 +95,82 @@
           "disable_host_sanitize": false
         }
       ]
+    },
+    {
+      "endpoint": "/api/users/{get1}/{get2}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/{get1}/{get2}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://users-service:5030"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/users/{put1}/{put2}",
+      "method": "PATCH",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/{put1}/{put2}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "PATCH",
+          "host": [
+            "http://users-service:5030"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
     }
   ],
-  "output_encoding": "json"
+  "output_encoding": "json",
+  "extra_config": {
+    "telemetry/opentelemetry": {
+      "trace_sample_rate": 0.25,
+      "metric_reporting_period": 1,
+      "exporters": {
+        "prometheus": [
+          {
+            "name": "promstack-kube-prometheus-prometheus",
+            "port": 8081
+          }
+        ]
+      },
+      "layers": {
+        "global": {
+          "disable_metrics": false,
+          "disable_traces": false,
+          "disable_propagation": false
+        },
+        "proxy": {
+          "disable_metrics": false,
+          "disable_traces": false
+        },
+        "backend": {
+          "metrics": {
+            "disable_stage": false,
+            "round_trip": false,
+            "read_payload": false,
+            "detailed_connection": false,
+            "static_attributes": []
+          },
+          "traces": {
+            "disable_stage": false,
+            "round_trip": false,
+            "read_payload": false,
+            "detailed_connection": false,
+            "static_attributes": []
+          }
+        }
+      }
+    }
+  }
 }

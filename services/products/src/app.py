@@ -9,6 +9,9 @@ import time
 import uuid
 import os
 from typing import Any, Callable, Awaitable
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(

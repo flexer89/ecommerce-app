@@ -5,11 +5,11 @@ import { useKeycloakAuth } from '../contexts/KeycloakContext';
 import '../assets/style/style.css';
 
 const LoginOrRegisterPage = () => {
-  const { login } = useKeycloakAuth();
+  const { redirectToCheckout } = useKeycloakAuth();
   const navigate = useNavigate();
 
   const handleLoginOrRegister = () => {
-    login();
+    redirectToCheckout();
   };
 
   const handleContinueAsGuest = () => {

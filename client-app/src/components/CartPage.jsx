@@ -57,12 +57,13 @@ const CartPage = () => {
           <div className="cart-items">
             {cartItemsWithImages.map((item) => (
               <div key={item.id} className="cart-item">
+                <div className="cart-item-details">
                 {item.image ? (
                   <img src={item.image} alt={item.name} className="cart-item-image" />
                 ) : (
-                  <div>No image available</div>
+                  <div className='cart-item-no-image'>No image available</div>
                 )}
-                <div className="cart-item-details">
+                <div className="cart-item-details-text">
                   <h2>{item.name}</h2>
                   <p>{item.description}</p>
                   <p>Stopień zmielenia: {item.grind}</p>
@@ -70,6 +71,7 @@ const CartPage = () => {
                   <p>Cena jednostkowa: {item.price}</p>
                   <p>Ilość: {item.quantity}</p>
                   <p>Cena całkowita: {(parseFloat(item.price) * item.quantity).toFixed(2)} zł</p>
+                </div>
                 </div>
                 <div className="cart-item-actions">
                   <button onClick={() => handleRemoveFromCart(item.id, item.grind, item.weight, 1)}>Usuń 1</button>

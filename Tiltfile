@@ -15,14 +15,14 @@ docker_build('orders', 'services/orders',
         sync('services/orders', '/orders'),
 ])
 
-docker_build('carts', 'services/carts',
-    live_update=[
-        sync('services/carts', '/carts'),
-])
-
 docker_build('users', 'services/users',
     live_update=[
         sync('services/users', '/users'),
+])
+
+docker_build('carts', 'services/carts',
+    live_update=[
+        sync('services/carts', '/carts'),
 ])
 
 docker_build('payments', 'services/payments',
@@ -34,11 +34,11 @@ docker_build('kraken','kraken/')
 
 k8s_yaml('deployments/products.yaml')
 k8s_yaml('deployments/orders.yaml')
-k8s_yaml('deployments/payments.yaml')
 k8s_yaml('deployments/users.yaml')
+k8s_yaml('deployments/payments.yaml')
 k8s_yaml('deployments/carts.yaml')
 k8s_yaml('deployments/client-app.yaml')
 k8s_yaml('deployments/kraken.yaml')
 k8s_yaml('deployments/keycloak.yaml')
-k8s_yaml('deployments/keycloak_db.yaml')
+k8s_yaml('deployments/databases/keycloak_db.yaml')
 k8s_yaml('deployments/smtp-server.yaml')

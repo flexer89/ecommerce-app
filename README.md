@@ -16,7 +16,6 @@ minikube tunnel
 - products service - 5000
 - orders service - 5010
 - payments service - 5020
-- users service - 5030
 - carts service - 5040
 
 # Services
@@ -36,10 +35,6 @@ This service is responsible for managing products in the store. It allows to add
 
 ## Orders service
 - GET Health Status `orders/health`
-- ...
-
-## Users service
-- GET Health Status `users/health`
 - ...
 
 ## Carts service
@@ -72,6 +67,10 @@ If you want to start the cluster, you need to run the following command:
 If cluster is running, you need to add ingress addon:
 ```
 minikube addons enable ingress
+```
+Apply ingresses:
+```
+kubectl apply -f deployments/overlays/ingress.yaml
 ```
 And then create a tunnel:
 ```
@@ -139,3 +138,15 @@ To log in, type:
 3. Choose Prometheus
 4. Set URL to `http://promstack-kube-prometheus-prometheus:9090`
 5. Click Save & Test
+
+## Import dashboards
+1. Go to Dashboards
+2. Click Manage
+3. Click Import
+3.1. Enter dashboard ID for Krakend: `20651`
+3.2. Import fastapi-dashboard.json
+4. Choose Prometheus data source
+
+# Secrets 
+You need to provide the secrets for the services. You need to create a file called `.secrets.yaml` in the deploments/secrets directory. The file should look like .secrets-example.yaml file.
+You also need to fill .env files in the services directories. The file should look like .env-example file.

@@ -1,12 +1,18 @@
+import os 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import Session
 from src.models import Product
 from src.schemas import ProductCreate, ProductUpdate
+from dotenv import load_dotenv
 
-SQLALCHEMY_DATABASE_URL = "postgresql://products:password@products-db/products"
+load_dotenv()
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
+DATABASE_USER = os.getenv("DATABASE_USER")
+DATABASE_URL = f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@products-db/products"
+
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 

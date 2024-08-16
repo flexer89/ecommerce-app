@@ -1,6 +1,6 @@
 FROM python:3.11-slim-buster
 
-WORKDIR /products
+WORKDIR /payments
 
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt

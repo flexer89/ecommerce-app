@@ -17,11 +17,20 @@ spec:
         image: postgres:16.2-alpine3.19
         env:
           - name: POSTGRES_USER
-            value: orders
+            valueFrom:
+              secretKeyRef:
+                name: orders-db-secret
+                key: postgres-user
           - name: POSTGRES_PASSWORD
-            value: password
+            valueFrom:
+              secretKeyRef:
+                name: orders-db-secret
+                key: postgres-password
           - name: POSTGRES_DB
-            value: orders
+            valueFrom:
+              secretKeyRef:
+                name: orders-db-secret
+                key: postgres-db
         ports:
         - containerPort: 5432
         volumeMounts:
@@ -31,6 +40,7 @@ spec:
       - name: init-script 
         configMap:
           name: init-sql-configmap-orders
+
 ---
 apiVersion: v1
 kind: Service

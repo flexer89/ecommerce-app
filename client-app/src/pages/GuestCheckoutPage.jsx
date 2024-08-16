@@ -1,36 +1,77 @@
 // src/pages/CheckoutPage.jsx
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useKeycloakAuth } from '../contexts/KeycloakContext';
 import getKeycloak from '../auth/keycloak';
 import '../assets/style/style.css';
 
 const CheckoutPage = () => {
   const { isInitialized } = useKeycloakAuth();
+  const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     email: '',
     name: '',
+    surname: '',
     phone_number: '',
     street: '',
     city: '',
     post_code: '',
     voivodeship: ''
   });
+  
+  const [selectedShipping, setSelectedShipping] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const handleSave = async () => {
-    // Add your save logic here
-    console.log('Saved data:', formValues);
+  const handleShippingChange = (e) => {
+    console.log('Selected Shipping:', e.target.value);
+    if (e.target.value === 'paczkomat') {
+      // Load the Easypack map
+      const script = document.createElement('script');
+      script.src = 'https://geowidget.easypack24.net/js/sdk-for-javascript.js';
+      script.async = true;
+      script.onload = () => {
+        window.easyPackAsyncInit = () => {
+          window.easyPack.init({
+            defaultLocale: 'pl',
+            mapType: 'osm',
+            searchType: 'osm',
+            points: {
+              types: ['parcel_locker'],
+              functions: ['parcel_collect'],
+            },
+            map: {
+              initialTypes: ['parcel_locker'],
+              initialFunctions: ['parcel_collect'],
+            },
+          });
+
+          window.easyPack.mapWidget('easypack-map', function(point) {
+            console.log('Selected point:', point);
+          });
+        };
+      };
+      document.body.appendChild(script);
+    }
+    setSelectedShipping(e.target.value);
+  };
+
+  const handleCheckout = (e) => {
+    e.preventDefault();
+    // Save shipping choice and navigate to payment
+    console.log('Selected Shipping:', selectedShipping);
+    navigate('/payment');
   };
 
   return (
-    <div className="checkout-page">
-      <div className='container'>
-        <h1>Checkout</h1>
-        <form onSubmit={handleSave}>
+    <div className="checkout-page container">
+      <h1>Podsumowanie</h1>
+      <div className="checkout-container">
+        <form className="checkout-form" onSubmit={handleCheckout}>
+          <h2>Dane użytkownika</h2>
           <div>
             <label>Email:</label>
             <input
@@ -38,11 +79,10 @@ const CheckoutPage = () => {
               name="email"
               value={formValues.email}
               onChange={handleInputChange}
-              disabled
             />
           </div>
           <div>
-            <label>Name:</label>
+            <label>Imię:</label>
             <input
               type="text"
               name="name"
@@ -51,7 +91,16 @@ const CheckoutPage = () => {
             />
           </div>
           <div>
-            <label>Phone Number:</label>
+            <label>Nazwisko:</label>
+            <input
+              type="text"
+              name="surname"
+              value={formValues.surname}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div>
+            <label>Numer Telefonu:</label>
             <input
               type="text"
               name="phone_number"
@@ -60,7 +109,7 @@ const CheckoutPage = () => {
             />
           </div>
           <div>
-            <label>Street:</label>
+            <label>Ulica i numer:</label>
             <input
               type="text"
               name="street"
@@ -69,7 +118,7 @@ const CheckoutPage = () => {
             />
           </div>
           <div>
-            <label>City:</label>
+            <label>Miasto:</label>
             <input
               type="text"
               name="city"
@@ -78,7 +127,7 @@ const CheckoutPage = () => {
             />
           </div>
           <div>
-            <label>Post Code:</label>
+            <label>Kod pocztowy:</label>
             <input
               type="text"
               name="post_code"
@@ -87,7 +136,7 @@ const CheckoutPage = () => {
             />
           </div>
           <div>
-            <label>Voivodeship:</label>
+            <label>Województwo:</label>
             <input
               type="text"
               name="voivodeship"
@@ -95,8 +144,50 @@ const CheckoutPage = () => {
               onChange={handleInputChange}
             />
           </div>
-          <button type="submit">Save and Continue</button>
+          <button className="contact-us-button" type="submit">Przejdź do płatności</button>
         </form>
+        <div className="shipping-options">
+          <h2>Wybierz sposób dostawy</h2>
+          <div>
+            <label>
+              <input
+                type="radio"
+                name="shipping"
+                value="kurier"
+                checked={selectedShipping === 'kurier'}
+                onChange={handleShippingChange}
+              />
+              Kurier
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="radio"
+                name="shipping"
+                value="paczkomat"
+                checked={selectedShipping === 'paczkomat'}
+                onChange={handleShippingChange}
+              />
+              Paczkomat
+            </label>
+            {selectedShipping === 'paczkomat' && (
+              <div id="easypack-map"></div>
+            )}
+          </div>
+          <div>
+            <label>
+              <input
+                type="radio"
+                name="shipping"
+                value="odbior_osobisty"
+                checked={selectedShipping === 'odbior_osobisty'}
+                onChange={handleShippingChange}
+              />
+              Odbiór osobisty (Sprawdź adres poniżej)
+            </label>
+          </div>
+        </div>
       </div>
     </div>
   );

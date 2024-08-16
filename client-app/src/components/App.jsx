@@ -25,7 +25,7 @@ import PaymentPage from '../pages/PaymentPage';
 import OrderConfirmationPage from '../pages/OrderConfirmationPage';
 import { CartProvider } from '../contexts/CartContext';
 import { KeycloakAuthProvider } from '../contexts/KeycloakContext';
-import CheckoutForm from '../components/CheckoutForm';
+import NotFoundComponent from "./NotFoundComponent";
 
 // Stripe initialization
 const stripePromise = loadStripe("pk_test_51PdvfxHm9ZvcVN2EsxnPlbHzfoeGElhmAdrJxRslA0A0r8mEoKLgQYDKCZrF5IZnlcRfNrLGSrvKfL1hgTuZlJTR00nRFN9LGB");
@@ -177,6 +177,14 @@ const FAQPage = () => (
   </div>
 );
 
+const NotFoundPage = () => (
+  <div>
+    <Header />
+    <NotFoundComponent />
+    <Footer />
+  </div>
+);
+
 const OurMissionPage = () => (
   <div>
     <Header />
@@ -206,6 +214,7 @@ const App = () => {
             <Route path="/regulations" element={<RegulationsPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/our-mission" element={<OurMissionPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <BackToTop />
         </Router>

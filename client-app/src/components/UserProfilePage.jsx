@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useKeycloakAuth } from '../contexts/KeycloakContext';
 import getKeycloak from '../auth/keycloak';
 import '../assets/style/style.css';
-import axios from 'axios';
-import ProductServiceClient from '../clients/productsService';
+import OrderServiceClient from '../clients/ordersService';
+import UserServiceClient from '../clients/UsersService';
 
 const UserProfilePage = () => {
   const [activeTab, setActiveTab] = useState('personalInfo');
@@ -42,18 +42,19 @@ const Orders = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchOrders = async () => {
+     {
       try {
-        const response = await axios.get('https://jolszak.test/api/orders/getbyuser/67891d0d-101a-42ea-897a-6ece743074ee');
+        const response = OrderServiceClient.get('/orders');
+        if (!response.ok) {
+          throw new Error('404 Not Found');
+        }
         setOrders(response.data);
-      } catch (err) {
-        setError(err);
+      } catch (error) {
+        setError(error);
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchOrders();
+    }
   }, []);
 
   if (loading) {
@@ -61,7 +62,7 @@ const Orders = () => {
   }
 
   if (error) {
-    return <div>Błąd podczas ładowania: {error.message}</div>;
+    return <div>Błąd podczas ładowania.</div>;
   }
 
   return (
@@ -103,10 +104,10 @@ const PersonalInfo = () => {
     email: '',
     name: '',
     surname: '',  
-    phone_number: '',
-    street: '',
-    city: '',
-    post_code: '',
+    phoneNumber: '',
+    Address: '',
+    City: '',
+    PostCode: '',
     voivodeship: ''
   });
 
@@ -114,28 +115,22 @@ const PersonalInfo = () => {
     const keycloak = getKeycloak();
     const fetchUserInfo = async () => {
       try {
-        const response = await fetch(`${keycloak.authServerUrl}/realms/${keycloak.realm}/protocol/openid-connect/userinfo`, {
-          headers: {
-            'Authorization': `Bearer ${keycloak.token}`,
-          },
-        });
-        console.log('response:', response);
-        console.log(keycloak.token);
-        if (!response.ok) {
+        const response = await UserServiceClient.get(`/get/${keycloak.subject}`);
+        if (response.status !== 200) {
           throw new Error('Failed to fetch user info');
         }
-        const data = await response.json();
-        console.log('data:', data);
+
+        const data = response.data;
         setUserInfo(data);
         setFormValues({
           email: data.email,
-          name: data.given_name,
-          surname: data.family_name,
-          phone_number: data.phone_number,
-          street: data.street,
-          city: data.city,
-          post_code: data.post_code,
-          voivodeship: data.voivodeship
+          name: data.firstName,
+          surname: data.lastName,
+          phoneNumber: data.attributes.phoneNumber,
+          Address: data.attributes.Address,
+          City: data.attributes.City,
+          PostCode: data.attributes.PostCode,
+          voivodeship: data.attributes.voivodeship
         });
       } catch (error) {
         console.error('Error fetching user info:', error);
@@ -157,18 +152,32 @@ const PersonalInfo = () => {
   };
 
   const handleSave = async () => {
-    try {
-      const response = await ProductServiceClient.get('/k8s');
-      console.log('Response from /k8s endpoint:', response.data);
-      // Handle the response as needed
-    } catch (error) {
-      console.error('Error making request to /k8s endpoint:', error);
-      // Handle the error as needed
-    } finally {
-      setIsEditing(false);
+    const keycloak = getKeycloak();
+    const userId = keycloak.subject;
+
+    const updateData = {
+      firstName: formValues.name,
+      lastName: formValues.surname,
+      email: formValues.email,
+      attributes: {
+        phoneNumber: formValues.phoneNumber,
+        Address: formValues.Address,
+        City: formValues.City,
+        PostCode: formValues.PostCode,
+        voivodeship: formValues.voivodeship,
+      },
+    };
+
+    const response = await UserServiceClient.patch(`/update/${userId}`, updateData).catch(function (error) {   
+      alert("Upewnij się, że wszystkie pola są wypełnione poprawnie.");
+      return null;
+    });
+    if (response) {
+      toggleEditMode();
+      setUserInfo({ ...userInfo, ...formValues });
     }
   };
-
+  
   return (
     <div>
       <h2>Dane użytkownika</h2>
@@ -184,7 +193,7 @@ const PersonalInfo = () => {
                   name="name"
                   value={formValues.name}
                   onChange={handleInputChange}
-                  className="editable-input"
+                  className={"editable-input"}
                 />
               </p>
               <p>
@@ -194,47 +203,47 @@ const PersonalInfo = () => {
                   name="surname"
                   value={formValues.surname}
                   onChange={handleInputChange}
-                  className="editable-input"
+                  className={"editable-input"}
                 />
               </p>
               <p>
                 <strong>Numer Telefonu:</strong>
                 <input
                   type="text"
-                  name="phone_number"
-                  value={formValues.phone_number}
+                  name="phoneNumber"
+                  value={formValues.phoneNumber}
                   onChange={handleInputChange}
-                  className="editable-input"
+                  className={"editable-input"}
                 />
               </p>
               <p>
                 <strong>Ulica:</strong>
                 <input
                   type="text"
-                  name="street"
-                  value={formValues.street}
+                  name="Address"
+                  value={formValues.Address}
                   onChange={handleInputChange}
-                  className="editable-input"
+                  className={"editable-input"}
                 />
               </p>
               <p>
                 <strong>Miasto:</strong>
                 <input
                   type="text"
-                  name="city"
-                  value={formValues.city}
+                  name="City"
+                  value={formValues.City}
                   onChange={handleInputChange}
-                  className="editable-input"
+                  className={"editable-input"}
                 />
               </p>
               <p>
                 <strong>Kod pocztowy:</strong>
                 <input
                   type="text"
-                  name="post_code"
-                  value={formValues.post_code}
+                  name="PostCode"
+                  value={formValues.PostCode}
                   onChange={handleInputChange}
-                  className="editable-input"
+                  className={"editable-input"}
                 />
               </p>
               <p>
@@ -244,21 +253,21 @@ const PersonalInfo = () => {
                   name="voivodeship"
                   value={formValues.voivodeship}
                   onChange={handleInputChange}
-                  className="editable-input"
+                  className={"editable-input"}
                 />
               </p>
-              <button class="contact-us-button" onClick={handleSave}>Zapisz</button>
+              <button className="contact-us-button" onClick={handleSave}>Zapisz</button>
             </div>
           ) : (
             <div>
               <p><strong>Imię:</strong> {formValues.name}</p>
               <p><strong>Nazwisko:</strong> {formValues.surname}</p>
-              <p><strong>Numer Telefonu:</strong> {formValues.phone_number}</p>
-              <p><strong>Ulica:</strong> {formValues.street}</p>
-              <p><strong>Miasto:</strong> {formValues.city}</p>
-              <p><strong>Kod pocztowy:</strong> {formValues.post_code}</p>
+              <p><strong>Numer Telefonu:</strong> {formValues.phoneNumber}</p>
+              <p><strong>Ulica:</strong> {formValues.Address}</p>
+              <p><strong>Miasto:</strong> {formValues.City}</p>
+              <p><strong>Kod pocztowy:</strong> {formValues.PostCode}</p>
               <p><strong>Województwo:</strong> {formValues.voivodeship}</p>
-              <button class="contact-us-button" onClick={toggleEditMode}>Edytuj</button>
+              <button className="contact-us-button" onClick={toggleEditMode}>Edytuj</button>
             </div>
           )}
         </div>

@@ -90,6 +90,7 @@ const Header = () => {
         <nav className="navbar-mobile">
           <ul className="navbar-list">
             <li><a href="/" className="navbar-link has-after" onClick={togglePanel}>Strona główna</a></li>
+            <li><a href="/profile" className="navbar-link has-after" onClick={togglePanel}>Profil</a></li>
             <li><a href="/cart" className="navbar-link has-after" onClick={togglePanel}>Koszyk</a></li>
             <li><a href="/products" className="navbar-link has-after" onClick={togglePanel}>Oferta</a></li>
             <li><a href="/bestsellers" className="navbar-link has-after" onClick={togglePanel}>Bestsellery</a></li>

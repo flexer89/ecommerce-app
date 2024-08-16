@@ -3,3 +3,4 @@ prometheus_fastapi_instrumentator
 uvicorn
 sqlalchemy
 psycopg2
+python-dotenv

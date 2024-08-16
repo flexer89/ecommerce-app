@@ -35,10 +35,11 @@ export const KeycloakAuthProvider = ({ children }) => {
 
   const login = () => getKeycloak().login();
   const logout = () => getKeycloak().logout({redirectUri: import.meta.env.VITE_KEYCLOAK_REDIRECT_URI});
+  const redirectToCheckout = () => getKeycloak().login({redirectUri: import.meta.env.VITE_KEYCLOAK_CHECKOUT_REDIRECT_URI});
   const user = { uuid, name, roles };
 
   return (
-    <KeycloakAuthContext.Provider value={{ isLogin, isInitialized, login, logout, user }}>
+    <KeycloakAuthContext.Provider value={{ isLogin, isInitialized, login, logout, redirectToCheckout, user }}>
       {children}
     </KeycloakAuthContext.Provider>
   );
