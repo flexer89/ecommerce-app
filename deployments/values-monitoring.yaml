@@ -41,6 +41,15 @@ prometheus:
           - source_labels: [__meta_kubernetes_service_name]
             action: keep
             regex: payments-service
+      - job_name: 'shipments'
+        scrape_interval: 30s
+        scrape_timeout: 10s
+        kubernetes_sd_configs:
+          - role: service
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: shipments-service
       - job_name: 'carts'
         scrape_interval: 30s
         scrape_timeout: 10s

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useKeycloakAuth } from '../contexts/KeycloakContext';
 import getKeycloak from '../auth/keycloak';
 import '../assets/style/style.css';
-import OrderServiceClient from '../clients/ordersService';
+import OrderServiceClient from '../clients/OrdersService';
 import UserServiceClient from '../clients/UsersService';
+import ShipmentServiceClient from '../clients/ShipmentsService';
 
 const UserProfilePage = () => {
   const [activeTab, setActiveTab] = useState('personalInfo');
@@ -42,19 +43,31 @@ const Orders = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-     {
+    const fetchOrders = async () => {
+      setLoading(true);
       try {
-        const response = OrderServiceClient.get('/orders');
-        if (!response.ok) {
-          throw new Error('404 Not Found');
+        const response = await OrderServiceClient.get(`/getbyuser/${getKeycloak().subject}`);
+        
+        // Handle 404: No orders found
+        if (response.status === 404) {
+          setOrders([]);  // No orders found, set to empty array
+          setError(null);  // No error
+        } else if (response.status === 200) {
+          // If the request is successful, set the orders
+          setOrders(response.data);
+        } else {
+          // Handle other unexpected statuses
+          throw new Error('Unexpected error occurred');
         }
-        setOrders(response.data);
       } catch (error) {
-        setError(error);
+        // Handle any non-404 errors
+        setError('Błąd podczas ładowania zamówień.');
       } finally {
         setLoading(false);
       }
-    }
+    };
+  
+    fetchOrders();
   }, []);
 
   if (loading) {
@@ -112,9 +125,9 @@ const PersonalInfo = () => {
   });
 
   useEffect(() => {
-    const keycloak = getKeycloak();
     const fetchUserInfo = async () => {
       try {
+        const keycloak = getKeycloak();
         const response = await UserServiceClient.get(`/get/${keycloak.subject}`);
         if (response.status !== 200) {
           throw new Error('Failed to fetch user info');
@@ -130,7 +143,7 @@ const PersonalInfo = () => {
           Address: data.attributes.Address,
           City: data.attributes.City,
           PostCode: data.attributes.PostCode,
-          voivodeship: data.attributes.voivodeship
+          voivodeship: data.attributes.voivodeship,
         });
       } catch (error) {
         console.error('Error fetching user info:', error);
@@ -278,11 +291,63 @@ const PersonalInfo = () => {
   );
 };
 
-const Shipments = () => (
-  <div>
-    <h2>Wysyłki</h2>
-    <p>Informacje o wysyłkach będą dostępne tutaj.</p>
-  </div>
-);
+const Shipments = () => {
+  const [shipments, setShipments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchShipments = async () => {
+      setLoading(true);
+      try {
+        const response = await ShipmentServiceClient.get(`/getbyuser/${getKeycloak().subject}`);
+        
+        if (response.status === 404) {
+          setShipments([]);  // No shipments found
+          setError(null);  // No error
+        } else if (response.status === 200) {
+          setShipments(response.data);
+        } else {
+          throw new Error('Unexpected error occurred');
+        }
+      } catch (error) {
+        setError('Błąd podczas ładowania wysyłek.');
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchShipments();
+  }, []);
+
+  if (loading) {
+    return <div>Ładowanie...</div>;
+  }
+
+  if (error) {
+    return <div>Błąd podczas ładowania.</div>;
+  }
+
+  return (
+    <div>
+      <h2>Twoje wysyłki</h2>
+      {shipments.length === 0 ? (
+        <p>Nie masz żadnych wysyłek.</p>
+      ) : (
+        <div className="shipments-list">
+          {shipments.map(shipment => (
+            <div key={shipment.id} className="shipment">
+              <h3>Wysyłka #{shipment.id}</h3>
+              <p><strong>Adres dostawy:</strong> {shipment.shipment_address}</p>
+              <p><strong>Data wysyłki:</strong> {new Date(shipment.shipment_date).toLocaleString()}</p>
+              <p><strong>Data dostawy:</strong> {new Date(shipment.delivery_date).toLocaleString()}</p>
+              <p><strong>Status:</strong> {shipment.status}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default UserProfilePage;

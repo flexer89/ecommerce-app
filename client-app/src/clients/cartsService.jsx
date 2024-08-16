@@ -5,7 +5,7 @@ const keycloak = getKeycloak();
 
 const CartServiceClient = axios.create({
   baseURL: "https://jolszak.test/api/carts",
-  timeout: 5040,
+  timeout: 5030,
   headers: {
     'Accept': 'application/json',
   }
@@ -22,7 +22,7 @@ CartServiceClient.interceptors.request.use(
       }
     }
     
-    config.headers.token = `Bearer ${keycloak.token}`;
+    config.headers.authorization = keycloak.token;
 
     return config;
   },

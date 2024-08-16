@@ -22,7 +22,7 @@ UserServiceClient.interceptors.request.use(
       }
     }
     
-    config.headers.token = `Bearer ${keycloak.token}`;
+    config.headers.authorization = keycloak.token;
 
     return config;
   },

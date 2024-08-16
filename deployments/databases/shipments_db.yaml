@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipments-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shipments-db
+  template:
+    metadata:
+      labels:
+        app: shipments-db
+    spec:
+      containers:
+      - name: shipments-db
+        image: postgres:16.2-alpine3.19
+        env:
+          # - name: POSTGRES_USER
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: shipments-db-secret
+          #       key: postgres-user
+          # - name: POSTGRES_PASSWORD
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: shipments-db-secret
+          #       key: postgres-password
+          # - name: POSTGRES_DB
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: shipments-db-secret
+          #       key: postgres-db
+          - name: POSTGRES_USER
+            value: shipments
+          - name: POSTGRES_PASSWORD
+            value: password
+          - name: POSTGRES_DB
+            value: shipments
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: init-script
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: init-script 
+        configMap:
+          name: init-sql-configmap-shipments
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shipments-db
+spec:
+  selector:
+    app: shipments-db
+  ports:
+    - protocol: TCP
+      port: 5432
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-sql-configmap-shipments
+data:
+  init.sql: |
+    -- Drop tables if they already exist
+    DROP TABLE IF EXISTS shipments;
+    DROP TYPE IF EXISTS shipment_status_enum;
+
+    -- Create enum type for shipment status
+    CREATE TYPE shipment_status_enum AS ENUM ('pending', 'shipped', 'delivered');
+
+    -- Create shipments table
+    CREATE TABLE shipments (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR NOT NULL,
+        order_id INTEGER NOT NULL,
+        shipment_address VARCHAR NOT NULL,
+        shipment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        delivery_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        status shipment_status_enum DEFAULT 'pending',
+        company VARCHAR NOT NULL
+    );
+
+    -- Add sample data
+    INSERT INTO shipments (user_id, order_id, shipment_address, status, company) VALUES ('5e44e20e-0ba8-4038-8e62-33fa661fce70', 1, '123 Sample St, Sample City', 'pending', 'company');
+    INSERT INTO shipments (user_id, order_id, shipment_address, status, company) VALUES ('5e44e20e-0ba8-4038-8e62-33fa661fce70', 2, '456 Example Rd, Example City', 'shipped', 'company');

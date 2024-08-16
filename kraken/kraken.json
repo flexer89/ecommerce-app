@@ -9,6 +9,13 @@
       ],
       "method": "GET",
       "output_encoding": "no-op",
+      "extra_config": {
+        "auth/validator": {
+            "alg": "RS256",
+            "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+            "disable_jwk_security": true
+        }
+      },
       "backend": [
         {
           "url_pattern": "/{get1}",
@@ -29,6 +36,13 @@
       ],
       "method": "GET",
       "output_encoding": "no-op",
+      "extra_config": {
+        "auth/validator": {
+            "alg": "RS256",
+            "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+            "disable_jwk_security": true
+        }
+      },
       "backend": [
         {
           "url_pattern": "/{get1}/{get2}",
@@ -46,6 +60,13 @@
       "endpoint": "/api/orders/{get1}",
       "method": "GET",
       "output_encoding": "no-op",
+      "extra_config": {
+        "auth/validator": {
+            "alg": "RS256",
+            "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+            "disable_jwk_security": true
+        }
+      },
       "backend": [
         {
           "url_pattern": "/{get1}",
@@ -63,6 +84,13 @@
       "endpoint": "/api/orders/{get1}/{get2}",
       "method": "GET",
       "output_encoding": "no-op",
+      "extra_config": {
+        "auth/validator": {
+            "alg": "RS256",
+            "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+            "disable_jwk_security": true
+        }
+      },
       "backend": [
         {
           "url_pattern": "/{get1}/{get2}",
@@ -77,12 +105,43 @@
       ]
     },
     {
+      "endpoint": "/api/shipments/{get1}/{get2}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "extra_config": {
+        "auth/validator": {
+            "alg": "RS256",
+            "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+            "disable_jwk_security": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/{get1}/{get2}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://shipments-service:5060"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
       "endpoint": "/api/payments/{get1}",
       "input_headers": [
         "*"
       ],
       "method": "POST",
       "output_encoding": "no-op",
+      "extra_config": {
+        "auth/validator": {
+            "alg": "RS256",
+            "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+            "disable_jwk_security": true
+        }
+      },
       "backend": [
         {
           "url_pattern": "/{get1}",
@@ -100,6 +159,13 @@
       "endpoint": "/api/users/{get1}/{get2}",
       "method": "GET",
       "output_encoding": "no-op",
+      "extra_config": {
+        "auth/validator": {
+            "alg": "RS256",
+            "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+            "disable_jwk_security": true
+        }
+      },
       "backend": [
         {
           "url_pattern": "/{get1}/{get2}",
@@ -117,6 +183,13 @@
       "endpoint": "/api/users/{put1}/{put2}",
       "method": "PATCH",
       "output_encoding": "no-op",
+      "extra_config": {
+        "auth/validator": {
+            "alg": "RS256",
+            "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+            "disable_jwk_security": true
+        }
+      },
       "backend": [
         {
           "url_pattern": "/{put1}/{put2}",

@@ -88,8 +88,8 @@ data:
     );
 
     -- Add sample data
-    INSERT INTO orders (user_id, total_price, status) VALUES ('aaa', 100.50, 'pending');
-    INSERT INTO orders (user_id, total_price, status) VALUES ('bbb', 200.75, 'processing');
+    INSERT INTO orders (user_id, total_price, status) VALUES ('5e44e20e-0ba8-4038-8e62-33fa661fce70', 100.50, 'pending');
+    INSERT INTO orders (user_id, total_price, status) VALUES ('5e44e20e-0ba8-4038-8e62-33fa661fce70', 200.75, 'processing');
 
     INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (1, 101, 2, 50.25);
     INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (1, 102, 1, 100.50);

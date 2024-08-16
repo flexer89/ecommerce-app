@@ -4,7 +4,7 @@ from typing import Dict
 from src.keycloak_client import keycloak_admin
 from src.schemas import UserUpdateRequest
 from keycloak.exceptions import KeycloakPutError
-import json
+
 router = APIRouter()
 
 

@@ -15,7 +15,3 @@ class ProductUpdate(ProductBase):
 
 class Product(ProductBase):
     id: int
-
-    class Config:
-        orm_mode = True
-        

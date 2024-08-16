@@ -30,15 +30,23 @@ docker_build('payments', 'services/payments',
         sync('services/payments', '/payments'),
 ])
 
+docker_build('shipments', 'services/shipments',
+    live_update=[
+        sync('services/shipments', '/shipments'),
+])
+
 docker_build('kraken','kraken/')
 
 k8s_yaml('deployments/products.yaml')
 k8s_yaml('deployments/orders.yaml')
 k8s_yaml('deployments/users.yaml')
+k8s_yaml('deployments/shipments.yaml')
 k8s_yaml('deployments/payments.yaml')
 k8s_yaml('deployments/carts.yaml')
 k8s_yaml('deployments/client-app.yaml')
 k8s_yaml('deployments/kraken.yaml')
 k8s_yaml('deployments/keycloak.yaml')
 k8s_yaml('deployments/databases/keycloak_db.yaml')
+k8s_yaml('deployments/databases/shipments_db.yaml')
+k8s_yaml('deployments/databases/orders_db.yaml')
 k8s_yaml('deployments/smtp-server.yaml')
