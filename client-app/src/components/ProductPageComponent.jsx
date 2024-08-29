@@ -15,11 +15,11 @@ const ProductPageComponent = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`https://jolszak.test/api/products/getbyid/${id}`); //TODO change to client
+        const response = await axios.get(`https://jolszak.test/api/products/getbyid/${id}`); //TODO change to client (get from link)
         const productData = response.data;
 
         // Fetch image separately if needed
-        const imageResponse = await axios.get(`https://jolszak.test/api/products/download/${id}`, {
+        const imageResponse = await axios.get(`https://jolszak.test/api/products/download/${id}`, { // todo change endpoint
           responseType: 'arraybuffer'
         });
         const base64Image = btoa(

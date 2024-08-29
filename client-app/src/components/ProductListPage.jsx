@@ -74,7 +74,7 @@ const ProductListPage = () => {
 
   return (
     <div className="product-list-page container">
-      {/* <FilterPanel onFilterChange={handleFilterChange} maxPrice={maxPrice} /> */}
+      <FilterPanel onFilterChange={handleFilterChange} maxPrice={maxPrice} />
       <div className='product-list-container'>
         <div className="product-list">
             {filteredProducts.map(product => (

@@ -62,6 +62,7 @@ prometheus:
       - job_name: 'keycloak'
         scrape_interval: 30s
         scrape_timeout: 10s
+        metrics_path: /realms/jolszak/metrics
         kubernetes_sd_configs:
           - role: service
         relabel_configs:

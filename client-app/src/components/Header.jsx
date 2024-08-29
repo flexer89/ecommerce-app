@@ -50,6 +50,7 @@ const Header = () => {
           </Link>
           <nav className="navbar">
             <ul className="navbar-list">
+              {/* todo przerobić na buttony i dać onclick */}
               <li><Link to="/" className="navbar-link has-after">Strona główna</Link></li>
               <li><Link to="/bestsellers" className="navbar-link has-after">Bestsellery</Link></li>
               <li><Link to="/products" className="navbar-link has-after">Oferta</Link></li>

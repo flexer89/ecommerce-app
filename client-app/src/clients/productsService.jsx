@@ -3,7 +3,7 @@ import getKeycloak from '../auth/keycloak';
 
 const keycloak = getKeycloak();
 
-const ProductServiceClient = axios.create({
+const OrderServiceClient = axios.create({
   baseURL: "https://jolszak.test/api/products",
   timeout: 5000,
   headers: {
@@ -11,7 +11,8 @@ const ProductServiceClient = axios.create({
   }
 });
 
-ProductServiceClient.interceptors.request.use(
+// Request interceptor to add the token to the request
+OrderServiceClient.interceptors.request.use(
   async (config) => {
     if (keycloak.isTokenExpired()) {
       try {
@@ -21,7 +22,7 @@ ProductServiceClient.interceptors.request.use(
         return Promise.reject(refreshError);
       }
     }
-    
+
     config.headers.authorization = keycloak.token;
 
     return config;
@@ -31,4 +32,17 @@ ProductServiceClient.interceptors.request.use(
   }
 );
 
-export default ProductServiceClient;
+// Response interceptor to handle 404 without throwing an error
+OrderServiceClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response && error.response.status === 404) {
+      return Promise.resolve(error.response);
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default OrderServiceClient;

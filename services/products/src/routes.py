@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from fastapi.responses import FileResponse
 import os
+import datetime
 from src.models import Product, Base
 from typing import Dict
 from sqlalchemy.orm import Session
@@ -32,28 +33,47 @@ async def health() -> Dict[str, str]:
     return {"status": "ok"}
 
 
-@router.get("/getall", response_model=list[Product])
+@router.get("/getall", response_model=list[ProductResponse])
 def read_products(limit: int = 10, db: Session = Depends(get_db)):
     products = get_products_db(db, limit=limit)
     return products
 
-@router.get("/getbyid/{product_id}", response_model=Product)
+@router.get("/getbyid/{product_id}", response_model=ProductResponse)
 def read_product(product_id: int, db: Session = Depends(get_db)):
     product = get_product_db(db, product_id=product_id)
     if product is None:
         raise HTTPException(status_code=404, detail="Product not found")
     return product
 
-@router.post("/create", response_model=Product)
+@router.post("/products/create", response_model=ProductResponse)
 async def create_product(
     name: str = Form(...),
-    description: str = Form(...),
+    description: Optional[str] = Form(None),
     price: float = Form(...),
+    stock: Optional[int] = Form(0),
+    discount: Optional[float] = Form(0),
+    category: Optional[str] = Form('uncategorized'),
     image: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
+    # Read the image file
     image_data = await image.read() if image else None
-    product_data = ProductCreate(name=name, description=description, price=price, image=image_data)
+    
+    # Validate discount range
+    if discount < 0 or discount > 1:
+        raise HTTPException(status_code=400, detail="Discount must be between 0 and 1")
+    
+    # Create the product instance
+    product_data = ProductCreate(
+        name=name,
+        description=description,
+        price=price,
+        image=image_data,
+        stock=stock,
+        discount=discount,
+        category=category,
+    )
+    
     return create_product_db(db=db, product=product_data)
 
 @router.put("/update/{product_id}", response_model=Product)
@@ -80,8 +100,8 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
     return db_product
 
 # Endpoint to return a file
-@router.get("/download/{product_id}", response_class=FileResponse)
-async def download_product_image(product_id: int, db: Session = Depends(get_db)):
+@router.get("/download/bin/{product_id}", response_class=FileResponse)
+async def download_binary_product_image(product_id: int, db: Session = Depends(get_db)):
     product = get_product_db(db, product_id=product_id)
     if not product or not product.image:
         raise HTTPException(status_code=404, detail="Image not found")
@@ -92,3 +112,23 @@ async def download_product_image(product_id: int, db: Session = Depends(get_db))
         file.write(product.image)
     
     return FileResponse(temp_file_path, media_type="application/octet-stream", filename=f"product_{product_id}_image.bin")
+
+@router.get("/download/png/{product_id}", response_class=FileResponse)
+async def download_png_product_image(product_id: int, db: Session = Depends(get_db)):
+    # Retrieve the product from the database
+    product = get_product_db(db, product_id=product_id)
+    
+    if not product or not product.image:
+        raise HTTPException(status_code=404, detail="Image not found")
+    
+    # Save the image to a temporary file with the .png extension
+    temp_file_path = f"/tmp/product_{product_id}_image.png"
+    with open(temp_file_path, "wb") as file:
+        file.write(product.image)
+    
+    # Return the file with the correct media type for PNG images
+    return FileResponse(
+        temp_file_path, 
+        media_type="image/png", 
+        filename=f"product_{product_id}_image.png"
+    )

@@ -68,8 +68,11 @@ data:
         description TEXT,
         price FLOAT NOT NULL,
         image BYTEA,
+        stock INT DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        discount FLOAT DEFAULT 0 CHECK (discount >= 0 AND discount <= 1),
+        category VARCHAR(255) DEFAULT 'uncategorized'
     );
 
     -- Add sample data

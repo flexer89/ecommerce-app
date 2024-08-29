@@ -26,7 +26,7 @@ const Footer = () => (
           <li>
             <p className="footer-list-title">Obserwuj nas</p>
           </li>
-          <div>
+          <div className='sm-buttons-list'>
             <li><a href="tiktok.com" className="footer-link" target='blank'><ion-icon name="logo-tiktok"></ion-icon></a></li>
             <li><a href="instagram.com" className="footer-link" target='blank'><ion-icon name="logo-instagram"></ion-icon></a></li>
             <li><a href="facebook.com" className="footer-link" target='blank'><ion-icon name="logo-facebook"></ion-icon></a></li>

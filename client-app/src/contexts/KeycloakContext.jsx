@@ -34,7 +34,7 @@ export const KeycloakAuthProvider = ({ children }) => {
   }, [isInitialized]);
 
   const login = () => getKeycloak().login();
-  const logout = () => getKeycloak().logout({redirectUri: import.meta.env.VITE_KEYCLOAK_REDIRECT_URI});
+  const logout = () => getKeycloak().logout({redirectUri: "/"});
   const redirectToCheckout = () => getKeycloak().login({redirectUri: import.meta.env.VITE_KEYCLOAK_CHECKOUT_REDIRECT_URI});
   const user = { uuid, name, roles };
 

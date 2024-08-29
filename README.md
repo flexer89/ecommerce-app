@@ -144,9 +144,19 @@ To log in, type:
 2. Click Manage
 3. Click Import
 3.1. Enter dashboard ID for Krakend: `20651`
+3.2  Enter dashboard ID for Keycloak: `19659`
 3.2. Import fastapi-dashboard.json
 4. Choose Prometheus data source
 
 # Secrets 
 You need to provide the secrets for the services. You need to create a file called `.secrets.yaml` in the deploments/secrets directory. The file should look like .secrets-example.yaml file.
 You also need to fill .env files in the services directories. The file should look like .env-example file.
+
+# Sample data 
+To add sample data to the products service, you need to run the following command:
+```
+cd samples/products
+python3 fill_db.py
+```
+It will add sample data to the products service.
+

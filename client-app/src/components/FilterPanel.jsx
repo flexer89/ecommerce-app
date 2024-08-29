@@ -1,7 +1,6 @@
-// src/components/FilterPanel.jsx
 import React, { useState, useEffect } from 'react';
 import { Slider } from '@mui/material';
-import '../assets/style/style.css'; // Ensure the path is correct
+import '../assets/style/style.css';
 
 const FilterPanel = ({ onFilterChange, maxPrice }) => {
   const [priceRange, setPriceRange] = useState([0, maxPrice]);
