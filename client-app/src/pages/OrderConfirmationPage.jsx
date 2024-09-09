@@ -1,4 +1,3 @@
-// src/pages/OrderConfirmationPage.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/style/style.css';

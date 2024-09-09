@@ -24,12 +24,17 @@ def get_products_db(db: Session, limit: int = 10):
 def get_product_db(db: Session, product_id: int):
     return db.query(Product).filter(Product.id == product_id).first()
 
+def get_products_list_db(db: Session, limit: int, offset: int):
+    return db.query(Product).offset(offset).limit(limit).all()
+
 def create_product_db(db: Session, product: ProductCreate):
     db_product = Product(
         name=product.name,
         description=product.description,
         price=product.price,
-        image=product.image
+        image=product.image,
+        category=product.category,
+        stock=product.stock
     )
     db.add(db_product)
     db.commit()
@@ -42,8 +47,20 @@ def update_product_db(db: Session, product_id: int, product: ProductUpdate):
         db_product.name = product.name
         db_product.description = product.description
         db_product.price = product.price
-        if product.image is not None:
-            db_product.image = product.image
+        db_product.stock = product.stock
+        db_product.discount = product.discount
+        db_product.category = product.category
+        db.commit()
+        db.refresh(db_product)
+    return db_product
+
+def count_db(db: Session):
+    return db.query(Product).count()
+
+def update_product_image_db(db: Session, product_id: int, image: str):
+    db_product = db.query(Product).filter(Product.id == product_id).first()
+    if db_product:
+        db_product.image = image
         db.commit()
         db.refresh(db_product)
     return db_product

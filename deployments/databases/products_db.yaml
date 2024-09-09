@@ -61,28 +61,16 @@ data:
     -- Drop tables if they already exist
     DROP TABLE IF EXISTS products CASCADE;
 
-    -- Create products table
-    CREATE TABLE products (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        description TEXT,
-        price FLOAT NOT NULL,
-        image BYTEA,
-        stock INT DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        discount FLOAT DEFAULT 0 CHECK (discount >= 0 AND discount <= 1),
-        category VARCHAR(255) DEFAULT 'uncategorized'
-    );
-
-    -- Add sample data
-    INSERT INTO products (name, description, price, image) VALUES 
-    ('111', 'Blackcurrant • Lemongrass • Wine', 7.95, NULL),
-    ('222', 'Orange • Cocoa • Nutmeg', 8.95, NULL),
-    ('333', 'Orange • Cocoa • Nutmeg', 8.95, NULL),
-    ('444', 'Orange • Cocoa • Nutmeg', 8.95, NULL),
-    ('555', 'Orange • Cocoa • Nutmeg', 8.95, NULL),
-    ('666', 'Orange • Cocoa • Nutmeg', 8.95, NULL),
-    ('777', 'Orange • Cocoa • Nutmeg', 8.95, NULL),
-    ('888', 'Orange • Cocoa • Nutmeg', 8.95, NULL),
-    ('999', 'Orange • Cocoa • Nutmeg', 8.95, NULL);
+      -- Create products table
+      CREATE TABLE products (
+          id SERIAL PRIMARY KEY,
+          name VARCHAR(255) NOT NULL,
+          description TEXT,
+          price FLOAT NOT NULL,
+          image BYTEA,
+          stock INT,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          discount FLOAT DEFAULT 0 CHECK (discount >= 0 AND discount <= 1),
+          category VARCHAR(255) DEFAULT 'uncategorized'
+      );

@@ -8,7 +8,6 @@ class ShipmentStatusEnum(str, Enum):
     shipped = 'shipped'
     delivered = 'delivered'
 
-# Schema for creating a shipment
 class ShipmentCreate(BaseModel):
     order_id: int
     user_id: str
@@ -16,13 +15,11 @@ class ShipmentCreate(BaseModel):
     status: Optional[ShipmentStatusEnum] = ShipmentStatusEnum.pending
     company: str
 
-# Schema for updating a shipment
 class ShipmentUpdate(BaseModel):
     shipment_address: Optional[str] = None
     status: Optional[ShipmentStatusEnum] = None
     delivery_date: Optional[datetime] = None
 
-# Schema for retrieving a shipment
 class ShipmentResponse(BaseModel):
     id: int
     order_id: int

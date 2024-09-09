@@ -20,9 +20,6 @@ export default function CheckoutForm() {
     if (!clientSecret) {
       return;
     }
-
-    // Optionally, handle the clientSecret logic here
-
   }, [stripe]);
 
   const clearCart = () => {
@@ -55,7 +52,7 @@ export default function CheckoutForm() {
 
     if (paymentIntent.status === 'succeeded') {
       setMessage("Payment succeeded!");
-      clearCart();  // Clear the cart after successful payment
+      clearCart();
     } else {
       setMessage("Payment processing or other status.");
     }

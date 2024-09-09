@@ -65,7 +65,7 @@ data:
     DROP TYPE IF EXISTS status_enum;
 
     -- Create enum type for order status
-    CREATE TYPE status_enum AS ENUM ('pending', 'processing', 'shipped');
+    CREATE TYPE status_enum AS ENUM ('pending', 'processing', 'shipped', 'delivered', 'cancelled');
 
     -- Create orders table
     CREATE TABLE orders (
@@ -91,6 +91,6 @@ data:
     INSERT INTO orders (user_id, total_price, status) VALUES ('5e44e20e-0ba8-4038-8e62-33fa661fce70', 100.50, 'pending');
     INSERT INTO orders (user_id, total_price, status) VALUES ('5e44e20e-0ba8-4038-8e62-33fa661fce70', 200.75, 'processing');
 
-    INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (1, 101, 2, 50.25);
-    INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (1, 102, 1, 100.50);
-    INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (2, 103, 5, 40.15);
+    INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (1, 1, 2, 50.25);
+    INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (1, 5, 1, 100.50);
+    INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (2, 7, 5, 40.15);

@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import Session
 from src.models import Order, OrderItem, StatusEnum
@@ -53,3 +53,15 @@ def get_orders_by_user_id_db(db: Session, user_id: str, limit: int = 0):
     if limit > 0:
         return db.query(Order).filter(Order.user_id == user_id).limit(limit).all()
     return db.query(Order).filter(Order.user_id == user_id).all()
+
+def get_bestsellers_db(db: Session, limit: int):
+    return (
+        db.query(OrderItem.product_id, func.count(OrderItem.product_id).label('order_count'))
+        .group_by(OrderItem.product_id)
+        .order_by(func.count(OrderItem.product_id).desc())
+        .limit(limit)
+        .all()
+    )
+    
+def count_db(db: Session):
+    return db.query(OrderItem).count()

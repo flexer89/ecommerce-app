@@ -42,8 +42,8 @@ async def log_requests_and_responses(
     incoming_json = {
         "method": request.method,
         "url": request.url,
-        # "headers": dict(request.headers),
-        # "body": dict(request),
+        "headers": dict(request.headers),
+        "body": dict(request),
     }
     logger.info(f"{request_id.get()} | Incoming Request: {incoming_json}")
 
@@ -55,8 +55,8 @@ async def log_requests_and_responses(
     end_time = time.time()
     outcoming_json = {
         "status_code": response.status_code,
-        # "headers": dict(response.headers),
-        # "body": dict(request),
+        "headers": dict(response.headers),
+        "body": dict(request),
         "time": end_time - start_time,
     }
     logger.info(f"{request_id.get()} | Outcoming Response: {outcoming_json}")

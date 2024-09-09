@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 import os
-from typing import Dict
+from typing import Dict, List
 from src.keycloak_client import keycloak_admin
-from src.schemas import UserUpdateRequest
+from src.schemas import UserUpdateRequest, UserResponseWithAttributes
 from keycloak.exceptions import KeycloakPutError
 
 router = APIRouter()
@@ -24,7 +24,6 @@ def get_patients_kc():
 def get_user_data(user_id: str):
     user = keycloak_admin.get_user(user_id)
     
-    # Flatten attributes from list to a single value (assuming each list has one item)
     attributes = {key: value[0] if isinstance(value, list) and value else value 
                   for key, value in user.get("attributes", {}).items()}
     
@@ -39,13 +38,11 @@ def get_user_data(user_id: str):
     
 @router.patch("/update/{user_id}")
 def update_user_data(user_id: str, update_data: UserUpdateRequest):
-    # Retrieve the existing user data from Keycloak
     user = keycloak_admin.get_user(user_id)
     
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    # Initialize the payload with existing data
     user_update_payload = {
         "firstName": user.get("firstName"),
         "lastName": user.get("lastName"),
@@ -53,7 +50,6 @@ def update_user_data(user_id: str, update_data: UserUpdateRequest):
         "attributes": user.get("attributes", {})
     }
 
-    # Update fields only if they are provided in the request
     if update_data.firstName is not None:
         user_update_payload["firstName"] = update_data.firstName
     
@@ -63,7 +59,6 @@ def update_user_data(user_id: str, update_data: UserUpdateRequest):
     if update_data.email is not None:
         user_update_payload["email"] = update_data.email
 
-    # Update attributes if provided
     if update_data.attributes is not None:
         attributes = user_update_payload["attributes"]
 
@@ -83,11 +78,31 @@ def update_user_data(user_id: str, update_data: UserUpdateRequest):
             attributes["voivodeship"] = [update_data.attributes.voivodeship]
 
         user_update_payload["attributes"] = attributes
-
-    # Send the update request to Keycloak
     try:
         keycloak_admin.update_user(user_id=user_id, payload=user_update_payload)
     except KeycloakPutError as e:
         raise HTTPException(status_code=400)
 
     return {"detail": "User updated successfully"}
+
+
+@router.get("/getall", response_model=List[UserResponseWithAttributes])
+def get_users():
+    try:
+        # Fetch users from Keycloak
+        users = keycloak_admin.get_users({})
+        users_data = []
+        for user in users:
+            attributes = {key: value[0] if isinstance(value, list) and value else value 
+                          for key, value in user.get("attributes", {}).items()}
+            users_data.append({
+                "id": user.get("id"),
+                "username": user.get("username"),
+                "email": user.get("email"),
+                "firstName": user.get("firstName"),
+                "lastName": user.get("lastName"),
+                "attributes": attributes,
+            })
+        return users_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

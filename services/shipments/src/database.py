@@ -17,7 +17,6 @@ DATABASE_URL = f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@shipments-db/{
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Create a new shipment
 def create_shipment_db(db: Session, shipment: ShipmentCreate):
     db_shipment = Shipment(**shipment.dict())
     db.add(db_shipment)
@@ -25,11 +24,9 @@ def create_shipment_db(db: Session, shipment: ShipmentCreate):
     db.refresh(db_shipment)
     return db_shipment
 
-# Get a shipment by ID
 def get_shipment_db(db: Session, shipment_id: int):
     return db.query(Shipment).filter(Shipment.id == shipment_id).first()
 
-# Update a shipment
 def update_shipment_db(db: Session, shipment_id: int, shipment: ShipmentUpdate):
     db_shipment = db.query(Shipment).filter(Shipment.id == shipment_id).first()
     if db_shipment:

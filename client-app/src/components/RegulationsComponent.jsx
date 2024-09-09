@@ -1,5 +1,5 @@
 import React from 'react';
-import '../assets/style/style.css';  // Adjust the path according to your project structure
+import '../assets/style/style.css';
 
 const regulationsData = [
   {

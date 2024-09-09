@@ -6,7 +6,7 @@ from typing import List
 from logging import Logger
 
 logger = Logger(__name__)
-stripe.api_key = os.getenv("STRIPE_API_KEY")
+stripe.api_key = "sk_test_51PdvfxHm9ZvcVN2EHa7Ulxugn22qjBP5i0ajZeVXISn4Bf4LQaZEpvFIvM2yIeQ8f8MylsSWQEJaSJvXXi91LzEF00gSm3rlCL"
 router = APIRouter()
 
 

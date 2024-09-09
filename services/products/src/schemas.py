@@ -26,7 +26,7 @@ class ProductResponse(BaseModel):
 
 
 class ProductUpdate(ProductBase):
-    image: Optional[bytes]
+    pass
 
 class Product(ProductBase):
     id: int

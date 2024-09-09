@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin-app
+  template:
+    metadata:
+      labels:
+        app: admin-app
+    spec:
+      containers:
+      - name: admin-app
+        image: admin-app
+        ports:
+        - containerPort: 8080
+        env:
+        - name: VITE_KEYCLOAK_URL
+          valueFrom:
+            secretKeyRef:
+              name: admin-app-secret
+              key: keycloak-url
+        - name: VITE_KEYCLOAK_REALM
+          valueFrom:
+            secretKeyRef:
+              name: admin-app-secret
+              key: keycloak-realm
+        - name: VITE_KEYCLOAK_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: admin-app-secret
+              key: keycloak-client-id
+        - name: VITE_KEYCLOAK_REDIRECT_URI
+          valueFrom:
+            secretKeyRef:
+              name: admin-app-secret
+              key: keycloak-redirect-uri
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-app
+spec:
+  selector:
+    app: admin-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

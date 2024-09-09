@@ -155,8 +155,12 @@ You also need to fill .env files in the services directories. The file should lo
 # Sample data 
 To add sample data to the products service, you need to run the following command:
 ```
+kubectl port-forward svc/products-service 5000:5000
 cd samples/products
 python3 fill_db.py
 ```
 It will add sample data to the products service.
+
+# Sources
+free-psd-templates.com
 

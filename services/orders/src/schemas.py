@@ -43,3 +43,17 @@ class Order(OrderBase):
 
     class Config:
         from_attributes = True
+        
+class OrderTrendResponse(BaseModel):
+    month: str
+    total_orders: int
+    total_revenue: float
+
+class OrderTrendResponse(BaseModel):
+    month: str
+    total_orders: int
+    total_revenue: float
+
+class OrderStatusCountResponse(BaseModel):
+    status: str
+    order_count: int

@@ -12,7 +12,7 @@ instrumentator.instrument(app, latency_lowr_buckets=latency_buckets).expose(app,
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Adjust as necessary
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

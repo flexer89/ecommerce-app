@@ -3,7 +3,7 @@ import getKeycloak from '../auth/keycloak';
 
 const keycloak = getKeycloak();
 
-const OrderServiceClient = axios.create({
+const ProductsServiceClient = axios.create({
   baseURL: "https://jolszak.test/api/products",
   timeout: 5000,
   headers: {
@@ -11,29 +11,31 @@ const OrderServiceClient = axios.create({
   }
 });
 
-// Request interceptor to add the token to the request
-OrderServiceClient.interceptors.request.use(
-  async (config) => {
-    if (keycloak.isTokenExpired()) {
-      try {
-        await keycloak.updateToken();
-      } catch (refreshError) {
-        keycloak.logout();
-        return Promise.reject(refreshError);
-      }
-    }
+// todo not every request needs to be authenticated
 
-    config.headers.authorization = keycloak.token;
+// // Request interceptor to add the token to the request
+// ProductsServiceClient.interceptors.request.use(
+//   async (config) => {
+//     if (keycloak.isTokenExpired()) {
+//       try {
+//         await keycloak.updateToken();
+//       } catch (refreshError) {
+//         keycloak.logout();
+//         return Promise.reject(refreshError);
+//       }
+//     }
 
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+//     config.headers.authorization = keycloak.token;
+
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
 
 // Response interceptor to handle 404 without throwing an error
-OrderServiceClient.interceptors.response.use(
+ProductsServiceClient.interceptors.response.use(
   (response) => {
     return response;
   },
@@ -45,4 +47,4 @@ OrderServiceClient.interceptors.response.use(
   }
 );
 
-export default OrderServiceClient;
+export default ProductsServiceClient;

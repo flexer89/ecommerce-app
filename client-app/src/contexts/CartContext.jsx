@@ -1,10 +1,7 @@
-// src/contexts/CartContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// Create context
 const CartContext = createContext();
 
-// Create a provider component
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem('cart');
@@ -18,7 +15,7 @@ export const CartProvider = ({ children }) => {
   const addItemToCart = (product, grind, weight) => {
     const existingProduct = cart.items.find(item => item.id === product.id && item.grind === grind && item.weight === weight);
     let updatedCart;
-    const productPrice = parseFloat(product.price);  // No need to trim, assuming it's a number
+    const productPrice = parseFloat(product.price);
 
     if (existingProduct) {
       updatedCart = {
@@ -72,7 +69,6 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-// Create a hook to use the cart context
 export const useCart = () => {
   return useContext(CartContext);
 };

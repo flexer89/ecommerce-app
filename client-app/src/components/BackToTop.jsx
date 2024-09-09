@@ -1,7 +1,6 @@
-// src/components/BackToTop.jsx
 import React, { useState, useEffect } from 'react';
 import 'ionicons/icons';
-import '../assets/style/style.css'; // Ensure the path is correct
+import '../assets/style/style.css';
 
 const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);

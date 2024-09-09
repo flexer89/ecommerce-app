@@ -1,4 +1,3 @@
-// src/pages/CheckoutPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useKeycloakAuth } from '../contexts/KeycloakContext';
@@ -93,7 +92,6 @@ const CheckoutPage = () => {
 
   const handleCheckout = (e) => {
     e.preventDefault();
-    // Save shipping choice and navigate to payment
     console.log('Selected Shipping:', selectedShipping);
     navigate('/payment');
   };

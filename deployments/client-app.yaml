@@ -43,6 +43,11 @@ spec:
             secretKeyRef:
               name: client-app-secret
               key: keycloak-checkout-redirect-uri
+        - name: VITE_STRIPE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: client-app-secret
+              key: stripe-api-key
 ---
 apiVersion: v1
 kind: Service

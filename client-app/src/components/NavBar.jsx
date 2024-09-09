@@ -28,7 +28,6 @@ const Navbar = () => {
             <li ref={(el) => (navbarLinks.current[0] = el)} data-nav-link onClick={closeNavbar}>
               <a href="#home">Home</a>
             </li>
-            {/* Add more links here */}
           </ul>
         </nav>
       </div>

@@ -48,19 +48,15 @@ const Orders = () => {
       try {
         const response = await OrderServiceClient.get(`/getbyuser/${getKeycloak().subject}`);
         
-        // Handle 404: No orders found
         if (response.status === 404) {
-          setOrders([]);  // No orders found, set to empty array
-          setError(null);  // No error
+          setOrders([]);
+          setError(null);
         } else if (response.status === 200) {
-          // If the request is successful, set the orders
           setOrders(response.data);
         } else {
-          // Handle other unexpected statuses
           throw new Error('Unexpected error occurred');
         }
       } catch (error) {
-        // Handle any non-404 errors
         setError('Błąd podczas ładowania zamówień.');
       } finally {
         setLoading(false);
@@ -303,8 +299,8 @@ const Shipments = () => {
         const response = await ShipmentServiceClient.get(`/getbyuser/${getKeycloak().subject}`);
         
         if (response.status === 404) {
-          setShipments([]);  // No shipments found
-          setError(null);  // No error
+          setShipments([]);
+          setError(null);
         } else if (response.status === 200) {
           setShipments(response.data);
         } else {

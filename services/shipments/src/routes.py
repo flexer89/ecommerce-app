@@ -32,7 +32,6 @@ def health():
 def create_shipment(shipment: ShipmentCreate, db: Session = Depends(get_db)):
     return create_shipment_db(db=db, shipment=shipment)
 
-# Endpoint to get a shipment by ID
 @router.get("/get/{shipment_id}", response_model=ShipmentResponse)
 def read_shipment(shipment_id: int, db: Session = Depends(get_db)):
     db_shipment = get_shipment_db(db, shipment_id=shipment_id)
@@ -40,7 +39,6 @@ def read_shipment(shipment_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Shipment not found")
     return db_shipment
 
-# Endpoint to update a shipment (patch)
 @router.patch("/update/{shipment_id}", response_model=ShipmentResponse)
 def update_shipment(shipment_id: int, shipment: ShipmentUpdate, db: Session = Depends(get_db)):
     db_shipment = update_shipment_db(db=db, shipment_id=shipment_id, shipment=shipment)
@@ -48,7 +46,6 @@ def update_shipment(shipment_id: int, shipment: ShipmentUpdate, db: Session = De
         raise HTTPException(status_code=404, detail="Shipment not found")
     return db_shipment
 
-# Endpoint to get a shipment by order ID
 @router.get("/getbyorder/{order_id}", response_model=ShipmentResponse)
 def read_shipment_by_order_id(order_id: int, db: Session = Depends(get_db)):
     db_shipment = get_shipment_by_order_id_db(db, order_id=order_id)

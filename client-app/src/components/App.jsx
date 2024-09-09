@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { React, useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -27,8 +27,7 @@ import { CartProvider } from '../contexts/CartContext';
 import { KeycloakAuthProvider } from '../contexts/KeycloakContext';
 import NotFoundComponent from "./NotFoundComponent";
 
-// Stripe initialization
-const stripePromise = loadStripe("pk_test_51PdvfxHm9ZvcVN2EsxnPlbHzfoeGElhmAdrJxRslA0A0r8mEoKLgQYDKCZrF5IZnlcRfNrLGSrvKfL1hgTuZlJTR00nRFN9LGB");
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_API_KEY);
 
 const HomePage = () => (
   <div>

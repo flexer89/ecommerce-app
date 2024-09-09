@@ -14,3 +14,14 @@ class UserUpdateRequest(BaseModel):
     lastName: Optional[str] = None
     email: Optional[str] = None
     attributes: Optional[UserUpdateRequestAttributes] = None
+
+class UserResponse(BaseModel):
+    id: str
+    username: str
+    email: str
+    firstName: str
+    lastName: str
+
+class UserResponseWithAttributes(UserResponse):
+    attributes: dict
+    

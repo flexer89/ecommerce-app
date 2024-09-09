@@ -46,6 +46,42 @@
   "quickLoginCheckMilliSeconds": 1000,
   "maxDeltaTimeSeconds": 43200,
   "failureFactor": 30,
+  "users" : [
+    {
+      "username" : "admin",
+      "enabled": true,
+      "email" : "test@admin.org",
+      "firstName": "Admin",
+      "lastName": "Test",
+      "attributes": {
+        "voivodeship": [
+          "opolskie"
+        ],
+        "phoneNumber": [
+          "123456789"
+        ],
+        "City": [
+          "City"
+        ],
+        "Address": [
+          "Address"
+        ],
+        "PostCode": [
+          "31-100"
+        ]
+      },
+      "groups": [ "admins" ],
+      "credentials" : [
+        { "type" : "password",
+          "value" : "admin" }
+      ],
+      "realmRoles": [ "admin" ],
+      "clientRoles": {
+        "realm-management": [ "realm-admin" ],
+        "account": [ "manage-account" ]
+      }
+    }
+  ],
   "roles": {
     "realm": [
       {
@@ -770,6 +806,58 @@
       ]
     },
     {
+      "id": "69fa1749-5c5d-4446-9137-25981149bf35",
+      "clientId": "frontend-admin",
+      "name": "",
+      "description": "",
+      "rootUrl": "https://admin.jolszak.test",
+      "adminUrl": "",
+      "baseUrl": "/",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [
+        "*"
+      ],
+      "webOrigins": [
+        "*"
+      ],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "publicClient": true,
+      "frontchannelLogout": true,
+      "protocol": "openid-connect",
+      "attributes": {
+        "oidc.ciba.grant.enabled": "false",
+        "oauth2.device.authorization.grant.enabled": "false",
+        "display.on.consent.screen": "false",
+        "backchannel.logout.session.required": "true",
+        "backchannel.logout.revoke.offline.tokens": "false"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": true,
+      "nodeReRegistrationTimeout": -1,
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "roles",
+        "profile",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ]
+    },
+    {
       "id": "d2cd162a-b83f-4ca5-a223-4fbdd49a9b80",
       "clientId": "python",
       "name": "python",
@@ -781,7 +869,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "python-secret",
       "redirectUris": [
         "https://jolszak.test/*"
       ],

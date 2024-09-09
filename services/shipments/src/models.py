@@ -5,13 +5,11 @@ import enum
 
 Base = declarative_base()
 
-# Define the shipment status enumeration
 class ShipmentStatusEnum(str, enum.Enum):
     pending = 'pending'
     shipped = 'shipped'
     delivered = 'delivered'
 
-# Shipment model definition
 class Shipment(Base):
     __tablename__ = 'shipments'
 

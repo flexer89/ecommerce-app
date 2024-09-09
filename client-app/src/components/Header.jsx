@@ -50,7 +50,6 @@ const Header = () => {
           </Link>
           <nav className="navbar">
             <ul className="navbar-list">
-              {/* todo przerobić na buttony i dać onclick */}
               <li><Link to="/" className="navbar-link has-after">Strona główna</Link></li>
               <li><Link to="/bestsellers" className="navbar-link has-after">Bestsellery</Link></li>
               <li><Link to="/products" className="navbar-link has-after">Oferta</Link></li>
@@ -60,6 +59,7 @@ const Header = () => {
           <div className="header-actions">
             {isLogin ? (
               <>
+                {/* Only show the Profile and Logout buttons if the user is logged in */}
                 <button className="header-action-btn" aria-label="user" onClick={handleUserIconClick}>
                   <IonIcon icon={personOutline} aria-hidden="true" />
                 </button>
@@ -68,7 +68,7 @@ const Header = () => {
                 </button>
               </>
             ) : (
-              <button className="header-action-btn" aria-label="user" onClick={handleUserIconClick}>
+              <button className="header-action-btn" aria-label="login" onClick={login}>
                 <IonIcon icon={personOutline} aria-hidden="true" />
               </button>
             )}
@@ -80,6 +80,7 @@ const Header = () => {
           </div>
         </div>
       </div>
+
       <div className={`panel ${isPanelOpen ? 'active' : ''}`}>
         <button 
           className="nav-close-btn" 
@@ -90,14 +91,34 @@ const Header = () => {
         </button>
         <nav className="navbar-mobile">
           <ul className="navbar-list">
-            <li><a href="/" className="navbar-link has-after" onClick={togglePanel}>Strona główna</a></li>
-            <li><a href="/profile" className="navbar-link has-after" onClick={togglePanel}>Profil</a></li>
-            <li><a href="/cart" className="navbar-link has-after" onClick={togglePanel}>Koszyk</a></li>
-            <li><a href="/products" className="navbar-link has-after" onClick={togglePanel}>Oferta</a></li>
-            <li><a href="/bestsellers" className="navbar-link has-after" onClick={togglePanel}>Bestsellery</a></li>
-            <li><a href="/our-mission" className="navbar-link has-after" onClick={togglePanel}>O nas</a></li>
+            <li><Link to="/" className="navbar-link has-after" onClick={togglePanel}>Strona główna</Link></li>
+            {/* Only show Profile link if the user is logged in */}
+            {isLogin && <li><Link to="/profile" className="navbar-link has-after" onClick={togglePanel}>Profil</Link></li>}
+            <li><Link to="/cart" className="navbar-link has-after" onClick={togglePanel}>Koszyk</Link></li>
+            <li><Link to="/products" className="navbar-link has-after" onClick={togglePanel}>Oferta</Link></li>
+            <li><Link to="/bestsellers" className="navbar-link has-after" onClick={togglePanel}>Bestsellery</Link></li>
+            <li><Link to="/our-mission" className="navbar-link has-after" onClick={togglePanel}>O nas</Link></li>
           </ul>
         </nav>
+
+        {/* Conditionally render the Logout/Login button based on authentication status */}
+        {isLogin ? (
+          <button 
+            className="header-action-btn log-in-out" 
+            aria-label="logout" 
+            onClick={handleLogout}
+          >
+            <IonIcon className='in-out-icon' icon="log-out-outline" aria-hidden="true" />
+          </button>
+        ) : (
+          <button 
+            className="header-action-btn log-in-out" 
+            aria-label="login" 
+            onClick={login}
+          >
+            <IonIcon className='in-out-icon' icon={personOutline} aria-hidden="true" />
+          </button>
+        )}
       </div>
     </header>
   );

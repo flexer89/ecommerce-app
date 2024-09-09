@@ -1,4 +1,3 @@
-// src/pages/LoginOrRegisterPage.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useKeycloakAuth } from '../contexts/KeycloakContext';

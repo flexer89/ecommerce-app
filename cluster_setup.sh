@@ -19,6 +19,7 @@ kubectl apply -f deployments/orders.yaml
 kubectl apply -f deployments/payments.yaml
 kubectl apply -f deployments/carts.yaml
 kubectl apply -f deployments/client-app.yaml
+kubectl apply -f deployments/admin-app.yaml
 kubectl apply -f deployments/keycloak.yaml
 
 # Deploy databases
@@ -26,6 +27,7 @@ kubectl apply -f deployments/databases/products_db.yaml
 kubectl apply -f deployments/databases/carts_db.yaml
 kubectl apply -f deployments/databases/orders_db.yaml
 kubectl apply -f deployments/databases/keycloak_db.yaml
+kubectl apply -f deployments/databases/shipments_db.yaml
 
 # Deploy kraken
 kubectl apply -f deployments/overlays/ingress.yaml

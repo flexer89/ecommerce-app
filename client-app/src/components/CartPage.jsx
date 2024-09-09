@@ -1,9 +1,10 @@
-// src/pages/CartPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { useKeycloakAuth } from '../contexts/KeycloakContext';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../assets/style/style.css';
 
 const CartPage = () => {
@@ -16,7 +17,7 @@ const CartPage = () => {
     const fetchProductImages = async () => {
       const itemsWithImages = await Promise.all(cart.items.map(async (item) => {
         try {
-          const imageResponse = await axios.get(`https://jolszak.test/api/products/download/${item.id}`, {
+          const imageResponse = await axios.get(`https://jolszak.test/api/products/download/bin/${item.id}`, {
             responseType: 'arraybuffer'
           });
           const base64Image = btoa(
@@ -37,6 +38,11 @@ const CartPage = () => {
 
   const handleRemoveFromCart = (id, grind, weight, quantity) => {
     removeItemFromCart(id, grind, weight, quantity);
+    if (quantity > 0) {
+      toast.success(`Usunięto ${quantity} sztuk z koszyka!`, { autoClose: 3000 });
+    } else {
+      toast.success(`Dodano ${Math.abs(quantity)} sztuk do koszyka!`, { autoClose: 3000 });
+    }
   };
 
   const handleCheckout = () => {
@@ -49,6 +55,7 @@ const CartPage = () => {
 
   return (
     <div className="cart-page">
+      <ToastContainer />
       <div className='container'>
         <h1>Twój koszyk</h1>
         {cart.items.length === 0 ? (

@@ -5,6 +5,13 @@ docker_build('client-app','client-app/',
     ]
 )
 
+docker_build('admin-app','admin-app/',
+    live_update=[
+        sync('./admin-app', '/app'),
+        run('cd /app && npm install', trigger='./admin-app/package.json')
+    ]
+)
+
 docker_build('products', 'services/products',
     live_update=[
         sync('services/products', '/products'),
@@ -45,7 +52,13 @@ k8s_yaml('deployments/shipments.yaml')
 k8s_yaml('deployments/payments.yaml')
 k8s_yaml('deployments/carts.yaml')
 k8s_yaml('deployments/client-app.yaml')
+k8s_yaml('deployments/admin-app.yaml')
 k8s_yaml('deployments/kraken.yaml')
 k8s_yaml('deployments/keycloak.yaml')
+
 k8s_yaml('deployments/databases/products_db.yaml')
-k8s_yaml('deployments/smtp-server.yaml')
+k8s_yaml('deployments/databases/carts_db.yaml')
+k8s_yaml('deployments/databases/orders_db.yaml')
+k8s_yaml('deployments/databases/shipments_db.yaml')
+k8s_yaml('deployments/databases/keycloak_db.yaml')
+#k8s_yaml('deployments/smtp-server.yaml')

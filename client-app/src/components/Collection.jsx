@@ -10,7 +10,7 @@ const Collection = () => (
         <li>
           <div className="collection-card has-before hover:shine">
             <h2 className="h2 card-title">Ekskluzywne kawy</h2>
-            <p className="card-text">Już od 99.99 zł</p>
+            <p className="card-text">Już od 29.99 zł</p>
             <button className="collection-card-button">Sprawdź</button>
             <div className="has-bg-image" style={{ backgroundImage: `url(${collection1})` }}></div>
           </div>
