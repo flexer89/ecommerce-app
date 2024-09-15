@@ -35,7 +35,8 @@ def create_order_db(db: Session, user_id: str, total_price: float, items: list):
             order_id=order.id,
             product_id=item.product_id,
             quantity=item.quantity,
-            price=item.price
+            price=item.price,
+            weight=item.weight
         )
         db.add(order_item)
     db.commit()
@@ -65,3 +66,28 @@ def get_bestsellers_db(db: Session, limit: int):
     
 def count_db(db: Session):
     return db.query(OrderItem).count()
+
+def get_orders_by_user_id_db(db: Session, user_id: str, limit: int = 0):
+    if limit > 0:
+        return db.query(Order).filter(Order.user_id == user_id).limit(limit).all()
+    return db.query(Order).filter(Order.user_id == user_id).all()
+
+def get_orders_db(db: Session, limit: str, offset: str, status: str, search: int):
+    if not status:
+        if not search:
+            orders = db.query(Order).limit(limit).offset(offset)
+        else:
+            orders = db.query(Order).filter(Order.id == search).limit(limit).offset(offset)
+    else:
+        if not search:
+            orders = db.query(Order).filter(Order.status == status).limit(limit).offset(offset)
+        else:
+            orders = db.query(Order).filter(Order.status == status, Order.id == search).limit(limit).offset(offset)
+                
+    # get total number of orders
+    total = db.query(Order).count()
+    
+    return {
+        "orders": orders.all(),
+        "total": total,
+    }

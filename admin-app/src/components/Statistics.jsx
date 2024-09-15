@@ -94,7 +94,6 @@ const ProductsStatistics = () => {
                 </div>
             </div>
 
-            {/* Top Selling Products */}
             <div className="top-products-container">
                 <h2>Bestsellery</h2>
                 <div className="top-products-list">
@@ -119,18 +118,13 @@ const ProductsStatistics = () => {
                 </div>
             </div>
 
-            {/* Chart for Low Stock Products */}
             <div className="chart-container">
                 <h2>Produkty o niskim stanie magazynowym</h2>
                 <Line data={lowStockChartData} options={{ responsive: true, scales: { y: { beginAtZero: true } } }} />
             </div>
-
-            {/* New Products (DataTable.net integration can go here) */}
-            {/* Discounted Products (DataTable.net integration can go here) */}
         </div>
     );
 };
-
 
 const OrdersStatistics = () => {
   const [ordersCount, setOrdersCount] = useState(0);
@@ -153,7 +147,7 @@ const OrdersStatistics = () => {
         const ordersTrendsResponse = await OrdersServiceClient.get('/trends');
         setOrdersCount(ordersResponse.data);
         setOrdersData(ordersTrendsResponse.data.monthly_trends);
-        setAverageProcessingTime(ordersTrendsResponse.data.avg_processing_time);
+        setAverageProcessingTime(Number(ordersTrendsResponse.data.avg_processing_time) || 0);
         setOrderStatusCounts(ordersTrendsResponse.data.order_status_counts);
       } catch (error) {
         console.error('Error fetching orders statistics:', error);
@@ -196,7 +190,6 @@ const OrdersStatistics = () => {
       y: {
         beginAtZero: true,
         min: 0,
-        max: undefined,
         ticks: {
           stepSize: 10,
         },
@@ -262,119 +255,68 @@ const OrdersStatistics = () => {
   );
 };
 
+// Shipments Statistics Section
+const ShipmentsStatistics = () => {
+  const [shipmentsCount, setShipmentsCount] = useState(0);
 
+  useEffect(() => {
+    const fetchShipmentsStats = async () => {
+      const shipmentsResponse = await ShipmentsServiceClient.get('/count');
+      console.log(shipmentsResponse);
+      setShipmentsCount(shipmentsResponse.data.total);
+    };
 
-// // Shipments Statistics Section
-// const ShipmentsStatistics = () => {
-//   const [shipmentsCount, setShipmentsCount] = useState(0);
-//   const [mostShippedProducts, setMostShippedProducts] = useState([]);
+    fetchShipmentsStats();
+  }, []);
 
-//   useEffect(() => {
-//     const fetchShipmentsStats = async () => {
-//       const shipmentsResponse = await ShipmentsServiceClient.get('/count');
-//       const shippedProductsResponse = await ShipmentsServiceClient.get('/most-shipped-products');
-//       setShipmentsCount(shipmentsResponse.data.total);
-//       setMostShippedProducts(shippedProductsResponse.data);
-//     };
+  return (
+    <div className="section-container">
+      <h2>Statystyki Wysyłek</h2>
+      <p>Ilość wysyłek: {shipmentsCount}</p>
+    </div>
+  );
+};
 
-//     fetchShipmentsStats();
-//   }, []);
+// Users Statistics Section
+const UsersStatistics = () => {
+  const [usersCount, setUsersCount] = useState(0);
+  const [userGrowth, setUserGrowth] = useState([]);
 
-//   return (
-//     <div className="section-container">
-//       <h2>Shipments Statistics</h2>
-//       <p>Total Shipments: {shipmentsCount}</p>
-//       <h3>Most Shipped Products</h3>
-//       <ul>
-//         {mostShippedProducts.map((product) => (
-//           <li key={product.id}>{product.name} - {product.shipped} shipped</li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// };
+  useEffect(() => {
+    const fetchUsersStats = async () => {
+      const usersResponse = await UsersServiceClient.get('/count');
+      const userGrowthResponse = await UsersServiceClient.get('/growth');
+      setUsersCount(usersResponse.data.total);
+      setUserGrowth(userGrowthResponse.data);
+    };
 
-// // Users Statistics Section
-// const UsersStatistics = () => {
-//   const [usersCount, setUsersCount] = useState(0);
-//   const [userGrowth, setUserGrowth] = useState([]);
+    fetchUsersStats();
+  }, []);
 
-//   useEffect(() => {
-//     const fetchUsersStats = async () => {
-//       const usersResponse = await UsersServiceClient.get('/count');
-//       const userGrowthResponse = await UsersServiceClient.get('/growth');
-//       setUsersCount(usersResponse.data.total);
-//       setUserGrowth(userGrowthResponse.data);
-//     };
+  const userGrowthChartData = {
+    labels: userGrowth.map(user => user.month),
+    datasets: [
+      {
+        label: 'Przyrost użytkowników',
+        data: userGrowth.map(user => user.count),
+        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1,
+      },
+    ],
+  };
 
-//     fetchUsersStats();
-//   }, []);
-
-//   const userGrowthChartData = {
-//     labels: userGrowth.map(user => user.month),
-//     datasets: [
-//       {
-//         label: 'User Growth',
-//         data: userGrowth.map(user => user.count),
-//         backgroundColor: 'rgba(255, 99, 132, 0.6)',
-//         borderColor: 'rgba(255, 99, 132, 1)',
-//         borderWidth: 1,
-//       },
-//     ],
-//   };
-
-//   return (
-//     <div className="section-container">
-//       <h2>Users Statistics</h2>
-//       <p>Total Users: {usersCount}</p>
-//       <div className="chart">
-//         <h3>User Growth</h3>
-//         <Line data={userGrowthChartData} />
-//       </div>
-//     </div>
-//   );
-// };
-
-// // Payments Statistics Section
-// const PaymentsStatistics = () => {
-//   const [paymentsCount, setPaymentsCount] = useState(0);
-//   const [revenueData, setRevenueData] = useState([]);
-
-//   useEffect(() => {
-//     const fetchPaymentsStats = async () => {
-//       const paymentsResponse = await PaymentsServiceClient.get('/count');
-//       const revenueTrendsResponse = await PaymentsServiceClient.get('/revenue-trends');
-//       setPaymentsCount(paymentsResponse.data.total);
-//       setRevenueData(revenueTrendsResponse.data);
-//     };
-
-//     fetchPaymentsStats();
-//   }, []);
-
-//   const revenueChartData = {
-//     labels: revenueData.map(revenue => revenue.month),
-//     datasets: [
-//       {
-//         label: 'Revenue per Month',
-//         data: revenueData.map(revenue => revenue.amount),
-//         backgroundColor: 'rgba(75, 192, 192, 0.6)',
-//         borderColor: 'rgba(75, 192, 192, 1)',
-//         borderWidth: 1,
-//       },
-//     ],
-//   };
-
-//   return (
-//     <div className="section-container">
-//       <h2>Payments Statistics</h2>
-//       <p>Total Payments: {paymentsCount}</p>
-//       <div className="chart">
-//         <h3>Revenue Trend</h3>
-//         <Bar data={revenueChartData} />
-//       </div>
-//     </div>
-//   );
-// };
+  return (
+    <div className="section-container">
+      <h2>Statystyki użytkowników</h2>
+      <p>Ilość użytkowników: {usersCount}</p>
+      <div className="chart">
+        <h3>Przyrost użytkowników</h3>
+        <Line data={userGrowthChartData} />
+      </div>
+    </div>
+  );
+};
 
 // Main Statistics Component
 const Statistics = () => {
@@ -382,9 +324,8 @@ const Statistics = () => {
     <div className="statistics-page container">
       <ProductsStatistics />
       <OrdersStatistics />
-      {/* <ShipmentsStatistics />
-      <UsersStatistics />
-      <PaymentsStatistics /> */}
+      <ShipmentsStatistics />
+      {/* <UsersStatistics /> */}
     </div>
   );
 };

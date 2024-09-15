@@ -23,6 +23,58 @@
       ]
     },
     {
+      "endpoint": "/api/products/get",
+      "input_headers": [
+        "*"
+      ],
+      "method": "GET",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/get",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://products-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "input_query_strings": [
+        "limit",
+        "offset",
+        "arabica",
+        "robusta",
+        "minPrice",
+        "maxPrice",
+        "search"
+      ]
+    },
+    {
+      "endpoint": "/api/products/download/images",
+      "input_headers": [
+        "*"
+      ],
+      "method": "GET",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/download/images",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://products-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "input_query_strings": [
+        "product_ids"
+      ]
+    },
+    {
       "endpoint": "/api/products/{get1}/{get2}",
       "input_headers": [
         "*"
@@ -84,12 +136,16 @@
     },
     {
       "endpoint": "/api/products/create",
-      "input_headers": ["*"],
+      "input_headers": [
+        "*"
+      ],
       "method": "POST",
       "output_encoding": "no-op",
       "extra_config": {
         "github.com/devopsfaith/krakend/proxy": {
-          "headers_to_pass": ["*"],
+          "headers_to_pass": [
+            "*"
+          ],
           "allow_multipart_form_data": true
         }
       },
@@ -99,19 +155,25 @@
           "encoding": "no-op",
           "sd": "static",
           "method": "POST",
-          "host": ["http://products-service:5000"],
+          "host": [
+            "http://products-service:5000"
+          ],
           "disable_host_sanitize": false
         }
       ]
     },
     {
       "endpoint": "/api/products/update/{update1}",
-      "input_headers": ["*"],
+      "input_headers": [
+        "*"
+      ],
       "method": "PUT",
       "output_encoding": "no-op",
       "extra_config": {
         "github.com/devopsfaith/krakend/proxy": {
-          "headers_to_pass": ["*"],
+          "headers_to_pass": [
+            "*"
+          ],
           "allow_multipart_form_data": true
         }
       },
@@ -121,19 +183,25 @@
           "encoding": "no-op",
           "sd": "static",
           "method": "PUT",
-          "host": ["http://products-service:5000"],
+          "host": [
+            "http://products-service:5000"
+          ],
           "disable_host_sanitize": false
         }
       ]
     },
     {
       "endpoint": "/api/products/update/{update1}/{update2}",
-      "input_headers": ["*"],
+      "input_headers": [
+        "*"
+      ],
       "method": "PUT",
       "output_encoding": "no-op",
       "extra_config": {
         "github.com/devopsfaith/krakend/proxy": {
-          "headers_to_pass": ["*"],
+          "headers_to_pass": [
+            "*"
+          ],
           "allow_multipart_form_data": true
         }
       },
@@ -143,7 +211,9 @@
           "encoding": "no-op",
           "sd": "static",
           "method": "PUT",
-          "host": ["http://products-service:5000"],
+          "host": [
+            "http://products-service:5000"
+          ],
           "disable_host_sanitize": false
         }
       ]
@@ -169,13 +239,6 @@
       "endpoint": "/api/orders/{get1}/{get2}",
       "method": "GET",
       "output_encoding": "no-op",
-      "extra_config": {
-        "auth/validator": {
-            "alg": "RS256",
-            "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
-            "disable_jwk_security": true
-        }
-      },
       "backend": [
         {
           "url_pattern": "/{get1}/{get2}",
@@ -190,14 +253,57 @@
       ]
     },
     {
+      "endpoint": "/api/orders/{put1}/{put2}/{put3}",
+      "method": "PUT",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/{put1}/{put2}/{put3}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "PUT",
+          "host": [
+            "http://orders-service:5010"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/orders/get",
+      "method": "GET",
+      "input_headers": [
+        "*"
+      ],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/get",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://orders-service:5010"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "input_query_strings": [
+        "limit",
+        "status",
+        "offset",
+        "search"
+      ]
+    },
+    {
       "endpoint": "/api/shipments/{get1}/{get2}",
       "method": "GET",
       "output_encoding": "no-op",
       "extra_config": {
         "auth/validator": {
-            "alg": "RS256",
-            "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
-            "disable_jwk_security": true
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true
         }
       },
       "backend": [
@@ -211,6 +317,56 @@
           ],
           "disable_host_sanitize": false
         }
+      ]
+    },
+    {
+      "endpoint": "/api/shipments/{get1}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/{get1}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://shipments-service:5060"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/shipments/get",
+      "method": "GET",
+      "input_headers": [
+        "*"
+      ],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/get",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://shipments-service:5060"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "input_query_strings": [
+        "limit",
+        "offset",
+        "status",
+        "search"
       ]
     },
     {
@@ -265,6 +421,32 @@
           ],
           "disable_host_sanitize": false
         }
+      ]
+    },
+    {
+      "endpoint": "/api/users/get",
+      "method": "GET",
+      "input_headers": [
+        "*"
+      ],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/get",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://users-service:5030"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "input_query_strings": [
+        "limit",
+        "query",
+        "offset",
+        "ids"
       ]
     },
     {

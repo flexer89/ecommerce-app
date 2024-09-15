@@ -7,6 +7,7 @@ class ShipmentStatusEnum(str, Enum):
     pending = 'pending'
     shipped = 'shipped'
     delivered = 'delivered'
+    cancelled = 'cancelled'
 
 class ShipmentCreate(BaseModel):
     order_id: int

@@ -42,3 +42,24 @@ def get_shipment_by_order_id_db(db: Session, order_id: int):
 
 def get_shipment_by_user_id_db(db: Session, user_id: int):
     return db.query(Shipment).filter(Shipment.user_id == user_id).all()
+
+def count_shipments_db(db: Session):
+    return db.query(Shipment).count()
+
+def get_all_shipments_db(db: Session):
+    return db.query(Shipment).all()
+
+def get_all_shipments_db_paginated(db: Session, offset: int = 0, limit: int = 10, status: str = None, search: int = None):
+    if status:
+        return db.query(Shipment).filter(Shipment.status == status).offset(offset).limit(limit).all()
+    if search:
+        return db.query(Shipment).filter(Shipment.order_id == search).offset(offset).limit(limit).all()
+    
+    if search and status:
+        return db.query(Shipment).filter(Shipment.order_id == search, Shipment.status == status).offset(offset).limit(limit).all()
+    return db.query(Shipment).filter().offset(offset).limit(limit).all()
+
+def get_shipments_count(db: Session, status: str = None):
+    if status:
+        return db.query(Shipment).filter(Shipment.status == status).count()
+    return db.query(Shipment).count()

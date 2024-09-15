@@ -1,46 +1,43 @@
 import axios from 'axios';
-import getKeycloak from '../auth/keycloak';
+import getKeycloak from '../auth/keycloak'; // Assuming keycloak.js is in this location
 
 const keycloak = getKeycloak();
 
 const ShipmentServiceClient = axios.create({
-  baseURL: "https://admin.jolszak.test/api/shipments",
-  timeout: 5010,
+  baseURL: 'https://admin.jolszak.test/api/shipments',
+  timeout: 5060,
   headers: {
     'Accept': 'application/json',
-  }
+  },
 });
 
-// Request interceptor to add the token to the request
+// Use an Axios request interceptor to add the token dynamically
 ShipmentServiceClient.interceptors.request.use(
   async (config) => {
+    // Ensure Keycloak is initialized and the token is available
+    console.log('Keycloak token:', keycloak);
+
+    if (!keycloak.authenticated) {
+      keycloak.login();
+    }
+
+    // Check if the token is expired and refresh it if needed
     if (keycloak.isTokenExpired()) {
       try {
-        await keycloak.updateToken();
-      } catch (refreshError) {
+        await keycloak.updateToken(30); // Refresh token if expiring in the next 30 seconds
+      } catch (error) {
+        console.error('Failed to refresh Keycloak token', error);
         keycloak.logout();
-        return Promise.reject(refreshError);
+        return Promise.reject(error);
       }
     }
 
-    config.headers.authorization = keycloak.token;
+    // Set the Authorization header with the token
+    config.headers.Authorization = `Bearer ${keycloak.token}`;
 
     return config;
   },
   (error) => {
-    return Promise.reject(error);
-  }
-);
-
-// Response interceptor to handle 404 without throwing an error
-ShipmentServiceClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    if (error.response && error.response.status === 404) {
-      return Promise.resolve(error.response);
-    }
     return Promise.reject(error);
   }
 );

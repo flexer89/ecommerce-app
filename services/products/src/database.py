@@ -24,8 +24,24 @@ def get_products_db(db: Session, limit: int = 10):
 def get_product_db(db: Session, product_id: int):
     return db.query(Product).filter(Product.id == product_id).first()
 
-def get_products_list_db(db: Session, limit: int, offset: int):
-    return db.query(Product).offset(offset).limit(limit).all()
+def get_products_list_db(db: Session, limit: int, offset: int, search: str, arabica: bool, robusta: bool, minPrice, maxPrice):
+    products = db.query(Product)
+    max_price = products.order_by(Product.price.desc()).first().price
+    
+    if arabica:
+        products = products.filter(Product.category == "arabica")
+    if robusta:
+        products = products.filter(Product.category == "robusta")
+    if minPrice:
+        products = products.filter(Product.price >= minPrice)
+    if maxPrice:
+        products = products.filter(Product.price <= maxPrice)
+    if search:
+        products = products.filter(Product.name.ilike(f"%{search}%"))
+        
+    total = products.count()
+    products = products.limit(limit).offset(offset).all()
+    return {"products": products, "total": total, "max_price": max_price}
 
 def create_product_db(db: Session, product: ProductCreate):
     db_product = Product(

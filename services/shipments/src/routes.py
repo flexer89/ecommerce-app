@@ -59,3 +59,21 @@ def read_shipment_by_user_id(user_id: str, db: Session = Depends(get_db)):
     if db_shipment is None:
         raise HTTPException(status_code=404, detail="Shipment not found")
     return db_shipment
+
+@router.get("/getall", response_model=list[ShipmentResponse])
+def read_all_shipments(db: Session = Depends(get_db)):
+    return get_all_shipments_db(db)
+
+@router.get("/count")
+def count_shipments(db: Session = Depends(get_db)):
+    return {"total": count_shipments_db(db)}
+
+@router.get("/get")
+def get_shipments(db: Session = Depends(get_db), limit: int = 10, offset: int = 0, status: str = None, search: int = None):
+    shipments = get_all_shipments_db_paginated(SessionLocal(), limit=limit, offset=offset, status=status, search=search)
+    total = get_shipments_count(db, status=status)
+
+    return {
+        "total": total,
+        "shipments": shipments
+    }

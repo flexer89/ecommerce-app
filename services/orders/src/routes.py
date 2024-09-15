@@ -30,22 +30,30 @@ def k8s():
 def health():
     return {"status": "ok"}
 
-@router.get("/get", response_model=List[Order])
+@router.get("/getall", response_model=List[Order])
 def read_orders(limit: int = 0, db: Session = Depends(get_db)):
     orders = get_orders_db(db, limit=limit)
     return orders
 
-@router.get("/getbyorder/{order_id}", response_model=Order)
+@router.get("/get/{order_id}", response_model=Order)
 def read_order(order_id: int, db: Session = Depends(get_db)):
     order = get_order_db(db, order_id=order_id)
+    
     if order is None:
         raise HTTPException(status_code=404, detail="Order not found")
     return order
 
-@router.post("/create", response_model=Order)
+@router.get("/getbyuser/{user_id}", response_model=List[Order])
+def read_orders_by_user(user_id: str, limit: int = 10, db: Session = Depends(get_db)):
+    orders = get_orders_by_user_id_db(db, user_id=user_id, limit=limit)
+    if not orders:
+        raise HTTPException(status_code=404, detail="No orders found for this user")
+    return orders
+
+@router.post("/create")
 def create_order(order: OrderCreate, db: Session = Depends(get_db)):
     db_order = create_order_db(db, user_id=order.user_id, total_price=order.total_price, items=order.items)
-    return db_order
+    return db_order.id
 
 @router.put("/update/{order_id}/status", response_model=Order)
 def update_order_status(order_id: int, order_update: OrderUpdateStatus, db: Session = Depends(get_db)):
@@ -118,4 +126,9 @@ def get_order_trends(db: Session = Depends(get_db)):
 @router.get("/count", response_model=int)
 def get_orders_count(db: Session = Depends(get_db)):
     return count_db(db)
+
+@router.get("/get")
+def get_orders(db: Session = Depends(get_db), limit: int = 10, offset: int = 0, status: str = None, search: int = None):
+    orders = get_orders_db(db=db, limit=limit, offset=offset, status=status, search=search)
+    return orders
     

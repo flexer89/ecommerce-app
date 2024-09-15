@@ -9,6 +9,9 @@ class StatusEnum(PyEnum):
     pending = 'pending'
     processing = 'processing'
     shipped = 'shipped'
+    delivered = 'delivered'
+    cancelled = 'cancelled'
+    on_hold = 'on_hold'
 
 class Order(Base):
     __tablename__ = 'orders'
@@ -31,3 +34,4 @@ class OrderItem(Base):
     price = Column(Float)
     created_at = Column(DateTime, default=datetime.utcnow)
     order = relationship("Order", back_populates="items")
+    weight = Column(Float)

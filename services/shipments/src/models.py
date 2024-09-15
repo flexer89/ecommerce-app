@@ -9,6 +9,7 @@ class ShipmentStatusEnum(str, enum.Enum):
     pending = 'pending'
     shipped = 'shipped'
     delivered = 'delivered'
+    cancelled = 'cancelled'
 
 class Shipment(Base):
     __tablename__ = 'shipments'

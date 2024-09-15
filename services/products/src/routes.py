@@ -2,6 +2,7 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Query
 from fastapi.responses import FileResponse
 import os
+import base64
 from typing import List
 from src.models import Product, Base
 from src.models import Product as ProductModel
@@ -47,15 +48,19 @@ def read_product(product_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Product not found")
     return product
 
-@router.get("/get/{limit}/{offset}", response_model=List[ProductResponse])
-def read_products(limit: int,offset: int, db: Session = Depends(get_db)
+@router.get("/get", response_model=ProductsListResponse)
+def read_products(limit: int, offset: int, search: str = None, arabica: bool = False, robusta: bool = False, minPrice = None, maxPrice = None, db: Session = Depends(get_db)
 ):
-    products = get_products_list_db(db, limit=limit, offset=offset)
+    products = get_products_list_db(db, limit=limit, offset=offset, search=search, arabica=arabica, robusta=robusta, minPrice=minPrice, maxPrice=maxPrice)
     
     if not products:
         raise HTTPException(status_code=404, detail="No more products available")
     
-    return products
+    return {
+        "products": products["products"],
+        "total": products["total"],
+        "total_max_price": products["max_price"],
+    }
 
 @router.post("/create", response_model=ProductResponse)
 async def create_product(
@@ -131,6 +136,29 @@ async def download_binary_product_image(product_id: int, db: Session = Depends(g
         file.write(product.image)
     
     return FileResponse(temp_file_path, media_type="application/octet-stream", filename=f"product_{product_id}_image.bin")
+
+@router.get("/download/images")
+async def download_multiple_images(
+    product_ids: Optional[str],
+    db: Session = Depends(get_db)
+):
+    if not product_ids:
+        raise HTTPException(status_code=404, detail="No product IDs provided")
+    
+    product_ids = product_ids.split(",")  # Split the string into a list of product IDs
+    images_data = {}
+    for product_id in product_ids:
+        product = get_product_db(db, product_id=product_id)
+        if not product or not product.image:
+            continue  # Skip if image not found
+        # Encode image in Base64
+        encoded_image = base64.b64encode(product.image).decode('utf-8')
+        images_data[str(product_id)] = encoded_image
+
+    if not images_data:
+        raise HTTPException(status_code=404, detail="No images found for the provided product IDs")
+
+    return images_data
 
 @router.get("/download/png/{product_id}", response_class=FileResponse)
 async def download_png_product_image(product_id: int, db: Session = Depends(get_db)):

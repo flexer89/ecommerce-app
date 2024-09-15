@@ -7,18 +7,21 @@ class StatusEnum(str, Enum):
     pending = 'pending'
     processing = 'processing'
     shipped = 'shipped'
+    delivered = 'delivered'
+    cancelled = 'cancelled'
+    on_hold = 'on_hold'
 
 class OrderItemBase(BaseModel):
     product_id: int
     quantity: int
     price: float
+    weight: float
 
 class OrderItemCreate(OrderItemBase):
     pass
 
 class OrderItem(OrderItemBase):
     id: int
-    order_id: int
     created_at: datetime
 
     class Config:

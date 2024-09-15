@@ -24,7 +24,7 @@ import GuestCheckoutPage from '../pages/GuestCheckoutPage';
 import PaymentPage from '../pages/PaymentPage';
 import OrderConfirmationPage from '../pages/OrderConfirmationPage';
 import { CartProvider } from '../contexts/CartContext';
-import { KeycloakAuthProvider } from '../contexts/KeycloakContext';
+import { KeycloakAuthProvider, useKeycloakAuth } from '../contexts/KeycloakContext';
 import NotFoundComponent from "./NotFoundComponent";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_API_KEY);

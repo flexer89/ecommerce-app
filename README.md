@@ -6,11 +6,6 @@
 5. helm
 6. tilt
 
-# Create tunnel
-```
-minikube tunnel
-```
-
 # Ports
 
 - products service - 5000
@@ -75,6 +70,12 @@ kubectl apply -f deployments/overlays/ingress.yaml
 And then create a tunnel:
 ```
 minikube tunnel
+```
+Then you need to add the following lines to the /etc/hosts file (Linux) or C:\Windows\System32\drivers\etc\hosts file (Windows)
+```
+127.0.0.1 auth.jolszak.test
+127.0.0.1 admin.jolszak.test
+127.0.0.1 jolszak.test
 ```
 If you want to stop the cluster, you need to run the following command:
 ```

@@ -9,60 +9,98 @@ import '../assets/style/style.css';
 
 const ProductsPageComponent = () => {
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [TotalMaxPrice, setTotalMaxPrice] = useState(0); // Added maxPrice state
   const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(false);
-  const [maxPrice, setMaxPrice] = useState(0);
-  const [offset, setOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1); // For pagination
+  const [totalPages, setTotalPages] = useState(0); // Total number of pages
+  const [totalProducts, setTotalProducts] = useState(0); // Total number of products
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const limit = 10;
+  const pageSize = 20; // Number of products per page
 
-  const fetchProducts = async () => {
-    if (loading || !hasMore) return;
+const fetchProducts = async () => {
+  setLoading(true);
 
-    setLoading(true);
+  try {
+    const offset = (currentPage - 1) * pageSize;
 
-    try {
-      const response = await ProductsServiceClient.get(`/get/${limit}/${offset}`);
-      const newProducts = response.data;
+    // Build query parameters, ensuring undefined values are omitted
+    const params = {
+      limit: pageSize,
+      offset: offset,
+    };
 
-      if (newProducts.length < limit) {
-        setHasMore(false);
-      }
-
-      const productsWithImages = await Promise.all(newProducts.map(async (product) => {
-        try {
-          const imageResponse = await ProductsServiceClient.get(`/download/bin/${product.id}`, {
-            responseType: 'arraybuffer',
-          });
-          const base64Image = btoa(
-            new Uint8Array(imageResponse.data).reduce((data, byte) => data + String.fromCharCode(byte), '')
-          );
-          product.image = `data:image/png;base64,${base64Image}`;
-        } catch (error) {
-          product.image = null;
-        }
-        return product;
-      }));
-
-      setProducts((prevProducts) => [...prevProducts, ...productsWithImages]);
-      setFilteredProducts((prevProducts) => [...prevProducts, ...productsWithImages]);
-
-      setOffset((prevOffset) => prevOffset + limit);
-
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      setHasMore(false);
-    } finally {
-      setLoading(false);
+    // Only include filters in params if they have a value
+    if (filters.search) params.search = filters.search;
+    if (filters.arabica) params.arabica = filters.arabica;
+    if (filters.robusta) params.robusta = filters.robusta;
+    if (filters.priceRange) {
+      if (filters.priceRange[0] !== undefined) params.minPrice = filters.priceRange[0];
+      if (filters.priceRange[1] !== undefined) params.maxPrice = filters.priceRange[1];
     }
+
+    // Debugging: Print params to check their values before making the API call
+    console.log('Query Params:', params);
+
+    // Build URL with query parameters
+    const queryParams = new URLSearchParams(params).toString();
+
+    console.log('Final Query String:', queryParams); // Debugging
+
+    // Fetch the products with queryParams
+    const response = await ProductsServiceClient.get(`/get?${queryParams}`);
+    
+    // Assuming response.data is { products: [...], total: number }
+    const { products: fetchedProducts, total, total_max_price: TotalMaxPrice } = response.data;
+
+    // Set products and pagination values
+    setTotalProducts(total);
+    setTotalPages(Math.ceil(total / pageSize));
+    setTotalMaxPrice(TotalMaxPrice); // Set maxPrice state
+
+    // Fetch images for the products
+    const productIds = fetchedProducts.map((product) => product.id).join(',');
+
+    const imagesResponse = await ProductsServiceClient.get('/download/images', {
+      params: { product_ids: productIds },
+    });
+    const imagesData = imagesResponse.data;
+
+    // Map images to products
+    const productsWithImages = fetchedProducts.map((product) => {
+      const base64Image = imagesData[product.id];
+      product.image = base64Image ? `data:image/png;base64,${base64Image}` : null;
+      return product;
+    });
+
+    setProducts(productsWithImages);
+
+  } catch (error) {
+    console.error('Error fetching products:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
+  // Fetch products when currentPage or filters change
+  useEffect(() => {
+    fetchProducts();
+  }, [currentPage, filters]);
+
+  // Handle filter changes
+  const handleFilterChange = (newFilters) => {
+    console.log('Received Filters in Parent:', newFilters); // Debugging
+    setFilters(newFilters);
+    setCurrentPage(1); // Reset to first page when filters change
   };
 
+  // Modal handlers
   const openModal = (product) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
@@ -88,13 +126,13 @@ const ProductsPageComponent = () => {
 
     ProductsServiceClient.post('/create', formData, {
       headers: {
-        'accept': 'application/json',
+        accept: 'application/json',
         'Content-Type': 'multipart/form-data',
       },
     })
-    .then(() => fetchProducts())
-    .catch((error) => console.error('Error creating product:', error))
-    .finally(() => setIsCreateModalOpen(false));
+      .then(() => fetchProducts())
+      .catch((error) => console.error('Error creating product:', error))
+      .finally(() => setIsCreateModalOpen(false));
   };
 
   const handleEditProduct = (productId) => {
@@ -118,76 +156,86 @@ const ProductsPageComponent = () => {
         'Content-Type': 'application/json',
       },
     })
-    .then(() => fetchProducts())
-    .catch((error) => console.error('Error updating product:', error))
-    .finally(() => setIsEditModalOpen(false));
+      .then(() => fetchProducts())
+      .catch((error) => console.error('Error updating product:', error))
+      .finally(() => setIsEditModalOpen(false));
   };
 
-  const handleScroll = () => {
-    const scrollTop = document.documentElement.scrollTop;
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollPercentage = (scrollTop + windowHeight) / documentHeight;
-
-    if (scrollPercentage > 0.7) {
-      fetchProducts();
-    }
+  // Pagination controls
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [offset, loading, hasMore]);
-
-  const handleFilterChange = (name, value) => {
-    const newFilters = { ...filters, [name]: value };
-    setFilters(newFilters);
-    applyFilters(newFilters);
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
-  const applyFilters = (filters) => {
-    let filtered = products;
-
-    if (filters.search) {
-      filtered = filtered.filter((product) =>
-        product.name.toLowerCase().includes(filters.search.toLowerCase())
-      );
-    }
-
-    if (filters.priceRange) {
-      filtered = filtered.filter((product) => {
-        const productPrice = parseFloat(product.price.toFixed(2));
-        return productPrice >= filters.priceRange[0] && productPrice <= filters.priceRange[1];
-      });
-    }
-    if (filters.category1) {
-      filtered = filtered.filter((product) => product.category.toLowerCase() === 'arabica');
-    }
-    if (filters.category2) {
-      filtered = filtered.filter((product) => product.category.toLowerCase() === 'robusta');
-    }
-    setFilteredProducts(filtered);
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
+
+  // Generate page numbers for pagination controls
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
 
   return (
     <div className="product-list-page container">
-      <FilterPanel onFilterChange={handleFilterChange} maxPrice={maxPrice} />
+      <FilterPanel onFilterChange={handleFilterChange} maxPrice={TotalMaxPrice} />
       <div className="product-list-container">
         <div className="product-list-header">
           <h1>Lista produktów</h1>
-          <button onClick={handleCreateProduct} className="our-mission-button">Dodaj produkt</button>
+          <button onClick={handleCreateProduct} className="our-mission-button">
+            Dodaj produkt
+          </button>
         </div>
-        <div className="product-list">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} onClick={() => openModal(product)} onEdit={handleEditProduct} />
-          ))}
-        </div>
+        {loading ? (
+          <p>Loading products...</p>
+        ) : (
+          <>
+            <div className="product-list">
+              {products.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onClick={() => openModal(product)}
+                  onEdit={handleEditProduct}
+                />
+              ))}
+            </div>
+            {/* Pagination Controls */}
+            <div className="pagination">
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              {pageNumbers.map((pageNumber) => (
+                <button
+                  key={pageNumber}
+                  onClick={() => handlePageClick(pageNumber)}
+                  className={pageNumber === currentPage ? 'active' : ''}
+                >
+                  {pageNumber}
+                </button>
+              ))}
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
       </div>
-      <Modal isOpen={isModalOpen} onClose={closeModal} product={selectedProduct} />
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        product={selectedProduct}
+      />
       <ProductCreateModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}

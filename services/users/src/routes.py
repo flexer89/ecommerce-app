@@ -16,10 +16,6 @@ async def k8s() -> Dict[str, str | None]:
     }
     return env_vars
 
-@router.get("/get")
-def get_patients_kc():
-    return keycloak_admin.get_users({})
-
 @router.get("/get/{user_id}")
 def get_user_data(user_id: str):
     user = keycloak_admin.get_user(user_id)
@@ -106,3 +102,32 @@ def get_users():
         return users_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+    
+@router.get("/get")
+def get_user_data(limit: int = 10, offset: int = 0, query: str = None, ids: str = None):
+    if ids:
+        ids = ids.split(",")
+        users = [keycloak_admin.get_user(user_id) for user_id in ids]
+        total = len(users)
+    else:
+        users = keycloak_admin.get_users({"max": limit, "first": offset, "search": query})
+        total = keycloak_admin.users_count(query={"search": query})
+    
+    users_data = []
+    for user in users:
+        attributes = {key: value[0] if isinstance(value, list) and value else value 
+                    for key, value in user.get("attributes", {}).items()}
+        users_data.append({
+            "id": user.get("id"),
+            "username": user.get("username"),
+            "email": user.get("email"),
+            "firstName": user.get("firstName"),
+            "lastName": user.get("lastName"),
+            "attributes": attributes,
+        })
+        
+    return {
+        "users": users_data,
+        "total": total,
+    }

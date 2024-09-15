@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 class ProductBase(BaseModel):
@@ -30,3 +30,8 @@ class ProductUpdate(ProductBase):
 
 class Product(ProductBase):
     id: int
+    
+class ProductsListResponse(BaseModel):
+    products: List[ProductResponse]
+    total: int
+    total_max_price: float

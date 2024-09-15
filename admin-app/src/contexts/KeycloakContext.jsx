@@ -15,9 +15,9 @@ export const KeycloakAuthProvider = ({ children }) => {
     const keycloak = getKeycloak();
     if (!isInitialized) {
       keycloak
-        .init({ onLoad: 'check-sso' })
+        .init({ onLoad: 'login-required' })
         .then((authenticated) => {
-          if (authenticated) {
+          setLogin(authenticated);
             const tokenPayload = keycloak.tokenParsed;
             if (tokenPayload && tokenPayload.realm_access && tokenPayload.realm_access.roles) {
               const userRoles = tokenPayload.realm_access.roles;
@@ -26,8 +26,6 @@ export const KeycloakAuthProvider = ({ children }) => {
               setUuid(tokenPayload.sub);
               setName(tokenPayload.name);
             }
-          }
-          setLogin(authenticated);
         })
         .catch((error) => {
           console.error('Error initializing Keycloak:', error);
