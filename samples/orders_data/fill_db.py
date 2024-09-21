@@ -22,10 +22,10 @@ keycloak_admin = KeycloakAdmin(connection=keycloak_connection)
 
 products_service_url = "http://localhost:5000"
 orders_service_url = "http://localhost:5010"
-shipments_service_url = "http://localhost:5060"
+shipments_service_url = "http://localhost:5050"
 
 # Number of sample orders to generate
-num_orders = 1
+num_orders = 100
 
 
 def get_users():
@@ -104,7 +104,8 @@ def main():
             "user_id": user_id,
             "shipment_address": f"{user.get('attributes').get('Address')[0]}, {user.get('attributes').get('City')[0]}, {user.get('attributes').get('voivodeship')[0]}, {user.get('attributes').get('PostCode')[0]}",
             "company": "UPS",
-            "status": random.choice(['pending', 'shipped', 'delivered'])
+            "current_location": "Warszawska 24, Kraków, małopolskie, 31-155",
+            "status": random.choice(['pending', 'shipped'])
         }
         
         shipment = requests.post(f"{shipments_service_url}/create", json=shipping_info)

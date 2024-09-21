@@ -21,22 +21,22 @@ const OrderEditModal = ({ order, onClose, onSubmit }) => {
     <div className="modal-overlay">
       <div className="modal-content modal-order-content">
         <div className="modal-header">
-          <h2>Edit Order</h2>
+          <h2>Edytuj zamówienie</h2>
           <button onClick={onClose} className="close-btn">&times;</button>
         </div>
         <div className="modal-body">
           <label>Status</label>
           <select value={status} onChange={(e) => setStatus(e.target.value)}>
-            <option value="pending">Pending</option>
-            <option value="processing">Processing</option>
-            <option value="shipped">Shipped</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
-            <option value="on_hold">On Hold</option>
+            <option value="pending">W toku</option>
+            <option value="processing">Przetwarzane</option>
+            <option value="shipped">Wysłane</option>
+            <option value="delivered">Dostarczone</option>
+            <option value="cancelled">Anulowane</option>
+            <option value="on_hold">Wstrzymane</option>
           </select>
         </div>
         <div className="modal-footer">
-          <button onClick={handleSubmit} className="our-mission-button">Save Changes</button>
+          <button onClick={handleSubmit} className="our-mission-button">Zapisz zmiany</button>
         </div>
       </div>
     </div>

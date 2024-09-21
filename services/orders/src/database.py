@@ -65,7 +65,7 @@ def get_bestsellers_db(db: Session, limit: int):
     )
     
 def count_db(db: Session):
-    return db.query(OrderItem).count()
+    return db.query(Order).count()
 
 def get_orders_by_user_id_db(db: Session, user_id: str, limit: int = 0):
     if limit > 0:

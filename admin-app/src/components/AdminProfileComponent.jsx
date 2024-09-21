@@ -129,7 +129,7 @@ const PersonalInfo = () => {
           throw new Error('Failed to fetch user info');
         }
 
-        const data = response.data;
+        const data = response.data.users[0];
         setUserInfo(data);
         setFormValues({
           email: data.email,

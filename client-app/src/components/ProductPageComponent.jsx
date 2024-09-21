@@ -30,7 +30,10 @@ const ProductPageComponent = () => {
         productData.file_extension = 'png';
 
         setProduct(productData);
-        setDisplayedPrice(productData.price);
+        const finalPrice = productData.discount > 0
+          ? productData.price * (1 - productData.discount)
+          : productData.price;
+        setDisplayedPrice(finalPrice);
       } catch (error) {
         console.error('Error fetching product:', error);
       }
@@ -46,11 +49,11 @@ const ProductPageComponent = () => {
   const handleWeightClick = (weight) => {
     setSelectedWeight(weight);
 
-    if (weight === '500g') {
-      setDisplayedPrice(product.price * 2);
-    } else {
-      setDisplayedPrice(product.price);
-    }
+    const basePrice = product.discount > 0
+      ? product.price * (1 - product.discount)
+      : product.price;
+
+    setDisplayedPrice(weight === '500g' ? basePrice * 2 : basePrice);
   };
 
   const handleAddToCart = () => {
@@ -84,8 +87,11 @@ const ProductPageComponent = () => {
 
   return (
     <div className="product-page">
-      <ToastContainer /> {/* Add the ToastContainer here */}
-      <div className="product-image">
+      <ToastContainer />
+      <div className="product-image" style={{ position: 'relative' }}>
+        {product.discount > 0 && (
+          <div className="discount-badge">-{product.discount * 100}%</div>
+        )}
         {product.image ? (
           <img src={`data:image/${product.file_extension};base64,${product.image}`} alt={product.name} />
         ) : (
@@ -95,7 +101,15 @@ const ProductPageComponent = () => {
       <div className="product-details">
         <h1>{product.name}</h1>
         <p>{product.description}</p>
-        <p className="product-price">{displayedPrice.toFixed(2)} zł</p>
+        {product.discount > 0 ? (
+          <div className="product-price">
+            <span className="old-price">{product.price.toFixed(2)} zł</span>
+            <span className="new-price">{displayedPrice.toFixed(2)} zł</span>
+          </div>
+        ) : (
+          <p className="product-price">{displayedPrice.toFixed(2)} zł</p>
+        )}
+        
         <div className="product-options">
           <div className="option-group">
             <h2>Stopień zmielenia</h2>

@@ -11,6 +11,7 @@ import AdminProfileComponent from "./AdminProfileComponent";
 import ShipmentComponent from "./ShipmentComponent";
 import MapComponent from "./MapComponent";
 import { KeycloakAuthProvider, useKeycloakAuth } from '../contexts/KeycloakContext';
+import BackToTop from "./BackToTop";
 
 const AdminDashboard = () => {
   const { isAdmin, login } = useKeycloakAuth();
@@ -38,6 +39,7 @@ const ProductsPage = () => {
     <div>
       <Header />
       <ProductsPageComponent />
+      <BackToTop />
     </div>
   );
 };

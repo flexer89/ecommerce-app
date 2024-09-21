@@ -59,7 +59,7 @@ const ProductEditModal = ({ isOpen, onClose, onSubmit, product }) => {
 
   return isOpen ? (
     <div className="modal-overlay">
-      <div className="modal-content modal-product-content">
+      <div className="modal-content">
         <div className="modal-header">
           <h2>Edytuj produkt</h2>
           <button className="close-btn" onClick={onClose}>

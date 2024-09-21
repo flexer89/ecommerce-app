@@ -20,6 +20,13 @@ const ProductCard = ({ product, onClick, onEdit, onDelete }) => {
 
   return (
     <div className="product-card">
+      {/* Odznaka z rabatem */}
+      {product.discount > 0 && (
+        <div className="discount-badge">
+          Przecena! -{product.discount * 100}%
+        </div>
+      )}
+      
       <div className="product-card-image-container" onClick={onClick}>
         <img src={product.image} alt={product.name} className="product-card-image" />
         <h2 className="product-card-title">{product.name}</h2>

@@ -4,7 +4,7 @@
         "description": "Ziarnista kawa specialty z Gwatemali, wyróżniająca się smakiem z nutami grejpfruta, kiwi oraz toffi.",
         "price": 49.90,
         "stock": 10,
-        "image_path": "images/anacafe_14.png",
+        "image_path": "samples/products/images/anacafe_14.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -13,7 +13,7 @@
         "description": "Ziarnista kawa pochodząca z Hondurasu, charakteryzująca się smakiem z nutami mlecznej czekolady, kwiatów oraz czerwonych owoców.",
         "price": 89.90,
         "stock": 10,
-        "image_path": "images/batian.png",
+        "image_path": "samples/products/images/batian.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -22,7 +22,7 @@
         "description": "Kawa Geisha to wyjątkowa odmiana kawy pochodząca z Etiopii. Słynie z niezwykle bogatego i złożonego smaku, często porównywanego do wina. Jej ziarna charakteryzują się delikatnością oraz nutami kwiatowymi (jaśmin) i owocowymi (brzoskwinia).",
         "price": 89.90,
         "stock": 10,
-        "image_path": "images/geisha.png",
+        "image_path": "samples/products/images/geisha.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -31,7 +31,7 @@
         "description": "Wyjątkowa kawa z Brazylii, charakteryzująca się zbalansowanym smakiem z nutami miodu, karmelu i owoców cytrusowych.",
         "price": 29.90,
         "stock": 10,
-        "image_path": "images/yellow_bourbon.png",
+        "image_path": "samples/products/images/yellow_bourbon.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -40,7 +40,7 @@
         "description": "Orange Bourbon to rzadka odmiana kawy pochodząca z Salwadoru, wyróżniająca się cytrusowymi nutami smakowymi, takimi jak pomarańcza i mandarynka, z delikatnym posmakiem karmelu i miodu oraz intensywną kwasowością.",
         "price": 79.90,
         "stock": 10,
-        "image_path": "images/orange_bourbon.png",
+        "image_path": "samples/products/images/orange_bourbon.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -49,7 +49,7 @@
         "description": "Pacamara to hybrydowa odmiana kawy z Salwadoru, znana z dużych ziaren i bogatego smaku, łączącego nuty owoców tropikalnych, czekolady oraz przypraw.",
         "price": 69.90,
         "stock": 10,
-        "image_path": "images/pacamara.png",
+        "image_path": "samples/products/images/pacamara.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -58,7 +58,7 @@
         "description": "SL28 to wysokiej jakości odmiana kawy z Kenii, charakteryzująca się pełnym body, wyrazistą kwasowością oraz nutami czarnej porzeczki, cytrusów i pomidorów.",
         "price": 99.90,
         "stock": 10,
-        "image_path": "images/sl28.png",
+        "image_path": "samples/products/images/sl28.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -67,7 +67,7 @@
         "description": "Maragogipe to unikalna odmiana kawy pochodząca z Brazylii, znana z ogromnych ziaren i delikatnego, słodkiego smaku z nutami wanilii, kwiatów i czekolady.",
         "price": 74.90,
         "stock": 10,
-        "image_path": "images/maragogipe.png",
+        "image_path": "samples/products/images/maragogipe.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -76,7 +76,7 @@
         "description": "Caturra to popularna odmiana kawy z Ameryki Środkowej, charakteryzująca się zrównoważonym smakiem z nutami czerwonych owoców, orzechów oraz subtelnej czekolady.",
         "price": 39.90,
         "stock": 10,
-        "image_path": "images/caturra.png",
+        "image_path": "samples/products/images/caturra.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -85,7 +85,7 @@
         "description": "Typica to jedna z najstarszych odmian kawy arabica, znana z delikatnych nut kwiatowych i owocowych oraz lekkiej kwasowości, typowej dla kaw z Ameryki Południowej.",
         "price": 44.90,
         "stock": 10,
-        "image_path": "images/typica.png",
+        "image_path": "samples/products/images/typica.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -94,7 +94,7 @@
         "description": "Kawa pochodząca z regionu Yirgacheffe w Etiopii, słynąca z delikatnych, kwiatowych aromatów i wyraźnych cytrusowych nut, z łagodną kwasowością.",
         "price": 59.90,
         "stock": 10,
-        "image_path": "images/ethiopia_yirgacheffe.png",
+        "image_path": "samples/products/images/ethiopia_yirgacheffe.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -103,7 +103,7 @@
         "description": "Kawa z Sumatry o bogatym, ziemistym smaku z nutami czekolady, przypraw oraz niską kwasowością, charakterystyczna dla indonezyjskich regionów upraw.",
         "price": 64.90,
         "stock": 10,
-        "image_path": "images/sumatra_mandheling.png",
+        "image_path": "samples/products/images/sumatra_mandheling.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -112,7 +112,7 @@
         "description": "Wyjątkowa kawa z Kolumbii o pełnym body i zbalansowanym smaku, z nutami karmelu, orzechów oraz subtelną owocową kwasowością.",
         "price": 54.90,
         "stock": 10,
-        "image_path": "images/colombia_supremo.png",
+        "image_path": "samples/products/images/colombia_supremo.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -121,7 +121,7 @@
         "description": "Kawa z regionu Tarrazu w Kostaryce, znana z wyrazistej kwasowości, cytrusowych nut oraz gładkiego body z akcentami orzechów i czekolady.",
         "price": 49.90,
         "stock": 10,
-        "image_path": "images/costa_rica_tarrazu.png",
+        "image_path": "samples/products/images/costa_rica_tarrazu.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -130,7 +130,7 @@
         "description": "Kawa z Kenii o wyraźnej kwasowości i intensywnym smaku z nutami jagód, porzeczek oraz cytrusów, z pełnym body i wyrazistym finiszem.",
         "price": 89.90,
         "stock": 10,
-        "image_path": "images/kenya_aa.png",
+        "image_path": "samples/products/images/kenya_aa.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -139,7 +139,7 @@
         "description": "Kawa z Hondurasu o zrównoważonym smaku, z wyraźnymi nutami czekolady, karmelu i delikatnymi owocowymi akcentami.",
         "price": 44.90,
         "stock": 10,
-        "image_path": "images/honduras_shg.png",
+        "image_path": "samples/products/images/honduras_shg.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -148,7 +148,7 @@
         "description": "Ekskluzywna kawa z Jamajki, słynąca z łagodnego, kremowego smaku z nutami czekolady, orzechów i kwiatów, o niskiej kwasowości.",
         "price": 199.90,
         "stock": 5,
-        "image_path": "images/jamaica_blue_mountain.png",
+        "image_path": "samples/products/images/jamaica_blue_mountain.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -157,7 +157,7 @@
         "description": "Kawa z indonezyjskiego regionu Sulawesi, o pełnym body i ziemistych nutach, z dodatkiem czekolady, przypraw i odrobiny owocowej słodyczy.",
         "price": 64.90,
         "stock": 10,
-        "image_path": "images/sulawesi_toraja.png",
+        "image_path": "samples/products/images/sulawesi_toraja.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -166,7 +166,7 @@
         "description": "Kawa z regionu Antigua w Gwatemali, znana z wyrazistego smaku z nutami czekolady, przypraw, orzechów oraz delikatnej kwasowości.",
         "price": 54.90,
         "stock": 10,
-        "image_path": "images/guatemala_antigua.png",
+        "image_path": "samples/products/images/guatemala_antigua.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -175,7 +175,7 @@
         "description": "Kawa z Rwandy o wyrazistym smaku z nutami cytrusów, czerwonych owoców i delikatnej czekolady, z jasną, owocową kwasowością.",
         "price": 69.90,
         "stock": 10,
-        "image_path": "images/rwanda_bourbon.png",
+        "image_path": "samples/products/images/rwanda_bourbon.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -184,7 +184,7 @@
         "description": "Kawa z regionu Chanchamayo w Peru, znana z łagodnego smaku z nutami orzechów, mlecznej czekolady oraz subtelną owocową kwasowością.",
         "price": 39.90,
         "stock": 10,
-        "image_path": "images/peru_chanchamayo.png",
+        "image_path": "samples/products/images/peru_chanchamayo.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -193,7 +193,7 @@
         "description": "Delikatna kawa z regionu Boquete w Panamie, charakteryzująca się kwiatowym aromatem oraz owocowymi nutami, w tym jagód i cytrusów.",
         "price": 74.90,
         "stock": 10,
-        "image_path": "images/panama_boquete.png",
+        "image_path": "samples/products/images/panama_boquete.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -202,7 +202,7 @@
         "description": "Kawa z Tanzanii o charakterystycznych ziarnach Peaberry, wyróżniająca się pełnym body i intensywnymi nutami cytrusów oraz czerwonych owoców.",
         "price": 59.90,
         "stock": 10,
-        "image_path": "images/tanzania_peaberry.png",
+        "image_path": "samples/products/images/tanzania_peaberry.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -211,7 +211,7 @@
         "description": "Kawa z regionu Sidamo w Etiopii, charakteryzująca się kwiatowymi i cytrusowymi nutami, z jasną kwasowością i lekkim body.",
         "price": 49.90,
         "stock": 10,
-        "image_path": "images/ethiopia_sidamo.png",
+        "image_path": "samples/products/images/ethiopia_sidamo.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -220,7 +220,7 @@
         "description": "Klasyczna kawa z Brazylii o zrównoważonym smaku z nutami orzechów, czekolady i karmelu, z niską kwasowością i pełnym body.",
         "price": 34.90,
         "stock": 10,
-        "image_path": "images/brazil_santos.png",
+        "image_path": "samples/products/images/brazil_santos.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -229,7 +229,7 @@
         "description": "Kawa z regionu Caranavi w Boliwii, znana z bogatego smaku z nutami tropikalnych owoców, kwiatów oraz czekolady, z delikatną kwasowością.",
         "price": 64.90,
         "stock": 10,
-        "image_path": "images/bolivia_caranavi.png",
+        "image_path": "samples/products/images/bolivia_caranavi.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -238,7 +238,7 @@
         "description": "Kawa z górskich regionów Meksyku, charakteryzująca się pełnym body i smakiem z nutami orzechów, czekolady oraz cytrusów, z umiarkowaną kwasowością.",
         "price": 44.90,
         "stock": 10,
-        "image_path": "images/mexico_altura.png",
+        "image_path": "samples/products/images/mexico_altura.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -247,7 +247,7 @@
         "description": "Kawa z Papui-Nowej Gwinei, o pełnym smaku z wyraźnymi nutami owoców leśnych, przypraw i kwiatów, z subtelną kwasowością.",
         "price": 74.90,
         "stock": 10,
-        "image_path": "images/papua_new_guinea_sigri.png",
+        "image_path": "samples/products/images/papua_new_guinea_sigri.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -256,7 +256,7 @@
         "description": "Kawa z regionu Blawan na Jawie, o pełnym body, ziemistych nutach i delikatnych akcentach przypraw, z niską kwasowością.",
         "price": 54.90,
         "stock": 10,
-        "image_path": "images/java_blawan.png",
+        "image_path": "samples/products/images/java_blawan.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -265,7 +265,7 @@
         "description": "Kawa z regionu Jinotega w Nikaragui, wyróżniająca się wyraźnymi nutami czekolady, karmelu i orzechów, z umiarkowaną kwasowością.",
         "price": 39.90,
         "stock": 10,
-        "image_path": "images/nicaragua_jinotega.png",
+        "image_path": "samples/products/images/nicaragua_jinotega.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -274,7 +274,7 @@
         "description": "Kawa robusta z Indii, charakteryzująca się mocnym body, niską kwasowością i wyraźnymi nutami przypraw, czekolady oraz delikatnym dymnym aromatem.",
         "price": 34.90,
         "stock": 10,
-        "image_path": "images/india_cherry_robusta.png",
+        "image_path": "samples/products/images/india_cherry_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -283,7 +283,7 @@
         "description": "Kawa robusta z Ugandy o pełnym body, intensywnym smaku z nutami gorzkiej czekolady, orzechów oraz delikatną ziemistą kwasowością.",
         "price": 29.90,
         "stock": 10,
-        "image_path": "images/uganda_robusta.png",
+        "image_path": "samples/products/images/uganda_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -292,7 +292,7 @@
         "description": "Kawa robusta z Wietnamu, znana z intensywnego smaku, mocnego body i nut gorzkiej czekolady oraz drewna, idealna do espresso.",
         "price": 24.90,
         "stock": 10,
-        "image_path": "images/vietnam_robusta.png",
+        "image_path": "samples/products/images/vietnam_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -301,7 +301,7 @@
         "description": "Kawa robusta z Brazylii, o pełnym smaku z nutami kakao, orzechów oraz przypraw, z delikatną, ziemistą kwasowością i mocnym finiszem.",
         "price": 31.90,
         "stock": 10,
-        "image_path": "images/brazil_conillon_robusta.png",
+        "image_path": "samples/products/images/brazil_conillon_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -310,7 +310,7 @@
         "description": "Indonezyjska kawa robusta z Jawy, charakteryzująca się mocnym body, ziemistymi nutami, wyraźnym smakiem ciemnej czekolady i lekkim aromatem przypraw.",
         "price": 36.90,
         "stock": 10,
-        "image_path": "images/indonesia_java_robusta.png",
+        "image_path": "samples/products/images/indonesia_java_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -319,7 +319,7 @@
         "description": "Kawa robusta z Tanzanii o pełnym body, wyrazistym smaku z nutami czekolady, przypraw i dymnych akcentów, idealna do mocnych espresso.",
         "price": 28.90,
         "stock": 10,
-        "image_path": "images/tanzania_robusta.png",
+        "image_path": "samples/products/images/tanzania_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -328,7 +328,7 @@
         "description": "Kawa robusta z Kongo, znana z intensywnego smaku z nutami gorzkiej czekolady, pieprzu i ziemi, z niską kwasowością i bogatym finiszem.",
         "price": 32.90,
         "stock": 10,
-        "image_path": "images/congo_robusta.png",
+        "image_path": "samples/products/images/congo_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -337,7 +337,7 @@
         "description": "Rzadka kawa robusta z Madagaskaru, o pełnym body i intensywnym smaku z wyraźnymi nutami ciemnej czekolady, orzechów oraz subtelnym aromatem przypraw.",
         "price": 35.90,
         "stock": 10,
-        "image_path": "images/madagascar_robusta.png",
+        "image_path": "samples/products/images/madagascar_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -346,7 +346,7 @@
         "description": "Kawa robusta z Wybrzeża Kości Słoniowej o mocnym, wyrazistym smaku z nutami palonej czekolady, przypraw i orzechów, idealna do espresso.",
         "price": 27.90,
         "stock": 10,
-        "image_path": "images/ivory_coast_robusta.png",
+        "image_path": "samples/products/images/ivory_coast_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -355,7 +355,7 @@
         "description": "Kawa robusta z Gwatemali o pełnym body, niskiej kwasowości i intensywnym smaku z nutami kakao, przypraw i drewna.",
         "price": 33.90,
         "stock": 10,
-        "image_path": "images/guatemala_robusta.png",
+        "image_path": "samples/products/images/guatemala_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -364,7 +364,7 @@
         "description": "Kawa robusta z Liberii o pełnym smaku z nutami gorzkiej czekolady, tytoniu i przypraw, z gęstym body i delikatnie ziemistym finiszem.",
         "price": 29.90,
         "stock": 10,
-        "image_path": "images/liberia_robusta.png",
+        "image_path": "samples/products/images/liberia_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -373,7 +373,7 @@
         "description": "Robusta z Filipin, charakteryzująca się wyrazistym, mocnym smakiem z nutami ciemnej czekolady, orzechów oraz przypraw, z lekką kwasowością.",
         "price": 31.90,
         "stock": 10,
-        "image_path": "images/philippines_robusta.png",
+        "image_path": "samples/products/images/philippines_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -382,7 +382,7 @@
         "description": "Kawa robusta z Tajlandii o intensywnym body, z wyraźnymi nutami przypraw, pieprzu i czekolady, z dymnym, długim finiszem.",
         "price": 34.90,
         "stock": 10,
-        "image_path": "images/thailand_robusta.png",
+        "image_path": "samples/products/images/thailand_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -391,7 +391,7 @@
         "description": "Kawa robusta z Kamerunu o pełnym body i smaku z nutami przypraw, ziemi i kakao, z gęstą, oleistą teksturą i delikatnie gorzkim finiszem.",
         "price": 30.90,
         "stock": 10,
-        "image_path": "images/cameroon_robusta.png",
+        "image_path": "samples/products/images/cameroon_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -400,7 +400,7 @@
         "description": "Kawa robusta ze Sri Lanki o wyrazistym smaku z nutami dymu, ciemnej czekolady i przypraw, idealna do espresso, z niską kwasowością.",
         "price": 32.90,
         "stock": 10,
-        "image_path": "images/sri_lanka_robusta.png",
+        "image_path": "samples/products/images/sri_lanka_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -409,7 +409,7 @@
         "description": "Kawa robusta z Ekwadoru o pełnym body, intensywnym smaku z nutami orzechów, ciemnej czekolady i delikatnych przypraw, z gładkim finiszem.",
         "price": 35.90,
         "stock": 10,
-        "image_path": "images/ecuador_robusta.png",
+        "image_path": "samples/products/images/ecuador_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -418,7 +418,7 @@
         "description": "Kawa robusta z Angoli o głębokim, wyrazistym smaku z nutami drewna, gorzkiej czekolady oraz delikatną kwasowością, idealna do mocnych kawowych naparów.",
         "price": 31.90,
         "stock": 10,
-        "image_path": "images/angola_robusta.png",
+        "image_path": "samples/products/images/angola_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -427,7 +427,7 @@
         "description": "Kawa robusta z Mozambiku o bogatym, ziemistym smaku z nutami czekolady, tytoniu oraz przypraw, z niską kwasowością i pełnym body.",
         "price": 34.90,
         "stock": 10,
-        "image_path": "images/mozambique_robusta.png",
+        "image_path": "samples/products/images/mozambique_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -436,7 +436,7 @@
         "description": "Kawa robusta z Laosu o intensywnym smaku z nutami orzechów, czekolady i przypraw, z gęstą teksturą i wyrazistym finiszem, doskonała do espresso.",
         "price": 30.90,
         "stock": 10,
-        "image_path": "images/laos_robusta.png",
+        "image_path": "samples/products/images/laos_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -445,7 +445,7 @@
         "description": "Kawa robusta z Malawi o pełnym body, wyrazistym smaku z nutami przypraw, kakao oraz delikatnym aromatem dymu, z niską kwasowością.",
         "price": 29.90,
         "stock": 10,
-        "image_path": "images/malawi_robusta.png",
+        "image_path": "samples/products/images/malawi_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -454,7 +454,7 @@
         "description": "Kawa robusta z Burundi o pełnym smaku, z wyraźnymi nutami czekolady, przypraw i lekkim ziemistym aromatem, z gładkim finiszem i niską kwasowością.",
         "price": 33.90,
         "stock": 10,
-        "image_path": "images/burundi_robusta.png",
+        "image_path": "samples/products/images/burundi_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -463,7 +463,7 @@
         "description": "Kawa robusta z Zambii charakteryzująca się mocnym body, intensywnymi nutami czekolady, pieprzu oraz drewna, z wyrazistym i długim finiszem.",
         "price": 32.90,
         "stock": 10,
-        "image_path": "images/zambia_robusta.png",
+        "image_path": "samples/products/images/zambia_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -472,7 +472,7 @@
         "description": "Kawa robusta z Gabonu o bogatym, mocnym smaku z nutami ciemnej czekolady, przypraw i lekkiej goryczki, doskonała do intensywnych naparów.",
         "price": 31.90,
         "stock": 10,
-        "image_path": "images/gabon_robusta.png",
+        "image_path": "samples/products/images/gabon_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -481,7 +481,7 @@
         "description": "Kawa robusta z Haiti o pełnym body, z wyraźnymi nutami przypraw, tytoniu i ciemnej czekolady, z subtelną, ziemistą kwasowością.",
         "price": 34.90,
         "stock": 10,
-        "image_path": "images/haiti_robusta.png",
+        "image_path": "samples/products/images/haiti_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -490,7 +490,7 @@
         "description": "Kawa robusta z Beninu o intensywnym smaku z nutami gorzkiej czekolady, przypraw i lekkim aromatem dymu, z niską kwasowością i gładkim finiszem.",
         "price": 30.90,
         "stock": 10,
-        "image_path": "images/benin_robusta.png",
+        "image_path": "samples/products/images/benin_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -499,7 +499,7 @@
         "description": "Kawa robusta z Sierra Leone o intensywnym smaku z nutami ciemnej czekolady, orzechów i przypraw, z pełnym body i niską kwasowością.",
         "price": 29.90,
         "stock": 10,
-        "image_path": "images/sierra_leone_robusta.png",
+        "image_path": "samples/products/images/sierra_leone_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -508,7 +508,7 @@
         "description": "Kawa robusta z Gwinei o bogatym, mocnym smaku z wyrazistymi nutami kakao, drewna oraz przypraw, idealna do espresso o gęstej teksturze.",
         "price": 28.90,
         "stock": 10,
-        "image_path": "images/guinea_robusta.png",
+        "image_path": "samples/products/images/guinea_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -517,7 +517,7 @@
         "description": "Kawa robusta z Togo, o pełnym body i smaku z nutami gorzkiej czekolady, tytoniu i pieprzu, z dymnym finiszem i niską kwasowością.",
         "price": 30.90,
         "stock": 10,
-        "image_path": "images/togo_robusta.png",
+        "image_path": "samples/products/images/togo_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -526,7 +526,7 @@
         "description": "Kawa robusta z Malty o intensywnym smaku z wyrazistymi nutami kakao, przypraw i delikatnym dymnym aromatem, idealna do mocnych naparów.",
         "price": 32.90,
         "stock": 10,
-        "image_path": "images/malta_robusta.png",
+        "image_path": "samples/products/images/malta_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -535,7 +535,7 @@
         "description": "Kawa robusta z Burkina Faso, charakteryzująca się mocnym smakiem z nutami ciemnej czekolady, ziemi i przypraw, z niską kwasowością i gładkim finiszem.",
         "price": 31.90,
         "stock": 10,
-        "image_path": "images/burkina_faso_robusta.png",
+        "image_path": "samples/products/images/burkina_faso_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -544,7 +544,7 @@
         "description": "Kawa arabica z regionu Tolima w Kolumbii, charakteryzująca się zrównoważonym smakiem z nutami czerwonych owoców, karmelu oraz subtelną kwasowością.",
         "price": 45.90,
         "stock": 10,
-        "image_path": "images/colombia_tolima.png",
+        "image_path": "samples/products/images/colombia_tolima.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -553,7 +553,7 @@
         "description": "Kawa arabica z regionu Bugisu w Ugandzie o pełnym body i bogatym smaku z nutami czekolady, orzechów i owoców, z umiarkowaną kwasowością.",
         "price": 49.90,
         "stock": 10,
-        "image_path": "images/uganda_bugisu.png",
+        "image_path": "samples/products/images/uganda_bugisu.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -562,7 +562,7 @@
         "description": "Kawa arabica z regionu Marcala w Hondurasie, znana z pełnego body i smaku z nutami karmelu, mlecznej czekolady oraz dojrzałych owoców.",
         "price": 47.90,
         "stock": 10,
-        "image_path": "images/honduras_marcala.png",
+        "image_path": "samples/products/images/honduras_marcala.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -571,7 +571,7 @@
         "description": "Kawa robusta z Indii o pełnym body i intensywnym smaku z nutami przypraw, orzechów oraz dymnymi akcentami, idealna do espresso.",
         "price": 32.90,
         "stock": 10,
-        "image_path": "images/india_parchment_robusta.png",
+        "image_path": "samples/products/images/india_parchment_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -580,7 +580,7 @@
         "description": "Kawa arabica z regionu Harrar w Etiopii, o wyrazistym smaku z nutami jagód, czekolady oraz przypraw, z pełnym body i umiarkowaną kwasowością.",
         "price": 51.90,
         "stock": 10,
-        "image_path": "images/ethiopia_harrar.png",
+        "image_path": "samples/products/images/ethiopia_harrar.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -589,7 +589,7 @@
         "description": "Kawa robusta z Wietnamu o mocnym smaku z nutami gorzkiej czekolady, drewna i orzechów, z pełnym body i intensywnym finiszem.",
         "price": 28.90,
         "stock": 10,
-        "image_path": "images/vietnam_green_robusta.png",
+        "image_path": "samples/products/images/vietnam_green_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -598,7 +598,7 @@
         "description": "Kawa arabica z regionu Volcan w Panamie, charakteryzująca się wyrazistym, owocowym smakiem z nutami brzoskwiń, cytrusów i jaśminu.",
         "price": 53.90,
         "stock": 10,
-        "image_path": "images/panama_volcan.png",
+        "image_path": "samples/products/images/panama_volcan.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -607,7 +607,7 @@
         "description": "Kawa robusta z regionu Lampung w Indonezji o intensywnym, ziemistym smaku z nutami ciemnej czekolady i przypraw, z pełnym body.",
         "price": 30.90,
         "stock": 10,
-        "image_path": "images/indonesia_lampung_robusta.png",
+        "image_path": "samples/products/images/indonesia_lampung_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -616,7 +616,7 @@
         "description": "Kawa arabica z El Salvadoru o zrównoważonym smaku z nutami czekolady, orzechów oraz owoców, z delikatną kwasowością i gładkim finiszem.",
         "price": 48.90,
         "stock": 10,
-        "image_path": "images/el_salvador_pacas.png",
+        "image_path": "samples/products/images/el_salvador_pacas.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -625,7 +625,7 @@
         "description": "Kawa arabica z Rwandy o złożonym smaku z nutami czerwonych owoców, czekolady oraz cytrusów, z jasną kwasowością i gładkim finiszem.",
         "price": 52.90,
         "stock": 10,
-        "image_path": "images/rwanda_gishamwana.png",
+        "image_path": "samples/products/images/rwanda_gishamwana.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -634,7 +634,7 @@
         "description": "Kawa arabica z regionu Kilimanjaro w Tanzanii o bogatym smaku z nutami jagód, cytrusów oraz czarnej porzeczki, z pełnym body i wyrazistą kwasowością.",
         "price": 49.90,
         "stock": 10,
-        "image_path": "images/tanzania_kilimanjaro.png",
+        "image_path": "samples/products/images/tanzania_kilimanjaro.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -643,7 +643,7 @@
         "description": "Kawa robusta z regionu Rio Minas w Brazylii, o pełnym body i intensywnym smaku z nutami gorzkiej czekolady, kakao oraz orzechów, z niską kwasowością.",
         "price": 34.90,
         "stock": 10,
-        "image_path": "images/brazil_rio_minas_robusta.png",
+        "image_path": "samples/products/images/brazil_rio_minas_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -652,7 +652,7 @@
         "description": "Kawa arabica z regionu Dota Tarrazu w Kostaryce, charakteryzująca się wyrazistym smakiem z nutami miodu, cytrusów oraz delikatnej kwiatowej kwasowości.",
         "price": 54.90,
         "stock": 10,
-        "image_path": "images/costa_rica_dota_tarrazu.png",
+        "image_path": "samples/products/images/costa_rica_dota_tarrazu.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -661,7 +661,7 @@
         "description": "Kawa robusta z regionu Doi Chang w Tajlandii o mocnym, ziemistym smaku z nutami ciemnej czekolady, przypraw i lekkim dymnym finiszem.",
         "price": 32.90,
         "stock": 10,
-        "image_path": "images/thailand_doi_chang_robusta.png",
+        "image_path": "samples/products/images/thailand_doi_chang_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -670,7 +670,7 @@
         "description": "Kawa arabica z północnego Peru o zrównoważonym smaku z nutami orzechów, karmelu oraz delikatnej kwasowości owoców tropikalnych.",
         "price": 47.90,
         "stock": 10,
-        "image_path": "images/peru_norte_arabica.png",
+        "image_path": "samples/products/images/peru_norte_arabica.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -679,7 +679,7 @@
         "description": "Kawa robusta z wyspy Flores w Indonezji o intensywnym smaku z nutami tytoniu, ciemnej czekolady oraz przypraw, z pełnym body i niską kwasowością.",
         "price": 31.90,
         "stock": 10,
-        "image_path": "images/indonesia_flores_robusta.png",
+        "image_path": "samples/products/images/indonesia_flores_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -688,7 +688,7 @@
         "description": "Kawa arabica z regionu Nyeri w Kenii o wyrazistym, owocowym smaku z nutami czarnej porzeczki, cytrusów oraz delikatnej kwasowości i pełnym body.",
         "price": 55.90,
         "stock": 10,
-        "image_path": "images/kenya_nyeri.png",
+        "image_path": "samples/products/images/kenya_nyeri.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -697,7 +697,7 @@
         "description": "Kawa robusta z regionu Kivu w Kongo o wyrazistym smaku z nutami ciemnej czekolady, drewna i przypraw, z pełnym body i lekką goryczką.",
         "price": 33.90,
         "stock": 10,
-        "image_path": "images/congo_kivu_robusta.png",
+        "image_path": "samples/products/images/congo_kivu_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -706,7 +706,7 @@
         "description": "Kawa arabica z regionu Santa Ana w El Salvadorze o wyrazistym smaku z nutami czekolady, karmelu oraz delikatnej kwasowości owoców tropikalnych.",
         "price": 50.90,
         "stock": 10,
-        "image_path": "images/el_salvador_santa_ana.png",
+        "image_path": "samples/products/images/el_salvador_santa_ana.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -715,7 +715,7 @@
         "description": "Kawa arabica z regionu Sierra Nevada w Kolumbii o pełnym body i bogatym smaku z nutami orzechów, karmelu oraz jagód, z umiarkowaną kwasowością.",
         "price": 48.90,
         "stock": 10,
-        "image_path": "images/colombia_sierra_nevada.png",
+        "image_path": "samples/products/images/colombia_sierra_nevada.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -724,7 +724,7 @@
         "description": "Kawa robusta z regionu Dak Lak w Wietnamie, charakteryzująca się intensywnym, wyrazistym smakiem z nutami ciemnej czekolady, orzechów i przypraw.",
         "price": 29.90,
         "stock": 10,
-        "image_path": "images/vietnam_dak_lak_robusta.png",
+        "image_path": "samples/products/images/vietnam_dak_lak_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -733,7 +733,7 @@
         "description": "Kawa arabica z regionu Chanchamayo w Peru, znana z delikatnego smaku z nutami czekolady, cytrusów oraz owoców tropikalnych, z umiarkowaną kwasowością.",
         "price": 46.90,
         "stock": 10,
-        "image_path": "images/peru_chanchamayo.png",
+        "image_path": "samples/products/images/peru_chanchamayo.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -742,7 +742,7 @@
         "description": "Kawa robusta z Indii o pełnym smaku, z intensywnymi nutami czekolady, pieprzu i przypraw, idealna do espresso z gęstym body i długim finiszem.",
         "price": 33.90,
         "stock": 10,
-        "image_path": "images/india_kaapi_royale_robusta.png",
+        "image_path": "samples/products/images/india_kaapi_royale_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -751,7 +751,7 @@
         "description": "Kawa arabica z regionu Valle Central w Kostaryce o wyrazistym smaku z nutami cytrusów, jaśminu oraz karmelu, z pełnym body i delikatną kwasowością.",
         "price": 53.90,
         "stock": 10,
-        "image_path": "images/costa_rica_valle_central.png",
+        "image_path": "samples/products/images/costa_rica_valle_central.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -760,7 +760,7 @@
         "description": "Kawa robusta z Sumatry o intensywnym, ziemistym smaku z nutami kakao, tytoniu i przypraw, z niską kwasowością i bogatym finiszem.",
         "price": 31.90,
         "stock": 10,
-        "image_path": "images/indonesia_sumatra_robusta.png",
+        "image_path": "samples/products/images/indonesia_sumatra_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -769,7 +769,7 @@
         "description": "Kawa arabica z regionu Limu w Etiopii, charakteryzująca się kwiatowym aromatem, z nutami cytrusów i jagód, z jasną kwasowością i delikatnym body.",
         "price": 52.90,
         "stock": 10,
-        "image_path": "images/ethiopia_limu.png",
+        "image_path": "samples/products/images/ethiopia_limu.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -778,7 +778,7 @@
         "description": "Kawa robusta z Brazylii o pełnym smaku z wyrazistymi nutami gorzkiej czekolady, przypraw i delikatnym dymnym finiszem, doskonała do espresso.",
         "price": 32.90,
         "stock": 10,
-        "image_path": "images/brazil_conilon_robusta.png",
+        "image_path": "samples/products/images/brazil_conilon_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -787,7 +787,7 @@
         "description": "Kawa arabica z regionu Huehuetenango w Gwatemali o zrównoważonym smaku z nutami czekolady, orzechów i owoców tropikalnych, z delikatną kwasowością.",
         "price": 49.90,
         "stock": 10,
-        "image_path": "images/guatemala_huehuetenango.png",
+        "image_path": "samples/products/images/guatemala_huehuetenango.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -796,7 +796,7 @@
         "description": "Kawa robusta z regionu Boyo w Kamerunie o intensywnym smaku z nutami przypraw, ciemnej czekolady i kakao, z pełnym body i gładkim finiszem.",
         "price": 34.90,
         "stock": 10,
-        "image_path": "images/cameroon_boyo_robusta.png",
+        "image_path": "samples/products/images/cameroon_boyo_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -805,7 +805,7 @@
         "description": "Kawa arabica z regionu Lempira w Hondurasie, charakteryzująca się zrównoważonym smakiem z nutami karmelu, mlecznej czekolady oraz delikatnej owocowej kwasowości.",
         "price": 48.90,
         "stock": 10,
-        "image_path": "images/honduras_lempira.png",
+        "image_path": "samples/products/images/honduras_lempira.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -814,7 +814,7 @@
         "description": "Kawa robusta z regionu Kibale w Ugandzie o intensywnym, wyrazistym smaku z nutami ciemnej czekolady, pieprzu i przypraw, z pełnym body i gładkim finiszem.",
         "price": 31.90,
         "stock": 10,
-        "image_path": "images/uganda_kibale_robusta.png",
+        "image_path": "samples/products/images/uganda_kibale_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -823,7 +823,7 @@
         "description": "Kawa arabica z regionu Chiapas w Meksyku, znana z pełnego body i bogatego smaku z nutami orzechów, czekolady i przypraw, z delikatną kwasowością.",
         "price": 49.90,
         "stock": 10,
-        "image_path": "images/mexico_chiapas.png",
+        "image_path": "samples/products/images/mexico_chiapas.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -832,7 +832,7 @@
         "description": "Kawa robusta z regionu Bukoba w Tanzanii o pełnym body i mocnym smaku z nutami ciemnej czekolady, tytoniu i przypraw, z niską kwasowością.",
         "price": 32.90,
         "stock": 10,
-        "image_path": "images/tanzania_bukoba_robusta.png",
+        "image_path": "samples/products/images/tanzania_bukoba_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -841,7 +841,7 @@
         "description": "Ekskluzywna kawa arabica z Panamy o delikatnym, złożonym smaku z nutami jaśminu, brzoskwini oraz cytrusów, znana z wyjątkowej jakości i gładkiego finiszu.",
         "price": 89.90,
         "stock": 10,
-        "image_path": "images/panama_geisha.png",
+        "image_path": "samples/products/images/panama_geisha.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -850,7 +850,7 @@
         "description": "Kawa robusta z regionu Ijen na Jawie, charakteryzująca się intensywnym smakiem z nutami przypraw, kakao oraz delikatnym dymnym aromatem.",
         "price": 33.90,
         "stock": 10,
-        "image_path": "images/indonesia_java_ijen_robusta.png",
+        "image_path": "samples/products/images/indonesia_java_ijen_robusta.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -859,7 +859,7 @@
         "description": "Kawa arabica z regionu Kirinyaga w Kenii, charakteryzująca się owocowym smakiem z nutami czarnej porzeczki, cytrusów i wiśni, z jasną kwasowością i pełnym body.",
         "price": 53.90,
         "stock": 10,
-        "image_path": "images/kenya_kirinyaga.png",
+        "image_path": "samples/products/images/kenya_kirinyaga.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -868,7 +868,7 @@
         "description": "Kawa robusta z regionu Rondonia w Brazylii, o wyrazistym smaku z nutami czekolady, orzechów oraz lekkim akcentem przypraw, z pełnym body i niską kwasowością.",
         "price": 30.90,
         "stock": 10,
-        "image_path": "images/brazil_robusta_rondonia.png",
+        "image_path": "samples/products/images/brazil_robusta_rondonia.png",
         "discount": 0,
         "category": "robusta"
     },
@@ -877,7 +877,7 @@
         "description": "Kawa arabica z regionu Huila w Kolumbii, o złożonym smaku z nutami czerwonych owoców, karmelu oraz subtelną, owocową kwasowością.",
         "price": 47.90,
         "stock": 10,
-        "image_path": "images/colombia_huila.png",
+        "image_path": "samples/products/images/colombia_huila.png",
         "discount": 0,
         "category": "arabica"
     },
@@ -886,7 +886,7 @@
         "description": "Kawa robusta z Indii o intensywnym, pełnym smaku z nutami kakao, przypraw i orzechów, z wyrazistym finiszem i niską kwasowością.",
         "price": 29.90,
         "stock": 10,
-        "image_path": "images/india_cherry_ab_robusta.png",
+        "image_path": "samples/products/images/india_cherry_ab_robusta.png",
         "discount": 0,
         "category": "robusta"
     }

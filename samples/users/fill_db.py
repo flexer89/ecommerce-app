@@ -47,10 +47,10 @@ def generate_user_data(index):
         "emailVerified": True,
         "attributes": {
             "phoneNumber": [f"{random.randint(100000000, 999999999)}"],
-            "City": [f"City"],
-            "Address": [f"address"],
-            "PostCode": [f"{random.randint(10, 99)}-123"],
-            "voivodeship": [random.choice(["opolskie", "małopolskie", "łódzkie"])]
+            "City": ['Warszawa'],
+            "Address": ['Plac Defilad 1'],
+            "PostCode": ['00-901'],
+            "voivodeship": ['mazowieckie']
         },
         "credentials": [
             {

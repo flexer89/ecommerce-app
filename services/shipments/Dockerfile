@@ -10,4 +10,4 @@ COPY . .
 ENV ENV=dev
 ENV DEBUG_METRICS=1
 
-CMD [ "uvicorn", "src.app:app", "--host=0.0.0.0", "--port=5060", "--reload"]
+CMD [ "uvicorn", "src.app:app", "--host=0.0.0.0", "--port=5050", "--reload"]

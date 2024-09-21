@@ -2,18 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import ShipmentServiceClient from '../clients/ShipmentsService';
 import '../assets/style/style.css';
-import dayjs from 'dayjs';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ShipmentDetailModal from './ShipmentDetailModal';
+import ShipmentEditModal from './ShipmentEditModal';
+import { statusTranslationMap, orderStatuses } from '../utils/utils';
 
-const shipmentStatuses = [
-  { label: 'All', key: 'all' },
-  { label: 'Pending', key: 'pending' },
-  { label: 'Shipped', key: 'shipped' },
-  { label: 'Delivered', key: 'delivered' },
-  { label: 'Cancelled', key: 'cancelled' },
-];
 
 const ShipmentComponent = () => {
   const [shipments, setShipments] = useState([]);
@@ -30,6 +24,7 @@ const ShipmentComponent = () => {
 
   const [selectedShipment, setSelectedShipment] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // State for opening edit modal
 
   const fetchShipments = async () => {
     try {
@@ -39,7 +34,7 @@ const ShipmentComponent = () => {
           limit: paginationModel.pageSize,
           offset: paginationModel.page * paginationModel.pageSize,
           status: activeTab !== 'all' ? activeTab : undefined,
-          query: searchQuery || undefined,
+          search: searchQuery || undefined,
         },
       });
       const fetchedShipments = response.data.shipments || [];
@@ -74,61 +69,94 @@ const ShipmentComponent = () => {
     setIsDetailModalOpen(false);
   };
 
+  const openEditModal = (shipment) => {
+    setSelectedShipment(shipment);
+    setIsEditModalOpen(true); // Open the edit modal
+  };
+
+  const closeEditModal = () => {
+    setSelectedShipment(null);
+    setIsEditModalOpen(false); // Close the edit modal
+  };
+
+  const handleEditSubmit = async (updatedShipmentData, shipmentId) => {
+    try {
+      await ShipmentServiceClient.patch(`/update/${shipmentId}`, updatedShipmentData);
+      toast.success('Shipment updated successfully!');
+      fetchShipments();
+    } catch (error) {
+      console.error('Error updating shipment:', error);
+      toast.error('Error updating shipment');
+    } finally {
+      closeEditModal();
+    }
+  };
+
+  const rows = shipments.map((shipment) => ({
+    ...shipment,
+    shipment_date: shipment.shipment_date
+      ? new Date(shipment.shipment_date).toLocaleDateString('pl-PL') + ' | ' + new Date(shipment.shipment_date).toLocaleTimeString('pl-PL')
+      : 'Brak daty',
+    delivery_date: shipment.delivery_date
+      ? new Date(shipment.delivery_date).toLocaleDateString('pl-PL') + ' | ' + new Date(shipment.delivery_date).toLocaleTimeString('pl-PL')
+      : 'Brak daty',
+  }));
+
   const columns = [
-    { field: 'id', headerName: 'ID', width: 100 },
-    { field: 'user_id', headerName: 'User ID', width: 150 },
-    { field: 'order_id', headerName: 'Order ID', width: 150 },
-    { field: 'shipment_address', headerName: 'Shipment Address', width: 250 },
-    {
-      field: 'shipment_date',
-      headerName: 'Shipment Date',
-      width: 150,
-      valueFormatter: (params) =>
-        new Date(params.value).toLocaleDateString(),
-    },
-    {
-      field: 'delivery_date',
-      headerName: 'Delivery Date',
-      width: 150,
-      valueFormatter: (params) =>
-        new Date(params.value).toLocaleDateString(),
-    },
+    { field: 'id', headerName: 'ID wysyłki', flex: 0.75 }, // Używamy flex zamiast width
+    { field: 'user_id', headerName: 'ID użytkownika', flex: 1.5 }, 
+    { field: 'order_id', headerName: 'ID zamówienia', flex: 0.75 }, 
+    { field: 'shipment_address', headerName: 'Adres dostawy', flex: 2 }, 
+    { field: 'shipment_date', headerName: 'Data wysyłki', flex: 1 }, // Data już sformatowana w mapowaniu
+    { field: 'delivery_date', headerName: 'Data dostawy', flex: 1 },
     {
       field: 'status',
       headerName: 'Status',
-      width: 150,
-      renderCell: (params) => (
-        <span className={`status-badge ${params.value}`}>{params.value}</span>
-      ),
+      flex: 1,
+      renderCell: (params) => {
+        const translatedStatus = statusTranslationMap[params.value] || 'Nieznany'; // Jeśli status jest nieznany, pokaż fallback
+        return (
+          <span className={`status-badge ${params.value}`}>{translatedStatus}</span>
+        );
+      },
     },
-    { field: 'company', headerName: 'Company', width: 200 },
+    { field: 'company', headerName: 'Firma', flex: 1 },
     {
       field: 'actions',
-      headerName: 'Actions',
-      width: 150,
+      headerName: 'Akcje',
+      flex: 1.5,
       renderCell: (params) => (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            openDetailModal(params.row);
-          }}
-        >
-          View Details
-        </button>
+        <div className="actions-container">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              openDetailModal(params.row);
+            }}
+          >
+            Szczegóły
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              openEditModal(params.row);
+            }}
+          >
+            Edytuj
+          </button>
+        </div>
       ),
       sortable: false,
       filterable: false,
     },
   ];
+  
 
   return (
-    <div className="shipments-page">
+    <div className="shipments-page container">
       <ToastContainer />
-      <h2>Shipments</h2>
-
-      {/* Tabs for shipment statuses */}
+      <h2>Wysyłki</h2>
       <div className="tabs-container">
-        {shipmentStatuses.map((status) => (
+        {orderStatuses.map((status) => (
           <button
             key={status.key}
             className={`tab-button ${activeTab === status.key ? 'active' : ''}`}
@@ -146,17 +174,16 @@ const ShipmentComponent = () => {
       <div className="search-bar">
         <input
           type="text"
-          placeholder="Search by shipment ID, user ID, order ID, or company"
+          placeholder="Wyszukaj po ID zamówienia"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
-        <button onClick={handleSearch}>Search</button>
+        <button className='our-mission-button' onClick={handleSearch}>Wyszukaj</button>
       </div>
 
-      {/* Shipments DataGrid */}
       <div style={{ height: 600, width: '100%' }}>
         <DataGrid
-          rows={shipments}
+          rows={rows}
           columns={columns}
           pagination
           paginationMode="server"
@@ -165,6 +192,9 @@ const ShipmentComponent = () => {
           onPaginationModelChange={setPaginationModel}
           loading={loading}
           disableSelectionOnClick
+          sx={{
+            fontSize: '1.1rem',
+          }}
         />
       </div>
 
@@ -173,6 +203,16 @@ const ShipmentComponent = () => {
         <ShipmentDetailModal
           shipment={selectedShipment}
           onClose={closeDetailModal}
+        />
+      )}
+
+      {/* Shipment Edit Modal */}
+      {isEditModalOpen && (
+        <ShipmentEditModal
+          isOpen={isEditModalOpen}
+          onClose={closeEditModal}
+          onSubmit={handleEditSubmit}
+          shipment={selectedShipment}
         />
       )}
     </div>

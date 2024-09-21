@@ -1,22 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
+import { useNavigate } from 'react-router-dom';
 import OrderServiceClient from '../clients/OrdersService';
 import UserServiceClient from '../clients/UsersService';
 import OrderDetailModal from './OrderDetailModal';
 import OrderEditModal from './OrderEditModal';
+import { statusTranslationMap, orderStatuses } from '../utils/utils';
 import '../assets/style/style.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const orderStatuses = [
-  { label: 'All', key: 'all' },
-  { label: 'Pending', key: 'pending' },
-  { label: 'Processing', key: 'processing' },
-  { label: 'Shipped', key: 'shipped' },
-  { label: 'Delivered', key: 'delivered' },
-  { label: 'Cancelled', key: 'cancelled' },
-  { label: 'On Hold', key: 'on_hold' },
-];
 
 const OrderList = () => {
   const [orders, setOrders] = useState([]);
@@ -31,6 +24,7 @@ const OrderList = () => {
     page: 0,
     pageSize: 20,
   });
+  const navigate = useNavigate();
 
   // Added state variables for search functionality
   const [searchText, setSearchText] = useState(''); // Input value for search
@@ -50,7 +44,7 @@ const OrderList = () => {
       });
 
       const fetchedOrders = response.data.orders;
-      const totalOrders = response.data.total; // Ensure API returns total number of matching orders
+      const totalOrders = response.data.total;
 
       setOrders(fetchedOrders);
       setRowCount(totalOrders);
@@ -97,6 +91,11 @@ const OrderList = () => {
     }
   };
 
+  // Redirect to User Profile page
+  const handleRowClick = (params) => {
+    navigate(`/users/${params.row.user_id}`);
+  };
+
   const openDetailModal = (order) => {
     setSelectedOrder(order);
     setIsDetailModalOpen(true);
@@ -121,44 +120,42 @@ const OrderList = () => {
     ? orders.map((order) => ({
         ...order,
         id: order.id,
-        userEmail: users.find((user) => user.id === order.user_id)?.email || 'Unknown',
-        date: new Date(order.created_at).toLocaleDateString(),
+        user_id: order.user_id,
+        total_price: order.total_price,
+        date: new Date(order.created_at).toLocaleDateString() + ' | ' + new Date(order.created_at).toLocaleTimeString(),
       }))
     : [];
 
   const columns = [
     {
       field: 'id',
-      headerName: 'Order',
-      width: 100,
+      headerName: 'ID zamówienia',
+      flex: 0.5,
       renderCell: (params) => `#${params.value}`,
     },
-    { field: 'userEmail', headerName: 'User', width: 200 },
-    { field: 'date', headerName: 'Date', width: 150 },
+    { field: 'user_id', headerName: 'Użytkownik', flex: 1.5},
+    { field: 'date', headerName: 'Data', flex: 1, },
     {
       field: 'status',
       headerName: 'Status',
-      width: 150,
-      renderCell: (params) => (
-        <span className={`status-badge ${params.value}`}>{params.value}</span>
-      ),
-    },
-    {
-      field: 'total_price',
-      headerName: 'Total',
-      width: 150,
-      valueFormatter: (params) => {
-        if (params.value === undefined || params.value === null) {
-          return 'N/A';
-        }
-        const value = Number(params.value);
-        return !isNaN(value) ? `${value.toFixed(2)} zł` : 'N/A';
+      flex: 1,
+      renderCell: (params) => {
+        const translatedStatus = statusTranslationMap[params.value] || 'Nieznany';
+        return (
+          <span className={`status-badge ${params.value}`}>{translatedStatus}</span>
+        );
       },
     },
     {
+      field: 'total_price',
+      headerName: 'Wartość zamówienia',
+      flex: 1,
+      renderCell: (params) => `${params.value.toFixed(2)} zł`,
+    },
+    {
       field: 'actions',
-      headerName: 'Actions',
-      width: 140,
+      headerName: 'Akcje',
+      flex: 1,
       renderCell: (params) => (
         <div className='actions-container'>
           <button
@@ -167,7 +164,7 @@ const OrderList = () => {
               openDetailModal(params.row);
             }}
           >
-            View Details
+            Szczegóły
           </button>
           <button
             onClick={(e) => {
@@ -175,15 +172,7 @@ const OrderList = () => {
               openEditModal(params.row);
             }}
           >
-            Edit
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              openEditModal(params.row);
-            }}
-          >
-            Edit
+            Edytuj
           </button>
         </div>
       ),
@@ -193,8 +182,9 @@ const OrderList = () => {
   ];
 
   return (
-    <div className="order-list-page">
+    <div className="order-list-page container">
       <ToastContainer />
+      <h2>Zamówienia</h2>
       <div className="tabs-container">
         {orderStatuses.map((status) => (
           <button
@@ -209,30 +199,32 @@ const OrderList = () => {
           </button>
         ))}
       </div>
-
-      {/* Search Bar */}
       <div className="search-bar">
         <input
           type="text"
-          placeholder="Search by order ID"
+          placeholder="Wyszukaj po ID zamówienia"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
-        <button onClick={handleSearch}>Search</button>
+        <button className='our-mission-button' onClick={handleSearch}>Wyszukaj</button>
       </div>
 
       <div className="order-list">
-        <div style={{ height: 600, width: '100%' }}>
+        <div className='datagrid-container'>
           <DataGrid
             rows={rows}
             columns={columns}
             pagination
-            paginationMode="server" // Enable server-side pagination
-            rowCount={rowCount} // Total number of matching orders
+            paginationMode="server"
+            rowCount={rowCount}
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
             loading={loading}
+            onRowClick={handleRowClick}
             disableSelectionOnClick
+            sx={{
+              fontSize: '1.1rem',
+            }}
           />
         </div>
 

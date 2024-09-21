@@ -23,13 +23,18 @@ def get_user_data(user_id: str):
     attributes = {key: value[0] if isinstance(value, list) and value else value 
                   for key, value in user.get("attributes", {}).items()}
     
-    return {
+    user = {
         "id": user.get("id"),
         "username": user.get("username"),
         "email": user.get("email"),
         "firstName": user.get("firstName"),
         "lastName": user.get("lastName"),
         "attributes": attributes,
+    }
+    
+    return {
+        "total": 1,
+        "users": [user],
     }
     
 @router.patch("/update/{user_id}")
@@ -105,14 +110,14 @@ def get_users():
     
     
 @router.get("/get")
-def get_user_data(limit: int = 10, offset: int = 0, query: str = None, ids: str = None):
+def get_user_data(limit: int = 10, offset: int = 0, search: str = None, ids: str = None):
     if ids:
         ids = ids.split(",")
         users = [keycloak_admin.get_user(user_id) for user_id in ids]
         total = len(users)
     else:
-        users = keycloak_admin.get_users({"max": limit, "first": offset, "search": query})
-        total = keycloak_admin.users_count(query={"search": query})
+        users = keycloak_admin.get_users({"max": limit, "first": offset, "search": search})
+        total = keycloak_admin.users_count(query={"search": search})
     
     users_data = []
     for user in users:

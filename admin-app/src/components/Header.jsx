@@ -82,11 +82,11 @@ const Header = () => {
         </button>
         <nav className="navbar-mobile">
           <ul className="navbar-list">
-            <li><Link to="/" className="navbar-link has-after" onClick={togglePanel}>Strona główna</Link></li>
-            <li><Link to="/profile" className="navbar-link has-after" onClick={togglePanel}>Profil</Link></li>
-            <li><Link to="/products" className="navbar-link has-after" onClick={togglePanel}>Oferta</Link></li>
-            <li><Link to="/bestsellers" className="navbar-link has-after" onClick={togglePanel}>Bestsellery</Link></li>
-            <li><Link to="/our-mission" className="navbar-link has-after" onClick={togglePanel}>O nas</Link></li>
+              <li><Link to="/statistics" className="navbar-link has-after">Statystyki</Link></li>
+              <li><Link to="/products" className="navbar-link has-after">Produkty</Link></li>
+              <li><Link to="/users" className="navbar-link has-after">Użytkownicy</Link></li>
+              <li><Link to="/orders" className="navbar-link has-after">Zamówienia</Link></li>
+              <li><Link to="/shipments" className="navbar-link has-after">Wysyłki</Link></li>
           </ul>
         </nav>
         {isLogin ? (

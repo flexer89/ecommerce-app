@@ -49,9 +49,9 @@ def read_product(product_id: int, db: Session = Depends(get_db)):
     return product
 
 @router.get("/get", response_model=ProductsListResponse)
-def read_products(limit: int, offset: int, search: str = None, arabica: bool = False, robusta: bool = False, minPrice = None, maxPrice = None, db: Session = Depends(get_db)
+def read_products(limit: int, offset: int, search: str = None, arabica: bool = False, robusta: bool = False, minPrice = None, maxPrice = None, sort_by: str = "", sort_order: str = "", db: Session = Depends(get_db)
 ):
-    products = get_products_list_db(db, limit=limit, offset=offset, search=search, arabica=arabica, robusta=robusta, minPrice=minPrice, maxPrice=maxPrice)
+    products = get_products_list_db(db, limit=limit, offset=offset, search=search, arabica=arabica, robusta=robusta, minPrice=minPrice, maxPrice=maxPrice, sort_by=sort_by, sort_order=sort_order)
     
     if not products:
         raise HTTPException(status_code=404, detail="No more products available")

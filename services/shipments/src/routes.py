@@ -68,7 +68,7 @@ def read_all_shipments(db: Session = Depends(get_db)):
 def count_shipments(db: Session = Depends(get_db)):
     return {"total": count_shipments_db(db)}
 
-@router.get("/get")
+@router.get("/get", response_model=GetShipmentResponse)
 def get_shipments(db: Session = Depends(get_db), limit: int = 10, offset: int = 0, status: str = None, search: int = None):
     shipments = get_all_shipments_db_paginated(SessionLocal(), limit=limit, offset=offset, status=status, search=search)
     total = get_shipments_count(db, status=status)

@@ -78,12 +78,9 @@ data:
         user_id VARCHAR NOT NULL,
         order_id INTEGER NOT NULL,
         shipment_address VARCHAR NOT NULL,
+        current_location VARCHAR NOT NULL,
         shipment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         delivery_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         status shipment_status_enum DEFAULT 'pending',
         company VARCHAR NOT NULL
     );
-
-    -- Add sample data
-    INSERT INTO shipments (user_id, order_id, shipment_address, status, company) VALUES ('5e44e20e-0ba8-4038-8e62-33fa661fce70', 1, '123 Sample St, Sample City', 'pending', 'company');
-    INSERT INTO shipments (user_id, order_id, shipment_address, status, company) VALUES ('5e44e20e-0ba8-4038-8e62-33fa661fce70', 2, '456 Example Rd, Example City', 'shipped', 'company');

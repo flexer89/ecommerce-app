@@ -21,23 +21,32 @@ const UserList = () => {
   });
   const navigate = useNavigate();
 
-  // Fetch users with pagination and optional search
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await UserServiceClient.get(`/get`, {
-        params: {
-          limit: paginationModel.pageSize,
-          offset: paginationModel.page * paginationModel.pageSize,
-          search: searchQuery,
-        },
-      });
-
-      const fetchedUsers = response.data.users;
-      const totalUsers = response.data.total; // Ensure this is the total number of matching users
+      let fetchedUsers = [];
+      let totalUsers = 0;
+      // If serachText is a valid UUID, fetch user by ID
+      if (searchText.match(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/)) {
+        const response = await UserServiceClient.get(`/get/${searchText}`);
+        fetchedUsers = response.data.users;
+        totalUsers = response.data.total;
+      }
+      else {
+        const response = await UserServiceClient.get(`/get`, {
+          params: {
+            limit: paginationModel.pageSize,
+            offset: paginationModel.page * paginationModel.pageSize,
+            search: searchQuery,
+          },
+        });
+        
+        totalUsers = response.data.total;
+        fetchedUsers = response.data.users;
+      }
 
       setUsers(fetchedUsers);
-      setRowCount(totalUsers); // Set total matching users
+      setRowCount(totalUsers);
     } catch (error) {
       console.error('Error fetching users:', error);
       toast.error('Error fetching user list');
@@ -46,18 +55,15 @@ const UserList = () => {
     }
   };
 
-  // UseEffect to fetch users whenever the paginationModel or search query changes
   useEffect(() => {
     fetchUsers();
   }, [paginationModel.page, paginationModel.pageSize, searchQuery]);
 
-  // Handle search
   const handleSearch = () => {
-    setSearchQuery(searchText); // Update the search query to trigger data fetch
-    setPaginationModel((prevModel) => ({ ...prevModel, page: 0 })); // Reset to the first page when searching
+    setSearchQuery(searchText);
+    setPaginationModel((prevModel) => ({ ...prevModel, page: 0 }));
   };
 
-  // Redirect to User Profile page
   const handleRowClick = (params) => {+
     navigate(`/users/${params.id}`);
   };
@@ -84,7 +90,7 @@ const UserList = () => {
         draggable: true,
       });
       closeEditModal();
-      fetchUsers(); // Refresh the data after updating
+      fetchUsers();
     } catch (error) {
       toast.error('Error updating user. Please check the data entered.', {
         position: "top-right",
@@ -98,18 +104,18 @@ const UserList = () => {
   };
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 100 },
-    { field: 'username', headerName: 'Username', width: 200 },
-    { field: 'email', headerName: 'Email', width: 250 },
-    { field: 'firstName', headerName: 'First Name', width: 150 },
-    { field: 'lastName', headerName: 'Last Name', width: 150 },
+    { field: 'id', headerName: 'ID', flex: 1 },
+    { field: 'username', headerName: 'Nazwa użytkownika', flex: 1 },
+    { field: 'email', headerName: 'Email', flex: 1 },
+    { field: 'firstName', headerName: 'Imię', flex: 1 },
+    { field: 'lastName', headerName: 'Nazwisko', flex: 1 },
     {
       field: 'actions',
-      headerName: 'Actions',
+      headerName: 'Akcje',
       width: 150,
       renderCell: (params) => (
         <button onClick={(e) => { e.stopPropagation(); openEditModal(params.row); }}>
-          Edit
+          Edytuj
         </button>
       ),
       sortable: false,
@@ -118,33 +124,32 @@ const UserList = () => {
 
   return (
     <div className="user-list-container">
-      <h2>Users</h2>
+      <h2>Użytkownicy</h2>
       <ToastContainer />
-
-      {/* Search Bar */}
       <div className="search-bar">
         <input
           type="text"
-          placeholder="Search by username or email"
+          placeholder="Wyszukaj po emailu lub ID."
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
-        <button onClick={handleSearch}>Search</button>
+        <button className='our-mission-button' onClick={handleSearch}>Wyszukaj</button>
       </div>
-
-      {/* DataGrid for modern table */}
       <div style={{ height: 600, width: '100%' }}>
         <DataGrid
           rows={users}
           columns={columns}
           pagination
-          paginationMode="server" // Enable server-side pagination
-          rowCount={rowCount} // Set the total row count for pagination
+          paginationMode="server"
+          rowCount={rowCount}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           loading={loading}
           onRowClick={handleRowClick}
           disableSelectionOnClick
+          sx={{
+            fontSize: '1.1rem',
+          }}
         />
       </div>
 

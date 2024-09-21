@@ -18,6 +18,7 @@ class Shipment(Base):
     order_id = Column(Integer, nullable=False)
     user_id = Column(String, nullable=False)
     shipment_address = Column(String, nullable=False)
+    current_location = Column(String, nullable=False)
     shipment_date = Column(TIMESTAMP, default=datetime.utcnow)
     delivery_date = Column(TIMESTAMP, default=datetime.utcnow)
     status = Column(Enum(ShipmentStatusEnum), default=ShipmentStatusEnum.pending)

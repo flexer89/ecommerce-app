@@ -15,7 +15,10 @@ export const CartProvider = ({ children }) => {
   const addItemToCart = (product, grind, weight) => {
     const existingProduct = cart.items.find(item => item.id === product.id && item.grind === grind && item.weight === weight);
     let updatedCart;
-    const productPrice = parseFloat(product.price);
+    let productPrice = parseFloat(product.price * (product.discount > 0 ? (1 - product.discount) : 1));
+    if (weight == '500g') {
+      productPrice *= 2;
+    }
 
     if (existingProduct) {
       updatedCart = {

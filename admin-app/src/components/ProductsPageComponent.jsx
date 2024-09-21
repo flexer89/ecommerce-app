@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard';
-import FilterPanel from '../components/FilterPanel';
+import SortModal from '../components/SortModal';
 import ProductsServiceClient from '../clients/ProductsService';
 import Modal from '../components/ProductModal';
 import ProductCreateModal from '../components/ProductCreateModal';
 import ProductEditModal from '../components/ProductEditModal';
+import FilterModal from '../components/FilterModal';
 import '../assets/style/style.css';
 
 const ProductsPageComponent = () => {
@@ -15,10 +16,14 @@ const ProductsPageComponent = () => {
   const [currentPage, setCurrentPage] = useState(1); // For pagination
   const [totalPages, setTotalPages] = useState(0); // Total number of pages
   const [totalProducts, setTotalProducts] = useState(0); // Total number of products
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false); // State for modal
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isSortModalOpen, setIsSortModalOpen] = useState(false);
+  const [sortOptions, setSortOptions] = useState({ sortBy: '', sortOrder: 'asc' });
+
 
   const pageSize = 20; // Number of products per page
 
@@ -43,6 +48,11 @@ const fetchProducts = async () => {
       if (filters.priceRange[1] !== undefined) params.maxPrice = filters.priceRange[1];
     }
 
+    // Include sorting options
+    if (sortOptions.sortBy) {
+      params.sort_by = sortOptions.sortBy;
+      params.sort_order = sortOptions.sortOrder;
+    }
     // Debugging: Print params to check their values before making the API call
     console.log('Query Params:', params);
 
@@ -62,6 +72,7 @@ const fetchProducts = async () => {
     setTotalPages(Math.ceil(total / pageSize));
     setTotalMaxPrice(TotalMaxPrice); // Set maxPrice state
 
+    if (fetchedProducts.length > 0) {
     // Fetch images for the products
     const productIds = fetchedProducts.map((product) => product.id).join(',');
 
@@ -78,6 +89,9 @@ const fetchProducts = async () => {
     });
 
     setProducts(productsWithImages);
+  } else {
+    setProducts([]);
+  }
 
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -87,13 +101,10 @@ const fetchProducts = async () => {
 };
 
 
-
-  // Fetch products when currentPage or filters change
   useEffect(() => {
     fetchProducts();
-  }, [currentPage, filters]);
+  }, [currentPage, filters, sortOptions]);
 
-  // Handle filter changes
   const handleFilterChange = (newFilters) => {
     console.log('Received Filters in Parent:', newFilters); // Debugging
     setFilters(newFilters);
@@ -174,7 +185,6 @@ const fetchProducts = async () => {
     setCurrentPage(pageNumber);
   };
 
-  // Generate page numbers for pagination controls
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
@@ -182,55 +192,67 @@ const fetchProducts = async () => {
 
   return (
     <div className="product-list-page container">
-      <FilterPanel onFilterChange={handleFilterChange} maxPrice={TotalMaxPrice} />
-      <div className="product-list-container">
-        <div className="product-list-header">
-          <h1>Lista produktów</h1>
-          <button onClick={handleCreateProduct} className="our-mission-button">
-            Dodaj produkt
-          </button>
-        </div>
-        {loading ? (
-          <p>Loading products...</p>
-        ) : (
-          <>
-            <div className="product-list">
-              {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onClick={() => openModal(product)}
-                  onEdit={handleEditProduct}
-                />
-              ))}
-            </div>
-            {/* Pagination Controls */}
-            <div className="pagination">
-              <button
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              {pageNumbers.map((pageNumber) => (
-                <button
-                  key={pageNumber}
-                  onClick={() => handlePageClick(pageNumber)}
-                  className={pageNumber === currentPage ? 'active' : ''}
-                >
-                  {pageNumber}
-                </button>
-              ))}
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
-            </div>
-          </>
-        )}
+      <div className="product-list-header">
+        <h1>Lista produktów</h1>
+        <button
+          onClick={() => setIsFilterModalOpen(true)}
+          className="our-mission-button"
+        >
+          Otwórz Filtry
+        </button>
+        <button onClick={handleCreateProduct} className="our-mission-button">
+          Dodaj Produkt
+        </button>
+        <button onClick={() => setIsSortModalOpen(true)} className="our-mission-button">
+          Sortuj Produkty
+        </button>
       </div>
+  
+      {loading ? (
+        <p>Loading products...</p>
+      ) : (
+        <>
+          {products.length === 0 ? (
+            <div className='product-not-found-container'>
+              <h1>Nie znaleziono produktów</h1>
+              <p>Spróbuj dostosować filtry lub dodać nowy produkt.</p>
+            </div>
+          ) : (
+            <>
+              <div className="product-list">
+                {products.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onClick={() => openModal(product)}
+                    onEdit={handleEditProduct}
+                  />
+                ))}
+              </div>
+              <div className="pagination">
+                <button onClick={handlePreviousPage} disabled={currentPage === 1}>
+                  Poprzednia
+                </button>
+                {pageNumbers.map((pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    onClick={() => handlePageClick(pageNumber)}
+                    className={pageNumber === currentPage ? 'active' : ''}
+                  >
+                    {pageNumber}
+                  </button>
+                ))}
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  Następna
+                </button>
+              </div>
+            </>
+          )}
+        </>
+      )}
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
@@ -247,6 +269,21 @@ const fetchProducts = async () => {
         onSubmit={handleEditSubmit}
         product={selectedProduct}
       />
+      <FilterModal
+        isOpen={isFilterModalOpen}
+        onClose={() => setIsFilterModalOpen(false)}
+        onFilterChange={handleFilterChange}
+        maxPrice={TotalMaxPrice}
+      />
+      <SortModal
+        isOpen={isSortModalOpen}
+        onClose={() => setIsSortModalOpen(false)}
+        onSortChange={(options) => {
+          setSortOptions(options);
+          setCurrentPage(1);
+        }}
+      />
+
     </div>
   );
 };

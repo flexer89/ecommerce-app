@@ -48,7 +48,9 @@
         "robusta",
         "minPrice",
         "maxPrice",
-        "search"
+        "search",
+        "sort_order",
+        "sort_by"
       ]
     },
     {
@@ -313,10 +315,39 @@
           "sd": "static",
           "method": "GET",
           "host": [
-            "http://shipments-service:5060"
+            "http://shipments-service:5050"
           ],
           "disable_host_sanitize": false
         }
+      ]
+    },
+    {
+      "endpoint": "/api/shipments/update/{shipmentId}",
+      "method": "PATCH",
+      "output_encoding": "no-op",
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/update/{shipmentId}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "PATCH",
+          "host": [
+            "http://shipments-service:5050"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "input_query_strings": [
+        "status",
+        "current_location",
+        "delivery_date"
       ]
     },
     {
@@ -337,7 +368,7 @@
           "sd": "static",
           "method": "GET",
           "host": [
-            "http://shipments-service:5060"
+            "http://shipments-service:5050"
           ],
           "disable_host_sanitize": false
         }
@@ -357,7 +388,7 @@
           "sd": "static",
           "method": "GET",
           "host": [
-            "http://shipments-service:5060"
+            "http://shipments-service:5050"
           ],
           "disable_host_sanitize": false
         }
@@ -444,7 +475,7 @@
       ],
       "input_query_strings": [
         "limit",
-        "query",
+        "search",
         "offset",
         "ids"
       ]

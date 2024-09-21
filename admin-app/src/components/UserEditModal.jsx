@@ -40,7 +40,7 @@ const UserEditModal = ({ user, onClose, onSubmit }) => {
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content modal-product-content">
+      <div className="modal-content">
         <div className="modal-header">
           <h2>Edit User</h2>
           <button onClick={onClose} className="close-btn">&times;</button>

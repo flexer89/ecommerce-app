@@ -8,7 +8,7 @@ import tempfile
 url = "http://localhost:5000/create"
 
 # Path to your JSON file containing product data
-json_file_path = "products.json"
+json_file_path = "samples/products/products.json"
 
 def load_products(json_file):
     with open(json_file, "r", encoding="utf-8") as file:

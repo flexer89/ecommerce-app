@@ -5,7 +5,7 @@ const keycloak = getKeycloak();
 
 const ShipmentServiceClient = axios.create({
   baseURL: 'https://admin.jolszak.test/api/shipments',
-  timeout: 5060,
+  timeout: 5050,
   headers: {
     'Accept': 'application/json',
   },

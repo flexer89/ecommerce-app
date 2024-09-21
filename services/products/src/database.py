@@ -1,5 +1,5 @@
 import os 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, asc, desc
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import Session
 from src.models import Product
@@ -24,23 +24,49 @@ def get_products_db(db: Session, limit: int = 10):
 def get_product_db(db: Session, product_id: int):
     return db.query(Product).filter(Product.id == product_id).first()
 
-def get_products_list_db(db: Session, limit: int, offset: int, search: str, arabica: bool, robusta: bool, minPrice, maxPrice):
+def get_products_list_db(db: Session, limit: int, offset: int, search: str, arabica: bool, robusta: bool, minPrice: float, maxPrice: float, sort_by: str, sort_order: str):
     products = db.query(Product)
     max_price = products.order_by(Product.price.desc()).first().price
     
+    # Apply filters based on arabica and robusta
     if arabica:
         products = products.filter(Product.category == "arabica")
     if robusta:
         products = products.filter(Product.category == "robusta")
+    
+    # Apply price range filters
     if minPrice:
         products = products.filter(Product.price >= minPrice)
     if maxPrice:
         products = products.filter(Product.price <= maxPrice)
+    
+    # Apply search filter
     if search:
         products = products.filter(Product.name.ilike(f"%{search}%"))
         
+    # Apply sorting options
+    if sort_by:
+        if sort_by == "price":
+            sort_column = Product.price
+        elif sort_by == "name":
+            sort_column = Product.name
+        elif sort_by == "discount":
+            sort_column = Product.discount
+        else:
+            sort_column = None
+        
+        if sort_column:
+            if sort_order == "asc":
+                products = products.order_by(asc(sort_column))
+            elif sort_order == "desc":
+                products = products.order_by(desc(sort_column))
+
+    # Get total count before applying pagination
     total = products.count()
+    
+    # Apply pagination
     products = products.limit(limit).offset(offset).all()
+    
     return {"products": products, "total": total, "max_price": max_price}
 
 def create_product_db(db: Session, product: ProductCreate):

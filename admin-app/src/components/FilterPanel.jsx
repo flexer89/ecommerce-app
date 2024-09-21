@@ -48,20 +48,17 @@ const FilterPanel = ({ onFilterChange, maxPrice }) => {
 
   return (
     <div className="filter-panel">
-      <h3>Filters</h3>
-      {/* Search Field */}
       <div className="filter-item">
-        <label>Search:</label>
         <input
           type="text"
           value={localSearchText}
           onChange={handleSearchChange}
-          placeholder="Search products"
+          placeholder="Wyszukaj"
         />
       </div>
       {/* Price Range Slider */}
       <div className="filter-item">
-        <label>Price Range:</label>
+        <label>Zakres cen:</label>
         <input
           type="range"
           min="0"
@@ -75,26 +72,25 @@ const FilterPanel = ({ onFilterChange, maxPrice }) => {
       </div>
       {/* Category Filters */}
       <div className="filter-item">
-        <label>
+        <label>Kategoria</label>
+        <div className="category-filter">
           <input
             type="checkbox"
             checked={localCategory1}
             onChange={handleCategory1Change}
           />
           Arabica
-        </label>
-        <label>
           <input
             type="checkbox"
             checked={localCategory2}
             onChange={handleCategory2Change}
           />
           Robusta
-        </label>
+        </div>
       </div>
       {/* Apply Filters Button */}
       <div className="filter-item">
-        <button onClick={handleApplyFilters}>Apply Filters</button>
+        <button className='our-mission-button' onClick={handleApplyFilters}>Zastosuj filtry</button>
       </div>
     </div>
   );
