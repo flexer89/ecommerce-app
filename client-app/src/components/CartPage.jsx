@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import '../assets/style/style.css';
 
 const CartPage = () => {
-  const { cart, removeItemFromCart } = useCart();
+  const { cart, removeItemFromCart, addItemToCart } = useCart();
   const { isLogin } = useKeycloakAuth();
   const navigate = useNavigate();
   const [cartItemsWithImages, setCartItemsWithImages] = useState([]);
@@ -38,12 +38,20 @@ const CartPage = () => {
 
   const handleRemoveFromCart = (id, grind, weight, quantity) => {
     removeItemFromCart(id, grind, weight, quantity);
-    if (quantity > 0) {
-      toast.success(`Usunięto ${quantity} sztuk z koszyka!`, { autoClose: 3000 });
-    } else {
-      toast.success(`Dodano ${Math.abs(quantity)} sztuk do koszyka!`, { autoClose: 3000 });
-    }
+    toast.success(`Usunięto ${quantity} sztuk produktu z koszyka!`, { autoClose: 3000 });
   };
+
+  const handleAddToCart = (item) => {
+    // Call addItemToCart with the full item object, grind, and weight
+    addItemToCart(item, item.grind, item.weight);
+    toast.success(`Dodano 1 sztukę ${item.name} do koszyka!`, { autoClose: 3000 });
+  };
+
+  const handleClearCart = (id, grind, weight) => {
+    removeItemFromCart(id, grind, weight, cart.items.find(item => item.id === id).quantity);
+    toast.success('Usunięto wszystkie produkty z koszyka!', { autoClose: 3000 });
+  };
+  
 
   const handleCheckout = () => {
     if (isLogin) {
@@ -63,27 +71,28 @@ const CartPage = () => {
         ) : (
           <div className="cart-items">
             {cartItemsWithImages.map((item) => (
-              <div key={item.id} className="cart-item">
+              // Use a composite key combining id, weight, and grind
+              <div key={`${item.id}-${item.weight}-${item.grind}`} className="cart-item">
                 <div className="cart-item-details">
-                {item.image ? (
-                  <img src={item.image} alt={item.name} className="cart-item-image" />
-                ) : (
-                  <div className='cart-item-no-image'>No image available</div>
-                )}
-                <div className="cart-item-details-text">
-                  <h2>{item.name}</h2>
-                  <p>{item.description}</p>
-                  <p>Stopień zmielenia: {item.grind}</p>
-                  <p>Waga: {item.weight}</p>
-                  <p>Cena jednostkowa: {item.price}</p>
-                  <p>Ilość: {item.quantity}</p>
-                  <p>Cena całkowita: {(parseFloat(item.price) * item.quantity).toFixed(2)} zł</p>
-                </div>
+                  {item.image ? (
+                    <img src={item.image} alt={item.name} className="cart-item-image" />
+                  ) : (
+                    <div className='cart-item-no-image'>No image available</div>
+                  )}
+                  <div className="cart-item-details-text">
+                    <h2>{item.name}</h2>
+                    <p>{item.description}</p>
+                    <p>Stopień zmielenia: {item.grind}</p>
+                    <p>Waga: {item.weight}</p>
+                    <p>Cena jednostkowa: {item.price.toFixed(2)} zł</p>
+                    <p>Ilość: {item.quantity}</p>
+                    <p>Cena całkowita: {(parseFloat(item.price) * item.quantity).toFixed(2)} zł</p>
+                  </div>
                 </div>
                 <div className="cart-item-actions">
                   <button onClick={() => handleRemoveFromCart(item.id, item.grind, item.weight, 1)}>Usuń 1</button>
-                  <button onClick={() => handleRemoveFromCart(item.id, item.grind, item.weight, -1)}>Dodaj 1</button>
-                  <button onClick={() => handleRemoveFromCart(item.id, item.grind, item.weight, item.quantity)}>Usuń wszystkie</button>
+                  <button onClick={() => handleAddToCart(item)}>Dodaj 1</button>
+                  <button onClick={() => handleClearCart(item.id, item.grind, item.weight)}>Usuń wszystkie</button>
                 </div>
               </div>
             ))}
@@ -97,5 +106,7 @@ const CartPage = () => {
     </div>
   );
 };
+
+
 
 export default CartPage;

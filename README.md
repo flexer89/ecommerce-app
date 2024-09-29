@@ -139,6 +139,16 @@ To log in, type:
 You need to provide the secrets for the services. You need to create a file called `.secrets.yaml` in the deploments/secrets directory. The file should look like .secrets-example.yaml file.
 You also need to fill .env files in the services directories. The file should look like .env-example file.
 
+# Keycloak setup
+To setup Keycloak, you need to go to `http://auth.jolszak.test` and log in with admin/admin credentials.
+Then you need to create a new realm (keycloak json is available under /keycloak folder) You can do it by going to Master Realm -> Add Realm.
+
+Keycloak requires an SMTP server to send emails. You can go to Realm Settings -> Email -> SMTP Server and fill the form.
+I am using Mailgun in Github Student Developer Pack. You can use it as well.
+SMTP Server is needed to send email confirmation to the user, password reset and other emails.
+
+You also need to go to authentication -> required actions and enable VERIFY_EMAIL
+
 # Sample data 
 To add sample data to all services, you need to run `./port_forward.sh` and then run `./sample_data.sh` in another terminal.
 

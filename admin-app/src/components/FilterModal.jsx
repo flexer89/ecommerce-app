@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Modal from './Modal';
 
-const FilterModal = ({ onFilterChange, maxPrice, isOpen, onClose }) => {
+const FilterModal = ({ onFilterChange, maxPrice = 0, isOpen, onClose }) => {
   const validMaxPrice = Number.isFinite(maxPrice) ? maxPrice : 0;
 
   const [localPriceRange, setLocalPriceRange] = useState([0, validMaxPrice]);
@@ -100,10 +100,6 @@ FilterModal.propTypes = {
   maxPrice: PropTypes.number,
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-};
-
-FilterModal.defaultProps = {
-  maxPrice: 0,
 };
 
 export default FilterModal;

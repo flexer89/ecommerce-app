@@ -1,72 +1,103 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import CartServiceClient from '../clients/CartsService';
+import { useKeycloakAuth } from './KeycloakContext';
+import getKeycloak from '../auth/keycloak';
+import { v4 as uuidv4 } from 'uuid'; // Import the UUID library
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState(() => {
-    const savedCart = localStorage.getItem('cart');
-    return savedCart ? JSON.parse(savedCart) : { items: [], total: 0, quantity: 0 };
-  });
+  const { isLogin } = useKeycloakAuth();
+  const keycloakMemo = useMemo(() => getKeycloak(), [isLogin]); // Memoize keycloak
+  const [cart, setCart] = useState({ items: [], total: 0, quantity: 0 });
+  const [cartId, setCartId] = useState(null); // Store the cart ID (UUID or user ID)
 
+  // Generate or retrieve a temporary cart ID for unauthenticated users
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart]);
+    if (!isLogin) {
+      let tempCartId = localStorage.getItem('tempCartId');
+      if (!tempCartId) {
+        tempCartId = uuidv4(); // Generate a new UUID
+        localStorage.setItem('tempCartId', tempCartId);
+      }
+      setCartId(tempCartId);
+    } 
+    else {
+      localStorage.setItem('tempCartId', keycloakMemo.subject);
+      setCartId(keycloakMemo.subject);
+    }
+  }, [isLogin, keycloakMemo]);
 
-  const addItemToCart = (product, grind, weight) => {
-    const existingProduct = cart.items.find(item => item.id === product.id && item.grind === grind && item.weight === weight);
-    let updatedCart;
+  // Fetch the cart from the backend
+  const fetchCart = useCallback(async () => {
+    try {
+      const response = await CartServiceClient.get(`/get/${cartId}`);
+
+      // If the cart is not found, initialize an empty one
+      if (response.status === 404) {
+        setCart({ items: [], total: 0, quantity: 0 });
+        return;
+      }
+
+      // Set the cart state with the data from the backend
+      setCart(response.data);
+    } catch (error) {
+      console.error('Error fetching cart:', error);
+    }
+  }, [cartId]);
+
+  // Fetch the cart whenever the cartId changes or is set
+  useEffect(() => {
+    if (cartId) {
+      fetchCart();
+    }
+  }, [cartId, fetchCart]);
+
+  const addItemToCart = async (product, grind, weight) => {
     let productPrice = parseFloat(product.price * (product.discount > 0 ? (1 - product.discount) : 1));
-    if (weight == '500g') {
+    if (weight === '500g') {
       productPrice *= 2;
     }
-
-    if (existingProduct) {
-      updatedCart = {
-        items: cart.items.map(item => 
-          item.id === product.id && item.grind === grind && item.weight === weight 
-            ? { ...item, quantity: item.quantity + 1 } 
-            : item
-        ),
-        total: cart.total + productPrice,
-        quantity: cart.quantity + 1
-      };
-    } else {
-      updatedCart = {
-        items: [...cart.items, { ...product, grind, weight, quantity: 1 }],
-        total: cart.total + productPrice,
-        quantity: cart.quantity + 1
-      };
+  
+    const itemToAdd = {
+      ...product,
+      grind,
+      weight,
+      price: productPrice,
+      quantity: 1,
+    };
+  
+    try {
+      await CartServiceClient.post(`/add/${cartId}`, {
+        items: [itemToAdd],
+      });
+      fetchCart();
+    } catch (error) {
+      console.error('Error adding item to backend cart:', error);
     }
-    setCart(updatedCart);
   };
 
-  const removeItemFromCart = (productId, grind, weight, quantityToRemove) => {
-    const productPrice = parseFloat(cart.items.find(item => item.id === productId && item.grind === grind && item.weight === weight).price);
-    const existingProduct = cart.items.find(item => item.id === productId && item.grind === grind && item.weight === weight);
-    
-    if (existingProduct.quantity > quantityToRemove) {
-      const updatedCart = {
-        items: cart.items.map(item => 
-          item.id === productId && item.grind === grind && item.weight === weight 
-            ? { ...item, quantity: item.quantity - quantityToRemove } 
-            : item
-        ),
-        total: cart.total - (productPrice * quantityToRemove),
-        quantity: cart.quantity - quantityToRemove
-      };
-      setCart(updatedCart);
-    } else {
-      const updatedCart = {
-        items: cart.items.filter(item => !(item.id === productId && item.grind === grind && item.weight === weight)),
-        total: cart.total - (productPrice * existingProduct.quantity),
-        quantity: cart.quantity - existingProduct.quantity
-      };
-      setCart(updatedCart);
+  const removeItemFromCart = async (productId, grind, weight, quantityToRemove) => {
+    const existingProduct = cart.items.find(
+      (item) => item.id === productId && item.grind === grind && item.weight === weight
+    );
+    if (!existingProduct) return;
+
+    try {
+      await CartServiceClient.post(`/remove/${cartId}`, {
+        product_id: productId,
+        quantity: quantityToRemove,
+        grind,
+        weight,
+      });
+      fetchCart();
+    } catch (error) {
+      console.error('Error removing item from backend cart:', error);
     }
   };
 
   return (
-    <CartContext.Provider value={{ cart, addItemToCart, removeItemFromCart }}>
+    <CartContext.Provider value={{ cart, addItemToCart, removeItemFromCart, fetchCart }}>
       {children}
     </CartContext.Provider>
   );

@@ -5,14 +5,9 @@ import '../assets/style/style.css';
 
 const LoginOrRegisterPage = () => {
   const { redirectToCheckout } = useKeycloakAuth();
-  const navigate = useNavigate();
 
   const handleLoginOrRegister = () => {
     redirectToCheckout();
-  };
-
-  const handleContinueAsGuest = () => {
-    navigate('/guest-checkout');
   };
 
   return (
@@ -21,7 +16,6 @@ const LoginOrRegisterPage = () => {
         <h1>Kontynuuj zakupy</h1>
         <div className='login-register-buttons'>
           <button class="our-mission-button" onClick={handleLoginOrRegister}>Zaloguj lub Zarejestruj się</button>
-          <button class="contact-us-button" onClick={handleContinueAsGuest}>Kontynuuj jako gość</button>
         </div>
       </div>
     </div>

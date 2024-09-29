@@ -496,6 +496,57 @@
           "disable_host_sanitize": false
         }
       ]
+    },
+    {
+      "endpoint": "/api/carts/get/{userId}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/get/{userId}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://carts-service:5040"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/carts/add/{userId}",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/add/{userId}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "POST",
+          "host": [
+            "http://carts-service:5040"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/carts/remove/{userId}",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/remove/{userId}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "POST",
+          "host": [
+            "http://carts-service:5040"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
     }
   ],
   "output_encoding": "json",
@@ -538,6 +589,23 @@
           }
         }
       }
+    },
+    "plugin/http-server": {
+      "name": [
+        "ip-filter"
+      ],
+      "ip-filter": {
+        "allow": false,
+        "client_ip_headers": [
+          "X-Forwarded-For",
+          "X-Real-IP",
+          "X-Appengine-Remote-Addr"
+        ]
+      }
     }
+  },
+  "plugin": {
+    "pattern": ".so",
+    "folder": "/opt/krakend/plugins/"
   }
 }

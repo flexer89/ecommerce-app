@@ -41,7 +41,6 @@ export default function CheckoutForm() {
       confirmParams: {
         return_url: "https://jolszak.test/",
       },
-      redirect: 'if_required',
     });
 
     if (paymentError) {

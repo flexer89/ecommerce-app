@@ -1,22 +1,8 @@
 import React from 'react';
-import ProductsServiceClient from '../clients/ProductsService';
+import { Link } from 'react-router-dom';
 import '../assets/style/style.css'; 
 
-const ProductCard = ({ product, onClick, onEdit, onDelete }) => {
-
-  const handleDelete = (productId) => {
-    const confirmDelete = window.confirm("Czy na pewno chcesz usunąć ten produkt?");
-    if (confirmDelete) {
-      try {
-        ProductsServiceClient.delete(`/delete/${productId}`);
-        setProducts((prevProducts) => prevProducts.filter((product) => product.id !== productId));
-      } catch (error) { 
-        console.error('Error deleting product:', error);
-      }
-
-      window.location.reload();
-    }
-  };
+const ProductCard = ({ product, onClick }) => {
 
   return (
     <div className="product-card">
@@ -32,7 +18,7 @@ const ProductCard = ({ product, onClick, onEdit, onDelete }) => {
         <p className="product-card-price">{(product.price - product.price * product.discount).toFixed(2)} zł</p>
       </div>
       <div className="product-card-actions">
-        <a href={`/product/${product.id}`} className="product-card-link">Podgląd</a>
+        <Link to={`/product/${product.id}`} className="product-card-link">Podgląd</Link>
       </div>
     </div>
   );

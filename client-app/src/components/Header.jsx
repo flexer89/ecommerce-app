@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IonIcon } from '@ionic/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { personOutline, bagHandleOutline } from 'ionicons/icons';
 import { useCart } from '../contexts/CartContext';
 import { useKeycloakAuth } from '../contexts/KeycloakContext';
+import getKeycloak from '../auth/keycloak';
 import '../assets/style/style.css';
 import logo from '../assets/images/logo-brown.png';
 
 const Header = () => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const { cart } = useCart();
-  const { isLogin, login, logout } = useKeycloakAuth();
+  const { cart, fetchCart } = useCart();
+  let { isLogin, login, logout, keycloak } = useKeycloakAuth(); // Added keycloak object to access user info
   const navigate = useNavigate();
 
   const togglePanel = () => {
@@ -27,7 +28,22 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
+    localStorage.removeItem('tempCartId');
   };
+
+  // Inside useEffect hook of Header component
+  useEffect(() => {
+    if (isLogin) {
+      keycloak = getKeycloak(); // Get Keycloak object
+      const userId = keycloak.subject; // Get user ID from Keycloak
+      fetchCart(userId); // Sync cart from backend
+    }
+  }, [isLogin, keycloak, fetchCart]);
+
+
+  // Ensure the cart object is always defined and provide default values
+  const totalAmount = cart?.total ? cart.total.toFixed(2) : '0.00';
+  const totalQuantity = cart?.quantity ? cart.quantity : 0;
 
   return (
     <header className="header">
@@ -73,9 +89,9 @@ const Header = () => {
               </button>
             )}
             <Link to="/cart" className="header-action-btn" aria-label="cart item">
-              <data className="btn-text" value={cart.total}>{cart.total.toFixed(2)} zł</data>
+              <data className="btn-text" value={totalAmount}>{totalAmount} zł</data>
               <IonIcon icon={bagHandleOutline} aria-hidden="true" />
-              <span className="btn-badge">{cart.quantity}</span>
+              <span className="btn-badge">{totalQuantity}</span>
             </Link>
           </div>
         </div>

@@ -3,44 +3,43 @@ import { useNavigate } from 'react-router-dom';
 import { useKeycloakAuth } from '../contexts/KeycloakContext';
 import getKeycloak from '../auth/keycloak';
 import '../assets/style/style.css';
+import UserServiceClient from '../clients/UsersService';
 
 const CheckoutPage = () => {
-  const { isInitialized, isLogin } = useKeycloakAuth();
+  const { isInitialized } = useKeycloakAuth();
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     email: '',
     name: '',
     surname: '',
-    phone_number: '',
-    street: '',
-    city: '',
-    post_code: '',
+    phoneNumber: '',
+    Address: '',
+    City: '',
+    PostCode: '',
     voivodeship: ''
   });
   const [selectedShipping, setSelectedShipping] = useState('');
 
+  // Load user info
   useEffect(() => {
     const keycloak = getKeycloak();
     const fetchUserInfo = async () => {
       try {
-        const response = await fetch(`${keycloak.authServerUrl}/realms/${keycloak.realm}/protocol/openid-connect/userinfo`, {
+        const response = await UserServiceClient.get(`/get/${keycloak.subject}`, {
           headers: {
             'Authorization': `Bearer ${keycloak.token}`,
           },
         });
-        if (!response.ok) {
-          throw new Error('Failed to fetch user info');
-        }
-        const data = await response.json();
+        const data = response.data.users[0];
         setFormValues({
           email: data.email,
-          name: data.given_name,
-          surname: data.family_name,
-          phone_number: data.phone_number,
-          street: data.street,
-          city: data.city,
-          post_code: data.post_code,
-          voivodeship: data.voivodeship
+          name: data.firstName,
+          surname: data.lastName,
+          phoneNumber: data.attributes.phoneNumber,
+          Address: data.attributes.Address,
+          City: data.attributes.City,
+          PostCode: data.attributes.PostCode,
+          voivodeship: data.attributes.voivodeship,
         });
       } catch (error) {
         console.error('Error fetching user info:', error);
@@ -52,17 +51,12 @@ const CheckoutPage = () => {
     }
   }, [isInitialized]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
-
-  const handleShippingChange = (e) => {
-    console.log('Selected Shipping:', e.target.value);
-    if (e.target.value === 'paczkomat') {
-      // Load the Easypack map
+  // Load the Easypack script only once
+  useEffect(() => {
+    if (!document.querySelector('#easypack-script')) {
       const script = document.createElement('script');
       script.src = 'https://geowidget.easypack24.net/js/sdk-for-javascript.js';
+      script.id = 'easypack-script';
       script.async = true;
       script.onload = () => {
         window.easyPackAsyncInit = () => {
@@ -79,15 +73,26 @@ const CheckoutPage = () => {
               initialFunctions: ['parcel_collect'],
             },
           });
-
-          window.easyPack.mapWidget('easypack-map', function(point) {
-            console.log('Selected point:', point);
-          });
         };
       };
       document.body.appendChild(script);
     }
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
+  const handleShippingChange = (e) => {
     setSelectedShipping(e.target.value);
+
+    // Display the Easypack map widget only when "Paczkomat" is selected
+    if (e.target.value === 'paczkomat' && window.easyPack) {
+      window.easyPack.mapWidget('easypack-map', function (point) {
+        console.log('Selected point:', point);
+      });
+    }
   };
 
   const handleCheckout = (e) => {
@@ -135,7 +140,7 @@ const CheckoutPage = () => {
             <input
               type="text"
               name="phone_number"
-              value={formValues.phone_number}
+              value={formValues.phoneNumber}
               onChange={handleInputChange}
             />
           </div>
@@ -144,7 +149,7 @@ const CheckoutPage = () => {
             <input
               type="text"
               name="street"
-              value={formValues.street}
+              value={formValues.Address}
               onChange={handleInputChange}
             />
           </div>
@@ -153,7 +158,7 @@ const CheckoutPage = () => {
             <input
               type="text"
               name="city"
-              value={formValues.city}
+              value={formValues.City}
               onChange={handleInputChange}
             />
           </div>
@@ -162,7 +167,7 @@ const CheckoutPage = () => {
             <input
               type="text"
               name="post_code"
-              value={formValues.post_code}
+              value={formValues.PostCode}
               onChange={handleInputChange}
             />
           </div>

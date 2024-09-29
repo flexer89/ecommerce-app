@@ -20,7 +20,6 @@ import CartPage from './CartPage';
 import UserProfilePage from './UserProfilePage';
 import LoginOrRegisterPage from '../pages/LoginOrRegisterPage';
 import CheckoutPage from '../pages/CheckoutPage';
-import GuestCheckoutPage from '../pages/GuestCheckoutPage';
 import PaymentPage from '../pages/PaymentPage';
 import OrderConfirmationPage from '../pages/OrderConfirmationPage';
 import { CartProvider } from '../contexts/CartContext';
@@ -105,14 +104,6 @@ const ProceedCheckoutPage = () => (
   <div>
     <Header />
     <CheckoutPage />
-    <Footer />
-  </div>
-);
-
-const ProceedGuestCheckoutPage = () => (
-  <div>
-    <Header />
-    <GuestCheckoutPage />
     <Footer />
   </div>
 );
@@ -207,7 +198,6 @@ const App = () => {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/login-or-register" element={<ContinueShoppingPage />} />
             <Route path="/checkout" element={<ProceedCheckoutPage />} />
-            <Route path="/guest-checkout" element={<ProceedGuestCheckoutPage />} />
             <Route path="/payment" element={ <ProceedPaymentPage />} />
             <Route path="/order-confirmation" element={<OrderConfirmation />} />
             <Route path="/regulations" element={<RegulationsPage />} />

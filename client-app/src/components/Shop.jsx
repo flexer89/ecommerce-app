@@ -75,7 +75,7 @@ const Shop = () => {
         <ul className="has-scrollbar">
           {bestsellers.map((product) => (
             <li key={product.id} className="scrollbar-item">
-              <a href={`/product/${product.id}`}>
+              <Link to={`/product/${product.id}`}>
                 <div className="shop-card">
                   <div
                     className="card-banner img-holder"
@@ -106,7 +106,7 @@ const Shop = () => {
                     <p className="order-count">Sprzedano: {product.order_count} sztuk</p>
                   </div>
                 </div>
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

@@ -12,7 +12,7 @@ RUN npm install @mui/material @emotion/react @emotion/styled
 
 RUN npm install keycloak-js @react-keycloak/web axios
 
-RUN npm install @ionic/react ionicons react-toastify
+RUN npm install @ionic/react ionicons react-toastify uuid
 
 COPY . .
 
