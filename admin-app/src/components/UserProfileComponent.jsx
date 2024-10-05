@@ -26,7 +26,7 @@ const UserProfileComponent = () => {
 
   const fetchUserOrders = async () => {
     try {
-      const response = await OrderServiceClient.get(`/getbyuser/${userId}`);
+      const response = await OrderServiceClient.get(`/getbyuser/${userId}?limit=10000`);
       setUserOrders(response.data);
     } catch (error) {
       console.error('Error fetching user orders:', error);
@@ -61,7 +61,7 @@ const UserProfileComponent = () => {
   };
 
   return (
-    <div className="user-profile-page">
+    <div className="user-profile-page container">
       <h1>Profil użytkownika</h1>
 
       {userInfo ? (
@@ -135,7 +135,7 @@ const UserProfileComponent = () => {
             </tbody>
           </table>
         ) : (
-          <p>No shipments found.</p>
+          <p>Nie znaleziono wysyłek.</p>
         )}
       </div>
 

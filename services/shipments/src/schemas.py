@@ -13,7 +13,7 @@ class ShipmentCreate(BaseModel):
     order_id: int
     user_id: str
     shipment_address: str
-    current_location: str
+    current_location: str = "Warszawska 24, Kraków, małopolskie, 31-155"
     status: Optional[ShipmentStatusEnum] = ShipmentStatusEnum.pending
     company: str
 

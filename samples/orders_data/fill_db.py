@@ -76,36 +76,35 @@ def main():
             print(f"item_total: {item_total}")
             total_price += item_total
             print(f"total_price: {total_price}")
+            grind = random.choice(['Całe ziarna', 'Grubo mielone', 'Mocno zmielone'])
             
-            print(f"Creating order for user: {user_id}, item: {item['id']}, quantity: {quantity}, price: {price}, weight: {weight}")
+            print(f"Creating order for user: {user_id}, item: {item['id']}, quantity: {quantity}, price: {price}, weight: {weight}, grind: {grind}")
             items_to_insert.append({
-                'product_id': item['id'],
+                'id': item['id'],
                 'quantity': quantity,
                 'price': price,
-                'weight': weight
+                'weight': weight,
+                'grind': grind
             })
-
         # create order
         order = requests.post(f"{orders_service_url}/create", json={
             'user_id': user_id,
             'total_price': total_price,
-            'status': status,
             'items': items_to_insert
         })
-        if order.status_code != 200:
+        if order.status_code != 201:
             print(f"Failed to create order: {order}")
             continue
         print(f"Order created: {order.json()}")
         
         # add shipping info 
-        order_id = order.json()
+        order_id = order.json().get('order_id')
         shipping_info = {
             "order_id": order_id,
             "user_id": user_id,
             "shipment_address": f"{user.get('attributes').get('Address')[0]}, {user.get('attributes').get('City')[0]}, {user.get('attributes').get('voivodeship')[0]}, {user.get('attributes').get('PostCode')[0]}",
             "company": "UPS",
             "current_location": "Warszawska 24, Kraków, małopolskie, 31-155",
-            "status": random.choice(['pending', 'shipped'])
         }
         
         shipment = requests.post(f"{shipments_service_url}/create", json=shipping_info)

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { formatDateTime, statusTranslationMap } from '../utils/utils';
+import OrderServiceClient from '../clients/OrdersService'; // Import OrderServiceClient to update order status
 
 const ShipmentEditModal = ({ isOpen, onClose, onSubmit, shipment }) => {
   const [currentLocation, setcurrentLocation] = useState(shipment?.current_location || '');
   const [shipmentAddress, setShipmentAddress] = useState(shipment?.shipment_address || '');
-  const [deliveryDate, setDeliveryDate] = useState(formatDateTime(shipment?.delivery_date)  || '');
+  const [deliveryDate, setDeliveryDate] = useState(formatDateTime(shipment?.delivery_date) || '');
   const [status, setStatus] = useState(shipment?.status || '');
 
   useEffect(() => {
@@ -14,16 +15,36 @@ const ShipmentEditModal = ({ isOpen, onClose, onSubmit, shipment }) => {
     setStatus(shipment?.status || '');
   }, [shipment]);
 
+  const updateOrderStatus = async (newStatus) => {
+    try {
+      // Fetch the order associated with the shipment
+      const response = await OrderServiceClient.get(`/get/${shipment.order_id}`);
+      const order = response.data;
+
+      if (order) {
+        // Update the order status based on the new shipment status
+        await OrderServiceClient.put(`/update/${order.id}/status`, { status: newStatus });
+        toast.success(`Order status updated to ${newStatus}`);
+      }
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      toast.error('Error updating order status');
+    }
+  };
+
   const handleSubmit = () => {
+    // Ensure the delivery date is properly formatted to avoid API errors
+    const formattedDeliveryDate = deliveryDate.length === 16 ? `${deliveryDate}:00` : deliveryDate; // Ensure seconds are added
+
     const updatedShipmentData = {
       current_location: currentLocation,
       shipment_address: shipmentAddress,
-      delivery_date: deliveryDate,
+      delivery_date: formattedDeliveryDate,
       status,
     };
 
-    // Call the onSubmit function passed as a prop
     onSubmit(updatedShipmentData, shipment.id);
+    updateOrderStatus(status);
   };
 
   return isOpen ? (

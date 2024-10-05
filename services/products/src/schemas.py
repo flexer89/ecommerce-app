@@ -35,3 +35,10 @@ class ProductsListResponse(BaseModel):
     products: List[ProductResponse]
     total: int
     total_max_price: float
+
+class UpdateQuantityItem(BaseModel):
+    product_id: int
+    quantity: int
+
+class UpdateQuantityRequest(BaseModel):
+    items: List[UpdateQuantityItem]

@@ -236,3 +236,32 @@ def get_product_trends(db: Session = Depends(get_db)):
             for product in discounted_products
         ],
     }
+    
+@router.post("/update-quantity", response_model=dict)
+async def update_quantity_endpoint(request: UpdateQuantityRequest, db: Session = Depends(get_db)):
+    unavailable_products = []
+
+    # Iterate over the items to check availability and update quantities
+    for item in request.items:
+        product = db.query(ProductModel).filter(ProductModel.id == item.product_id).first()
+
+        if product:
+            if product.stock < item.quantity:
+                unavailable_products.append(product.name)
+            else:
+                # Subtract the quantity from the product's available stock
+                product.stock -= item.quantity
+        else:
+            unavailable_products.append(f"Product with ID {item.product_id} not found")
+
+    # If there are unavailable products, return an error
+    if unavailable_products:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Insufficient quantity for the following products: {', '.join(unavailable_products)}"
+        )
+
+    # Commit the changes to the database
+    db.commit()
+
+    return {"status": "success", "message": "Quantities updated successfully"}

@@ -10,7 +10,7 @@ RUN npm install react-router-dom @stripe/react-stripe-js @stripe/stripe-js
 
 RUN npm install @mui/material @emotion/react @emotion/styled
 
-RUN npm install keycloak-js @react-keycloak/web axios
+RUN npm install keycloak-js @react-keycloak/web axios react-leaflet leaflet
 
 RUN npm install @ionic/react ionicons react-toastify uuid
 

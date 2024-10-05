@@ -1,4 +1,4 @@
-from pydantic import BaseModel, condecimal, validator
+from pydantic import BaseModel
 from typing import List
 
 class CartItemSchema(BaseModel):
@@ -6,9 +6,8 @@ class CartItemSchema(BaseModel):
     name: str
     price: float
     discount: float
-    category: str
     grind: str
-    weight: str
+    weight: float
     quantity: int
 
 
@@ -24,4 +23,10 @@ class RemoveItemRequest(BaseModel):
     product_id: int
     quantity: int
     grind: str
-    weight: str
+    weight: float
+    
+class ErrorResponse(BaseModel):
+    message: str
+    
+class StatusResponse(BaseModel):
+    status: str

@@ -1,7 +1,6 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
 from prometheus_fastapi_instrumentator import Instrumentator
-from routes import router
+from src.routes import router
 
 app = FastAPI(name="payments-service")
 app.include_router(router=router)

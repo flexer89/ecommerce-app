@@ -1,6 +1,27 @@
-from typing import Optional
+from typing import Optional, Dict, List
 from pydantic import BaseModel
 
+class UserAttributes(BaseModel):
+    phoneNumber: str = None
+    Address: str = None
+    City: str = None
+    PostCode: str = None
+    voivodeship: str = None
+
+class UserWithAttributesResponse(BaseModel):
+    id: str
+    username: str
+    email: str
+    firstName: str
+    lastName: str
+    attributes: UserAttributes
+
+class UserListResponse(BaseModel):
+    total: int
+    users: list[UserWithAttributesResponse]
+    
+class ErrorResponse(BaseModel):
+    detail: str
 
 class UserUpdateRequestAttributes(BaseModel):
     phoneNumber: Optional[str] = None
@@ -15,13 +36,20 @@ class UserUpdateRequest(BaseModel):
     email: Optional[str] = None
     attributes: Optional[UserUpdateRequestAttributes] = None
 
+class UpdateResponse(BaseModel):
+    detail: str
+
+class ErrorResponse(BaseModel):
+    detail: str
+
 class UserResponse(BaseModel):
     id: str
     username: str
     email: str
     firstName: str
     lastName: str
-
-class UserResponseWithAttributes(UserResponse):
-    attributes: dict
     
+class UserStatisticsResponse(BaseModel):
+    total_users: int
+    active_users_last_30_days: int
+    new_users_last_30_days: int

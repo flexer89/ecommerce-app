@@ -28,7 +28,7 @@ def k8s():
 def health():
     return {"status": "ok"}
 
-@router.post("/create", response_model=ShipmentResponse)
+@router.post("/create", response_model=ShipmentResponse, status_code=201)
 def create_shipment(shipment: ShipmentCreate, db: Session = Depends(get_db)):
     return create_shipment_db(db=db, shipment=shipment)
 

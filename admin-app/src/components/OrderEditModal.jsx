@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ShipmentServiceClient from '../clients/ShipmentsService'; // Import ShipmentServiceClient
 
 const OrderEditModal = ({ order, onClose, onSubmit }) => {
   const [status, setStatus] = useState(order.status || '');
@@ -9,12 +10,40 @@ const OrderEditModal = ({ order, onClose, onSubmit }) => {
     setStatus(order.status || '');
   }, [order]);
 
+  const updateShipmentStatus = async (newStatus) => {
+    try {
+      // Fetch the shipment by order ID
+      const response = await ShipmentServiceClient.get(`/getbyorder/${order.id}`);
+      const shipment = response.data;
+
+      if (shipment) {
+        // Update the shipment status based on the order status
+        await ShipmentServiceClient.patch(`/update/${shipment.id}`, {
+          status: newStatus,
+        });
+        toast.success(`Shipment status updated to ${newStatus}`);
+      }
+    } catch (error) {
+      console.error('Error updating shipment status:', error);
+      toast.error('Error updating shipment status');
+    }
+  };
+
   const handleSubmit = async () => {
     const updatedOrderData = {
       status,
     };
 
     await onSubmit(updatedOrderData);
+
+    // Update the shipment status based on the new order status
+    if (status === 'shipped') {
+      await updateShipmentStatus('shipped');
+    } else if (status === 'delivered') {
+      await updateShipmentStatus('delivered');
+    } else if (status === 'cancelled') {
+      await updateShipmentStatus('cancelled');
+    }
   };
 
   return (

@@ -165,6 +165,26 @@
       ]
     },
     {
+      "endpoint": "/api/products/update-quantity",
+      "input_headers": [
+        "*"
+      ],
+      "method": "POST",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/update-quantity",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "POST",
+          "host": [
+            "http://products-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
       "endpoint": "/api/products/update/{update1}",
       "input_headers": [
         "*"
@@ -221,12 +241,12 @@
       ]
     },
     {
-      "endpoint": "/api/orders/{get1}",
+      "endpoint": "/api/orders/getbyuser/{user_id}",
       "method": "GET",
       "output_encoding": "no-op",
       "backend": [
         {
-          "url_pattern": "/{get1}",
+          "url_pattern": "/getbyuser/{user_id}",
           "encoding": "no-op",
           "sd": "static",
           "method": "GET",
@@ -235,41 +255,17 @@
           ],
           "disable_host_sanitize": false
         }
-      ]
-    },
-    {
-      "endpoint": "/api/orders/{get1}/{get2}",
-      "method": "GET",
-      "output_encoding": "no-op",
-      "backend": [
-        {
-          "url_pattern": "/{get1}/{get2}",
-          "encoding": "no-op",
-          "sd": "static",
-          "method": "GET",
-          "host": [
-            "http://orders-service:5010"
-          ],
-          "disable_host_sanitize": false
+      ],
+      "input_query_strings": [
+        "limit"
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true
         }
-      ]
-    },
-    {
-      "endpoint": "/api/orders/{put1}/{put2}/{put3}",
-      "method": "PUT",
-      "output_encoding": "no-op",
-      "backend": [
-        {
-          "url_pattern": "/{put1}/{put2}/{put3}",
-          "encoding": "no-op",
-          "sd": "static",
-          "method": "PUT",
-          "host": [
-            "http://orders-service:5010"
-          ],
-          "disable_host_sanitize": false
-        }
-      ]
+      }
     },
     {
       "endpoint": "/api/orders/get",
@@ -295,6 +291,188 @@
         "status",
         "offset",
         "search"
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      }
+    },
+    {
+      "endpoint": "/api/orders/create",
+      "method": "POST",
+      "input_headers": [
+        "*"
+      ],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/create",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "POST",
+          "host": [
+            "http://orders-service:5010"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      }
+    },
+    {
+      "endpoint": "/api/orders/get/{order_id}",
+      "method": "GET",
+      "input_headers": [
+        "*"
+      ],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/get/{order_id}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://orders-service:5010"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      }
+    },
+    {
+      "endpoint": "/api/orders/update/{order_id}/status",
+      "method": "PUT",
+      "input_headers": [
+        "*"
+      ],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/update/{order_id}/status",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "PUT",
+          "host": [
+            "http://orders-service:5010"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      }
+    },
+    {
+      "endpoint": "/api/orders/bestsellers",
+      "method": "GET",
+      "input_headers": [
+        "*"
+      ],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/bestsellers",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://orders-service:5010"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/orders/trends",
+      "method": "GET",
+      "input_headers": [
+        "*"
+      ],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/trends",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://orders-service:5010"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      }
+    },
+    {
+      "endpoint": "/api/orders/count",
+      "method": "GET",
+      "input_headers": [
+        "*"
+      ],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/count",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://orders-service:5010"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      }
+    },
+    {
+      "endpoint": "/api/shipments/create",
+      "method": "POST",
+      "input_headers": [
+        "*"
+      ],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/create",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "POST",
+          "host": [
+            "http://shipments-service:5050"
+          ],
+          "disable_host_sanitize": false
+        }
       ]
     },
     {
@@ -401,7 +579,7 @@
       ]
     },
     {
-      "endpoint": "/api/payments/{get1}",
+      "endpoint": "/api/payments/create-payment-intent",
       "input_headers": [
         "*"
       ],
@@ -409,7 +587,7 @@
       "output_encoding": "no-op",
       "backend": [
         {
-          "url_pattern": "/{get1}",
+          "url_pattern": "/create-payment-intent",
           "encoding": "no-op",
           "sd": "static",
           "method": "POST",
@@ -418,32 +596,29 @@
           ],
           "disable_host_sanitize": false
         }
-      ]
-    },
-    {
-      "endpoint": "/api/users/{get1}/{get2}",
-      "method": "GET",
-      "output_encoding": "no-op",
-      "backend": [
-        {
-          "url_pattern": "/{get1}/{get2}",
-          "encoding": "no-op",
-          "sd": "static",
-          "method": "GET",
-          "host": [
-            "http://users-service:5030"
-          ],
-          "disable_host_sanitize": false
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true
         }
-      ]
+      }
     },
     {
-      "endpoint": "/api/users/getall",
+      "endpoint": "/api/users/get/{user_id}",
       "method": "GET",
       "output_encoding": "no-op",
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
       "backend": [
         {
-          "url_pattern": "/getall",
+          "url_pattern": "/get/{user_id}",
           "encoding": "no-op",
           "sd": "static",
           "method": "GET",
@@ -460,6 +635,14 @@
       "input_headers": [
         "*"
       ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true,
+          "roles": []
+        }
+      },
       "output_encoding": "no-op",
       "backend": [
         {
@@ -481,12 +664,46 @@
       ]
     },
     {
-      "endpoint": "/api/users/{put1}/{put2}",
-      "method": "PATCH",
+      "endpoint": "/api/users/statistics",
+      "method": "GET",
+      "input_headers": [
+        "*"
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
       "output_encoding": "no-op",
       "backend": [
         {
-          "url_pattern": "/{put1}/{put2}",
+          "url_pattern": "/statistics",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://users-service:5030"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/users/update/{user_id}",
+      "method": "PATCH",
+      "output_encoding": "no-op",
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/update/{user_id}",
           "encoding": "no-op",
           "sd": "static",
           "method": "PATCH",
@@ -507,6 +724,23 @@
           "encoding": "no-op",
           "sd": "static",
           "method": "GET",
+          "host": [
+            "http://carts-service:5040"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/carts/delete/{userId}",
+      "method": "DELETE",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/delete/{userId}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "DELETE",
           "host": [
             "http://carts-service:5040"
           ],

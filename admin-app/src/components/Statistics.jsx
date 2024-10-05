@@ -9,121 +9,121 @@ import PaymentsServiceClient from '../clients/PaymentsService';
 import '../assets/style/style.css';
 
 const ProductsStatistics = () => {
-    const [productsCount, setProductsCount] = useState(0);
-    const [bestsellers, setBestsellers] = useState([]);
-    const [lowStockProducts, setLowStockProducts] = useState([]);
-    const [newProducts, setNewProducts] = useState([]);
-    const [discountedProducts, setDiscountedProducts] = useState([]);
-    const [outOfStockAmount, setOutOfStockAmount] = useState(0);
-    const [ordersCount, setOrdersCount] = useState(0);
+  const [productsCount, setProductsCount] = useState(0);
+  const [bestsellers, setBestsellers] = useState([]);
+  const [lowStockProducts, setLowStockProducts] = useState([]);
+  const [newProducts, setNewProducts] = useState([]);
+  const [discountedProducts, setDiscountedProducts] = useState([]);
+  const [outOfStockAmount, setOutOfStockAmount] = useState(0);
+  const [ordersCount, setOrdersCount] = useState(0);
 
-    useEffect(() => {
-        const fetchProductStats = async () => {
-            try {
-                const productsResponse = await ProductsServiceClient.get('/count');
-                setProductsCount(productsResponse.data);
+  useEffect(() => {
+      const fetchProductStats = async () => {
+          try {
+              const productsResponse = await ProductsServiceClient.get('/count');
+              setProductsCount(productsResponse.data);
 
-                const response = await ProductsServiceClient.get('/trends');
-                setLowStockProducts(response.data.low_stock_products);
-                setNewProducts(response.data.new_products);
-                setDiscountedProducts(response.data.discounted_products);
-                setOutOfStockAmount(response.data.out_of_stock_product_amount);
-            } catch (error) {
-                console.error('Error fetching product stats:', error);
-            }
-        };
+              const response = await ProductsServiceClient.get('/trends');
+              setLowStockProducts(response.data.low_stock_products);
+              setNewProducts(response.data.new_products);
+              setDiscountedProducts(response.data.discounted_products);
+              setOutOfStockAmount(response.data.out_of_stock_product_amount);
+          } catch (error) {
+              console.error('Error fetching product stats:', error);
+          }
+      };
 
-        const fetchBestsellers = async () => {
-            try {
-                const bestsellerResponse = await OrdersServiceClient.get('/bestsellers?limit=5');
-                const bestsellersData = bestsellerResponse.data;
-                const ordersCountResponse = await OrdersServiceClient.get('/count');
-                setOrdersCount(ordersCountResponse.data);
+      const fetchBestsellers = async () => {
+          try {
+              const bestsellerResponse = await OrdersServiceClient.get('/bestsellers?limit=5');
+              const bestsellersData = bestsellerResponse.data;
+              const ordersCountResponse = await OrdersServiceClient.get('/count');
+              setOrdersCount(ordersCountResponse.data);
 
-                const productPromises = bestsellersData.map(async (bestseller) => {
-                    const productResponse = await ProductsServiceClient.get(`/getbyid/${bestseller.product_id}`);
-                    const product = productResponse.data;
+              const productPromises = bestsellersData.map(async (bestseller) => {
+                  const productResponse = await ProductsServiceClient.get(`/getbyid/${bestseller.product_id}`);
+                  const product = productResponse.data;
 
-                    try {
-                        const imageResponse = await ProductsServiceClient.get(`/download/bin/${product.id}`, {
-                            responseType: 'arraybuffer',
-                        });
-                        const base64Image = btoa(
-                            new Uint8Array(imageResponse.data).reduce((data, byte) => data + String.fromCharCode(byte), '')
-                        );
-                        product.image = `data:image/png;base64,${base64Image}`;
-                    } catch (error) {
-                        product.image = null;
-                    }
-                    return { ...product, sales_count: bestseller.order_count };
-                });
+                  try {
+                      const imageResponse = await ProductsServiceClient.get(`/download/bin/${product.id}`, {
+                          responseType: 'arraybuffer',
+                      });
+                      const base64Image = btoa(
+                          new Uint8Array(imageResponse.data).reduce((data, byte) => data + String.fromCharCode(byte), '')
+                      );
+                      product.image = `data:image/png;base64,${base64Image}`;
+                  } catch (error) {
+                      product.image = null;
+                  }
+                  return { ...product, sales_count: bestseller.order_count };
+              });
 
-                const productsWithImages = await Promise.all(productPromises);
-                setBestsellers(productsWithImages);
-            } catch (error) {
-                console.error('Error fetching bestsellers:', error);
-            }
-        };
+              const productsWithImages = await Promise.all(productPromises);
+              setBestsellers(productsWithImages);
+          } catch (error) {
+              console.error('Error fetching bestsellers:', error);
+          }
+      };
 
-        fetchProductStats();
-        fetchBestsellers();
-    }, []);
+      fetchProductStats();
+      fetchBestsellers();
+  }, []);
 
-    const lowStockChartData = {
-        labels: lowStockProducts.map((product) => product.name),
-        datasets: [
-            {
-                label: 'Stan magazynowy',
-                data: lowStockProducts.map((product) => product.stock),
-                backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1,
-            },
-        ],
-    };
+  return (
+      <div className="section-container">
+          <h2>Statystyki Produktów</h2>
+          <div className='stat-container'>
+              <div className='stat-card'>
+                  <p>Liczba produktów: <span>{productsCount}</span></p>
+              </div>
+              <div className='stat-card'>
+                  <p>Ilość wyczerpanych produktów: <span>{outOfStockAmount}</span></p>
+              </div>
+          </div>
 
-    return (
-        <div className="section-container">
-            <h2>Statystyki Produktów</h2>
-            <div className='stat-container'>
-                <div className='stat-card'>
-                    <p>Liczba produktów: <span>{productsCount}</span></p>
-                </div>
-                <div className='stat-card'>
-                    <p>Ilość wyczerpanych produktów: <span>{outOfStockAmount}</span></p>
-                </div>
-            </div>
+          <div className="top-products-container">
+              <h2>Bestsellery</h2>
+              <div className="top-products-list">
+                  {bestsellers.map((product) => (
+                      <div className="top-product-item" key={product.id}>
+                          <div className="product-details">
+                              <img src={product.image || 'default-image.png'} alt={product.name} className="product-image" />
+                              <div className="product-info">
+                                  <h3 className="product-name">{product.name}</h3>
+                                  <p className="product-price">{product.price.toFixed(2)} zł</p>
+                              </div>
+                          </div>
+                          <div className="product-sales">
+                              <div className="progress-bar">
+                                  <div className="progress" style={{ width: `${(product.sales_count / ordersCount) * 100}%` }} />
+                              </div>
+                              <p>Sprzedaż: {product.sales_count}</p>
+                              <p>Wartość sprzedaży: {(product.sales_count * product.price).toFixed(2)} zł</p>
+                          </div>
+                      </div>
+                  ))}
+              </div>
+          </div>
 
-            <div className="top-products-container">
-                <h2>Bestsellery</h2>
-                <div className="top-products-list">
-                    {bestsellers.map((product) => (
-                        <div className="top-product-item" key={product.id}>
-                            <div className="product-details">
-                                <img src={product.image || 'default-image.png'} alt={product.name} className="product-image" />
-                                <div className="product-info">
-                                    <h3 className="product-name">{product.name}</h3>
-                                    <p className="product-price">{product.price.toFixed(2)} zł</p>
-                                </div>
-                            </div>
-                            <div className="product-sales">
-                                <div className="progress-bar">
-                                    <div className="progress" style={{ width: `${(product.sales_count / ordersCount) * 100}%` }} />
-                                </div>
-                                <p>Sprzedaż: {product.sales_count}</p>
-                                <p>Wartość sprzedaży: {(product.sales_count * product.price).toFixed(2)} zł</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            <div className="chart-container">
-                <h2>Produkty o niskim stanie magazynowym</h2>
-                <Line data={lowStockChartData} options={{ responsive: true, scales: { y: { beginAtZero: true } } }} />
-            </div>
-        </div>
-    );
+          <div className="low-stock-container">
+              <h2>Produkty o niskim stanie magazynowym</h2>
+              <div className="low-stock-list">
+                  {lowStockProducts.length > 0 ? (
+                      lowStockProducts.map((product) => (
+                          <div key={product.id} className="stat-card">
+                              <div className="low-stock-info">
+                                  <h3>{product.name}</h3>
+                                  <p>Stan magazynowy: {product.stock}</p>
+                              </div>
+                          </div>
+                      ))
+                  ) : (
+                      <p>Brak produktów o niskim stanie magazynowym</p>
+                  )}
+              </div>
+          </div>
+      </div>
+  );
 };
 
 const OrdersStatistics = () => {
@@ -131,7 +131,9 @@ const OrdersStatistics = () => {
   const [averageProcessingTime, setAverageProcessingTime] = useState(0);
   const [ordersData, setOrdersData] = useState([]);
   const [orderStatusCounts, setOrderStatusCounts] = useState([]);
-
+  const [topCustomers, setTopCustomers] = useState([]);
+  const [cancellationsCount, setCancellationsCount] = useState(0);
+  const [conversionRate, setConversionRate] = useState(0);
   const statusMapping = {
     pending: 'Oczekujące',
     processing: 'Przetwarzane',
@@ -145,10 +147,30 @@ const OrdersStatistics = () => {
       try {
         const ordersResponse = await OrdersServiceClient.get('/count');
         const ordersTrendsResponse = await OrdersServiceClient.get('/trends');
+        
         setOrdersCount(ordersResponse.data);
         setOrdersData(ordersTrendsResponse.data.monthly_trends);
         setAverageProcessingTime(Number(ordersTrendsResponse.data.avg_processing_time) || 0);
         setOrderStatusCounts(ordersTrendsResponse.data.order_status_counts);
+        setCancellationsCount(ordersTrendsResponse.data.cancellations_count);
+        setConversionRate(ordersTrendsResponse.data.conversion_rate || 0);
+
+        // Fetch top customers based on orders trends data
+        const topCustomersData = ordersTrendsResponse.data.top_customers;
+
+        // Fetch customer details from user service for each top customer
+        const customerPromises = topCustomersData.map(async (customer) => {
+          const userResponse = await UsersServiceClient.get(`/get/${customer.user_id}`);
+          const userData = userResponse.data.users[0];
+          return { 
+            ...customer, 
+            name: `${userData.firstName} ${userData.lastName} | ${userData.email}`
+          };
+        });
+
+        const customers = await Promise.all(customerPromises);
+        setTopCustomers(customers);
+
       } catch (error) {
         console.error('Error fetching orders statistics:', error);
       }
@@ -230,6 +252,8 @@ const OrdersStatistics = () => {
       <h2>Statystyki zamówień</h2>
       <p>Ilość zamówień: {ordersCount}</p>
       <p>Średni czas przetwarzania: {averageProcessingTime.toFixed(2)} godzin</p>
+      <p>Ilość anulacji: {cancellationsCount}</p>
+      <p>Wskaźnik konwersji: {(conversionRate * 100).toFixed(2)}%</p>
 
       <div className="order-status-container">
         <h3>Statusy zamówień</h3>
@@ -249,6 +273,19 @@ const OrdersStatistics = () => {
         <div className='chart-container'>
           <h3>Trend przychodu</h3>
           <Line data={orderRevenueChartData} options={chartOptions} />
+        </div>
+      </div>
+
+      <div className="top-customers-container">
+        <h3>Najlepsi klienci</h3>
+        <div className="top-customers-list">
+          {topCustomers.map(customer => (
+            <div key={customer.user_id} className="customer-card">
+              <h4>{customer.name}</h4>
+              <p>Liczba zamówień: {customer.orders_count}</p>
+              <p>Wartość zamówień: {customer.total_spent.toFixed(2)} zł</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -284,36 +321,17 @@ const UsersStatistics = () => {
 
   useEffect(() => {
     const fetchUsersStats = async () => {
-      const usersResponse = await UsersServiceClient.get('/count');
-      const userGrowthResponse = await UsersServiceClient.get('/growth');
-      setUsersCount(usersResponse.data.total);
-      setUserGrowth(userGrowthResponse.data);
+      const usersResponse = await UsersServiceClient.get('/statistics');
+      setUsersCount(usersResponse.data.total_users);
     };
 
     fetchUsersStats();
   }, []);
 
-  const userGrowthChartData = {
-    labels: userGrowth.map(user => user.month),
-    datasets: [
-      {
-        label: 'Przyrost użytkowników',
-        data: userGrowth.map(user => user.count),
-        backgroundColor: 'rgba(255, 99, 132, 0.6)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1,
-      },
-    ],
-  };
-
   return (
     <div className="section-container">
       <h2>Statystyki użytkowników</h2>
       <p>Ilość użytkowników: {usersCount}</p>
-      <div className="chart">
-        <h3>Przyrost użytkowników</h3>
-        <Line data={userGrowthChartData} />
-      </div>
     </div>
   );
 };
@@ -325,7 +343,7 @@ const Statistics = () => {
       <ProductsStatistics />
       <OrdersStatistics />
       <ShipmentsStatistics />
-      {/* <UsersStatistics /> */}
+      <UsersStatistics />
     </div>
   );
 };

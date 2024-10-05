@@ -4,6 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import Session
 from src.models import Order, OrderItem, StatusEnum
 from dotenv import load_dotenv
+from sqlalchemy.exc import SQLAlchemyError
+from typing import Dict
 
 load_dotenv()
 
@@ -11,7 +13,10 @@ DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
 DATABASE_USER = os.getenv("DATABASE_USER")
 DATABASE_NAME = os.getenv("DATABASE_NAME")
 
-DATABASE_URL = f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@orders-db/{DATABASE_NAME}"
+if os.getenv("ENV") == "test":
+    DATABASE_URL = "sqlite:///./test.db"
+else:
+    DATABASE_URL = f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@orders-db/{DATABASE_NAME}"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -25,22 +30,32 @@ def get_orders_db(db: Session, limit: int = 10):
 def get_order_db(db: Session, order_id: int):
     return db.query(Order).filter(Order.id == order_id).first()
 
-def create_order_db(db: Session, user_id: str, total_price: float, items: list):
-    order = Order(user_id=user_id, total_price=total_price, status=StatusEnum.pending)
-    db.add(order)
-    db.commit()
-    db.refresh(order)
-    for item in items:
-        order_item = OrderItem(
-            order_id=order.id,
-            product_id=item.product_id,
-            quantity=item.quantity,
-            price=item.price,
-            weight=item.weight
-        )
-        db.add(order_item)
-    db.commit()
-    return order
+def create_order_db(db: Session, order_data: Dict):
+    try:
+        order = Order(user_id=order_data.user_id, total_price=order_data.total_price, status="pending")
+        
+        db.add(order)
+        db.commit()
+        db.refresh(order)
+
+        for item in order_data.items:
+            order_item = OrderItem(
+                order_id=order.id,
+                product_id=item.id,
+                quantity=item.quantity,
+                price=item.price,
+                grind=item.grind,
+                weight=item.weight,
+            )
+            db.add(order_item)
+        db.commit()
+        
+        return order.id
+    
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise RuntimeError(f"Error inserting order into database: {str(e)}")
+
 
 def update_order_status_db(db: Session, order_id: int, status: StatusEnum):
     order = db.query(Order).filter(Order.id == order_id).first()
@@ -84,7 +99,6 @@ def get_orders_db(db: Session, limit: str, offset: str, status: str, search: int
         else:
             orders = db.query(Order).filter(Order.status == status, Order.id == search).limit(limit).offset(offset)
                 
-    # get total number of orders
     total = db.query(Order).count()
     
     return {

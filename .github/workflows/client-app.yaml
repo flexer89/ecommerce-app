@@ -1,0 +1,32 @@
+name: Run Unit Tests and Push to DockerHub (client-app)
+
+on:
+  push:
+    paths:
+      - 'client-app/**'
+
+jobs:
+  unit_tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: |
+          cd services/carts
+          docker build -t flexer89/client-app:latest .
+
+      - name: Log in to DockerHub
+        if: success()
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Push Docker image
+        if: success()
+        run: |
+          docker tag flexer89/client-app:latest flexer89/client-app:latest
+          docker push flexer89/client-app:latest

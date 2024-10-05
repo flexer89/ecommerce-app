@@ -35,3 +35,4 @@ class OrderItem(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     order = relationship("Order", back_populates="items")
     weight = Column(Float)
+    grind = Column(String)

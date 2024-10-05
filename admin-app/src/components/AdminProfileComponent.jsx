@@ -5,6 +5,8 @@ import '../assets/style/style.css';
 import OrderServiceClient from '../clients/OrdersService';
 import UserServiceClient from '../clients/UsersService';
 import ShipmentServiceClient from '../clients/ShipmentsService';
+import OrderDetailModal from './OrderDetailModal'; // Import OrderDetailModal
+import ShipmentDetailModal from './ShipmentDetailModal'; // Import ShipmentDetailModal
 
 const UserProfilePage = () => {
   const [activeTab, setActiveTab] = useState('personalInfo');
@@ -41,12 +43,13 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
       setLoading(true);
       try {
-        const response = await OrderServiceClient.get(`/getbyuser/${getKeycloak().subject}`);
+        const response = await OrderServiceClient.get(`/getbyuser/${getKeycloak().subject}?limit=10000`);
         
         if (response.status === 404) {
           setOrders([]);
@@ -66,6 +69,14 @@ const Orders = () => {
     fetchOrders();
   }, []);
 
+  const handleOrderClick = (order) => {
+    setSelectedOrder(order);
+  };
+
+  const closeOrderModal = () => {
+    setSelectedOrder(null);
+  };
+
   if (loading) {
     return <div>Ładowanie...</div>;
   }
@@ -82,25 +93,16 @@ const Orders = () => {
       ) : (
         <div className="orders-list">
           {orders.map(order => (
-            <div key={order.id} className="order">
+            <div key={order.id} className="order" onClick={() => handleOrderClick(order)}>
               <h3>Zamówienie #{order.id}</h3>
               <p><strong>Data utworzenia:</strong> {new Date(order.created_at).toLocaleString()}</p>
-              <p><strong>Łączna cena:</strong> {order.total_price} zł</p>
-              <p><strong>Status:</strong> {order.status}</p>
-              <h4>Przedmioty:</h4>
-              <ul>
-                {order.items.map(item => (
-                  <li key={item.id}>
-                    <p><strong>ID produktu:</strong> {item.product_id}</p>
-                    <p><strong>Ilość:</strong> {item.quantity}</p>
-                    <p><strong>Cena jednostkowa:</strong> {item.price} zł</p>
-                  </li>
-                ))}
-              </ul>
+              <p><strong>Łączna cena:</strong> {order.total_price.toFixed(2)} zł</p>
+              <button className="our-mission-button">Szczegóły</button>
             </div>
           ))}
         </div>
       )}
+      {selectedOrder && <OrderDetailModal order={selectedOrder} onClose={closeOrderModal} />} {/* Display OrderDetailModal */}
     </div>
   );
 };
@@ -265,7 +267,7 @@ const PersonalInfo = () => {
                   className={"editable-input"}
                 />
               </p>
-              <button className="contact-us-button" onClick={handleSave}>Zapisz</button>
+              <button className="our-mission-button" onClick={handleSave}>Zapisz</button>
             </div>
           ) : (
             <div>
@@ -276,7 +278,7 @@ const PersonalInfo = () => {
               <p><strong>Miasto:</strong> {formValues.City}</p>
               <p><strong>Kod pocztowy:</strong> {formValues.PostCode}</p>
               <p><strong>Województwo:</strong> {formValues.voivodeship}</p>
-              <button className="contact-us-button" onClick={toggleEditMode}>Edytuj</button>
+              <button className="our-mission-button" onClick={toggleEditMode}>Edytuj</button>
             </div>
           )}
         </div>
@@ -291,6 +293,7 @@ const Shipments = () => {
   const [shipments, setShipments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedShipment, setSelectedShipment] = useState(null); // For displaying ShipmentDetailModal
 
   useEffect(() => {
     const fetchShipments = async () => {
@@ -316,6 +319,14 @@ const Shipments = () => {
     fetchShipments();
   }, []);
 
+  const handleShipmentClick = (shipment) => {
+    setSelectedShipment(shipment);
+  };
+
+  const closeShipmentModal = () => {
+    setSelectedShipment(null);
+  };
+
   if (loading) {
     return <div>Ładowanie...</div>;
   }
@@ -332,16 +343,17 @@ const Shipments = () => {
       ) : (
         <div className="shipments-list">
           {shipments.map(shipment => (
-            <div key={shipment.id} className="shipment">
+            <div key={shipment.id} className="shipment" onClick={() => handleShipmentClick(shipment)}>
               <h3>Wysyłka #{shipment.id}</h3>
               <p><strong>Adres dostawy:</strong> {shipment.shipment_address}</p>
               <p><strong>Data wysyłki:</strong> {new Date(shipment.shipment_date).toLocaleString()}</p>
               <p><strong>Data dostawy:</strong> {new Date(shipment.delivery_date).toLocaleString()}</p>
-              <p><strong>Status:</strong> {shipment.status}</p>
+              <button className="our-mission-button">Szczegóły</button>
             </div>
           ))}
         </div>
       )}
+      {selectedShipment && <ShipmentDetailModal shipment={selectedShipment} onClose={closeShipmentModal} />} {/* Display ShipmentDetailModal */}
     </div>
   );
 };

@@ -30,7 +30,7 @@ const ProductCard = ({ product, onClick, onEdit, onDelete }) => {
       <div className="product-card-image-container" onClick={onClick}>
         <img src={product.image} alt={product.name} className="product-card-image" />
         <h2 className="product-card-title">{product.name}</h2>
-        <p className="product-card-price">{product.price.toFixed(2)} zł</p>
+        <p className="product-card-price">{(product.price - (product.price * product.discount)).toFixed(2)} zł</p>
       </div>
       <div className="product-card-actions">
         <button onClick={() => onEdit(product.id)} className="product-card-link">Edytuj</button>

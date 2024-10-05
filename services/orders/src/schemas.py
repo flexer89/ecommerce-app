@@ -2,6 +2,13 @@ from pydantic import BaseModel
 from typing import List
 from datetime import datetime
 from enum import Enum
+from uuid import UUID
+
+class ErrorResponse(BaseModel):
+    detail: str
+    
+class CreateOrderResponse(BaseModel):
+    order_id: int
 
 class StatusEnum(str, Enum):
     pending = 'pending'
@@ -28,7 +35,7 @@ class OrderItem(OrderItemBase):
         from_attributes = True
 
 class OrderBase(BaseModel):
-    user_id: str
+    user_id: UUID
     total_price: float
     status: StatusEnum
 
@@ -60,3 +67,34 @@ class OrderTrendResponse(BaseModel):
 class OrderStatusCountResponse(BaseModel):
     status: str
     order_count: int
+    
+class Bestseller(BaseModel):
+    product_id: int
+    order_count: int
+    
+class BestsellersResponse(BaseModel):
+    List[Bestseller]
+
+class OrderItem(BaseModel):
+    id: int
+    quantity: int
+    price: float
+    weight: float
+    grind: str
+
+class CreateOrderRequest(BaseModel):
+    user_id: UUID
+    items: List[OrderItem]
+    total_price: float
+
+class OrderResponse(BaseModel):
+    created_at: datetime
+    id: int
+    status: StatusEnum
+    total_price: float
+    updated_at: datetime
+    user_id: UUID
+    
+class GetOrdersResponse(BaseModel):
+    orders: List[OrderResponse]
+    total: int

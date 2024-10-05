@@ -1,8 +1,12 @@
 const formatDateTime = (input) => {
     const [datePart, timePart] = input.split(' | ');
   
-    const [day, month, year] = datePart.split('.');
+    let [day, month, year] = datePart.split('.');
     const [hour, minute] = timePart.split(':');
+
+    if (day.length === 1) {
+      day = `0${day}`;
+    }
   
     const formattedDate = `${year}-${month}-${day}T${hour}:${minute}`;
   
@@ -14,6 +18,8 @@ const statusTranslationMap = {
     shipped: 'Wysłane',
     delivered: 'Dostarczone',
     cancelled: 'Anulowane',
+    processing: 'Przetwarzane',
+    on_hold: 'Wstrzymane',
 };
 
 const orderStatusTranslationMap = {

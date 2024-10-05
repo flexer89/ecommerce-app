@@ -4,10 +4,12 @@ import SortModal from '../components/SortModal';
 import ProductsServiceClient from '../clients/ProductsService';
 import Modal from '../components/ProductModal';
 import FilterModal from '../components/FilterModal';
+import OrderServiceClient from '../clients/OrdersService';
 import '../assets/style/style.css';
 
 const ProductListPage = () => {
   const [products, setProducts] = useState([]);
+  const [bestsellers, setBestsellers] = useState([]); // Store bestsellers
   const [TotalMaxPrice, setTotalMaxPrice] = useState(0.0); // Added maxPrice state
   const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(false);
@@ -20,89 +22,94 @@ const ProductListPage = () => {
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
   const [sortOptions, setSortOptions] = useState({ sortBy: '', sortOrder: 'asc' });
 
-
   const pageSize = 20; // Number of products per page
 
-const fetchProducts = async () => {
-  setLoading(true);
-
-  try {
-    const offset = (currentPage - 1) * pageSize;
-
-    // Build query parameters, ensuring undefined values are omitted
-    const params = {
-      limit: pageSize,
-      offset: offset,
-    };
-
-    // Only include filters in params if they have a value
-    if (filters.search) params.search = filters.search;
-    if (filters.arabica) params.arabica = filters.arabica;
-    if (filters.robusta) params.robusta = filters.robusta;
-    if (filters.priceRange) {
-      if (filters.priceRange[0] !== undefined) params.minPrice = filters.priceRange[0];
-      if (filters.priceRange[1] !== undefined) params.maxPrice = filters.priceRange[1];
+  const fetchBestsellers = async () => {
+    try {
+      // Fetch best-selling product details from the /bestsellers endpoint
+      const bestsellerResponse = await OrderServiceClient.get('/bestsellers?limit=3');
+      setBestsellers(bestsellerResponse.data);
+    } catch (error) {
+      console.error('Error fetching bestsellers:', error);
     }
+  };
 
-    // Include sorting options
-    if (sortOptions.sortBy) {
-      params.sort_by = sortOptions.sortBy;
-      params.sort_order = sortOptions.sortOrder;
+  const fetchProducts = async () => {
+    setLoading(true);
+
+    try {
+      const offset = (currentPage - 1) * pageSize;
+
+      // Build query parameters, ensuring undefined values are omitted
+      const params = {
+        limit: pageSize,
+        offset: offset,
+      };
+
+      if (filters.search) params.search = filters.search;
+      if (filters.arabica) params.arabica = filters.arabica;
+      if (filters.robusta) params.robusta = filters.robusta;
+      if (filters.priceRange) {
+        if (filters.priceRange[0] !== undefined) params.minPrice = filters.priceRange[0];
+        if (filters.priceRange[1] !== undefined) params.maxPrice = filters.priceRange[1];
+      }
+
+      if (sortOptions.sortBy) {
+        params.sort_by = sortOptions.sortBy;
+        params.sort_order = sortOptions.sortOrder;
+      }
+
+      const queryParams = new URLSearchParams(params).toString();
+
+      // Fetch the products with queryParams
+      const response = await ProductsServiceClient.get(`/get?${queryParams}`);
+      
+      const { products: fetchedProducts, total, total_max_price: TotalMaxPrice } = response.data;
+
+      setTotalProducts(total);
+      setTotalPages(Math.ceil(total / pageSize));
+      setTotalMaxPrice(parseFloat(TotalMaxPrice.toFixed(2)));
+
+      if (fetchedProducts.length > 0) {
+        const productIds = fetchedProducts.map((product) => product.id).join(',');
+
+        const imagesResponse = await ProductsServiceClient.get('/download/images', {
+          params: { product_ids: productIds },
+        });
+        const imagesData = imagesResponse.data;
+
+        const productsWithImages = fetchedProducts.map((product) => {
+          const base64Image = imagesData[product.id];
+          product.image = base64Image ? `data:image/png;base64,${base64Image}` : null;
+
+          // Check if the product is in the bestsellers list
+          const isBestseller = bestsellers.some((bestseller) => bestseller.product_id === product.id);
+          product.isBestseller = isBestseller;
+
+          return product;
+        });
+
+        setProducts(productsWithImages);
+      } else {
+        setProducts([]);
+      }
+
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
     }
-    // Debugging: Print params to check their values before making the API call
-    console.log('Query Params:', params);
+  };
 
-    // Build URL with query parameters
-    const queryParams = new URLSearchParams(params).toString();
-
-    console.log('Final Query String:', queryParams); // Debugging
-
-    // Fetch the products with queryParams
-    const response = await ProductsServiceClient.get(`/get?${queryParams}`);
-    
-    // Assuming response.data is { products: [...], total: number }
-    const { products: fetchedProducts, total, total_max_price: TotalMaxPrice } = response.data;
-
-    // Set products and pagination values
-    setTotalProducts(total);
-    setTotalPages(Math.ceil(total / pageSize));
-    setTotalMaxPrice(parseFloat(TotalMaxPrice.toFixed(2)));
-
-    if (fetchedProducts.length > 0) {
-    // Fetch images for the products
-    const productIds = fetchedProducts.map((product) => product.id).join(',');
-
-    const imagesResponse = await ProductsServiceClient.get('/download/images', {
-      params: { product_ids: productIds },
-    });
-    const imagesData = imagesResponse.data;
-
-    // Map images to products
-    const productsWithImages = fetchedProducts.map((product) => {
-      const base64Image = imagesData[product.id];
-      product.image = base64Image ? `data:image/png;base64,${base64Image}` : null;
-      return product;
-    });
-
-    setProducts(productsWithImages);
-  } else {
-    setProducts([]);
-  }
-
-  } catch (error) {
-    console.error('Error fetching products:', error);
-  } finally {
-    setLoading(false);
-  }
-};
-
+  useEffect(() => {
+    fetchBestsellers(); // Fetch bestsellers first
+  }, []);
 
   useEffect(() => {
     fetchProducts();
-  }, [currentPage, filters, sortOptions]);
+  }, [currentPage, filters, sortOptions, bestsellers]); // Re-fetch products when bestsellers are updated
 
   const handleFilterChange = (newFilters) => {
-    console.log('Received Filters in Parent:', newFilters); // Debugging
     setFilters(newFilters);
     setCurrentPage(1); // Reset to first page when filters change
   };
@@ -118,31 +125,6 @@ const fetchProducts = async () => {
     setSelectedProduct(null);
   };
 
-  const handleCreateProduct = () => {
-    setIsCreateModalOpen(true);
-  };
-
-  const handleCreateSubmit = (productData) => {
-    const formData = new FormData();
-    formData.append('name', productData.name);
-    formData.append('description', productData.description);
-    formData.append('price', productData.price);
-    formData.append('stock', productData.stock);
-    formData.append('category', productData.category);
-    formData.append('image', productData.image);
-
-    ProductsServiceClient.post('/create', formData, {
-      headers: {
-        accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-      .then(() => fetchProducts())
-      .catch((error) => console.error('Error creating product:', error))
-      .finally(() => setIsCreateModalOpen(false));
-  };
-
-  // Pagination controls
   const handlePreviousPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
@@ -152,6 +134,7 @@ const fetchProducts = async () => {
   };
 
   const handlePageClick = (pageNumber) => {
+    window.scrollTo(0, 0);
     setCurrentPage(pageNumber);
   };
 
@@ -164,15 +147,8 @@ const fetchProducts = async () => {
     <div className="product-list-page container">
       <div className="product-list-header">
         <h1>Lista produktów</h1>
-        <button
-          onClick={() => setIsFilterModalOpen(true)}
-          className="our-mission-button"
-        >
-          Otwórz Filtry
-        </button>
-        <button onClick={() => setIsSortModalOpen(true)} className="our-mission-button">
-          Sortuj Produkty
-        </button>
+        <button onClick={() => setIsFilterModalOpen(true)} className="our-mission-button">Otwórz Filtry</button>
+        <button onClick={() => setIsSortModalOpen(true)} className="our-mission-button">Sortuj Produkty</button>
       </div>
   
       {loading ? (
@@ -191,14 +167,13 @@ const fetchProducts = async () => {
                   <ProductCard
                     key={product.id}
                     product={product}
+                    isBestseller={product.isBestseller} // Pass the bestseller information
                     onClick={() => openModal(product)}
                   />
                 ))}
               </div>
               <div className="pagination">
-                <button onClick={handlePreviousPage} disabled={currentPage === 1}>
-                  Poprzednia
-                </button>
+                <button onClick={handlePreviousPage} disabled={currentPage === 1}>Poprzednia</button>
                 {pageNumbers.map((pageNumber) => (
                   <button
                     key={pageNumber}
@@ -208,22 +183,13 @@ const fetchProducts = async () => {
                     {pageNumber}
                   </button>
                 ))}
-                <button
-                  onClick={handleNextPage}
-                  disabled={currentPage === totalPages}
-                >
-                  Następna
-                </button>
+                <button onClick={handleNextPage} disabled={currentPage === totalPages}>Następna</button>
               </div>
             </>
           )}
         </>
       )}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        product={selectedProduct}
-      />
+      <Modal isOpen={isModalOpen} onClose={closeModal} product={selectedProduct} />
       <FilterModal
         isOpen={isFilterModalOpen}
         onClose={() => setIsFilterModalOpen(false)}
@@ -238,7 +204,6 @@ const fetchProducts = async () => {
           setCurrentPage(1);
         }}
       />
-
     </div>
   );
 };

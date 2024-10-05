@@ -43,20 +43,19 @@ const OrderDetailModal = ({ order, onClose }) => {
 
     const fetchShipment = async () => {
       try {
-        // Assuming there's an API to get shipment details by order ID
         const shipmentResponse = await ShipmentServiceClient.get(`/getbyorder/${order.id}`);
         if (shipmentResponse.data) {
-          setShipment(shipmentResponse.data); // Store shipment details
+          setShipment(shipmentResponse.data);
         }
       } catch (error) {
         console.error('No shipment found for this order:', error);
-        setShipment(null); // Ensure shipment is null if no shipment exists
+        setShipment(null);
       }
     };
 
     if (order) {
       fetchOrderDetails();
-      fetchShipment(); // Fetch shipment details if the order has a shipment
+      fetchShipment();
     }
   }, [order]);
 

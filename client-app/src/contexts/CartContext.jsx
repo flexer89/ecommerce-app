@@ -55,7 +55,7 @@ export const CartProvider = ({ children }) => {
 
   const addItemToCart = async (product, grind, weight) => {
     let productPrice = parseFloat(product.price * (product.discount > 0 ? (1 - product.discount) : 1));
-    if (weight === '500g') {
+    if (weight === 500) {
       productPrice *= 2;
     }
   
@@ -96,8 +96,17 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  const deleteCart = async () => {
+    try {
+      await CartServiceClient.delete(`/delete/${cartId}`);
+      setCart({ items: [], total: 0, quantity: 0 });
+    } catch (error) {
+      console.error('Error deleting cart:', error);
+    }
+  }
+
   return (
-    <CartContext.Provider value={{ cart, addItemToCart, removeItemFromCart, fetchCart }}>
+    <CartContext.Provider value={{ cart, addItemToCart, removeItemFromCart, fetchCart, deleteCart }}>
       {children}
     </CartContext.Provider>
   );

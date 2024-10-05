@@ -4,6 +4,10 @@ import { useKeycloakAuth } from '../contexts/KeycloakContext';
 import getKeycloak from '../auth/keycloak';
 import '../assets/style/style.css';
 import UserServiceClient from '../clients/UsersService';
+import OrderServiceClient from '../clients/OrdersService';
+import ShipmentServiceClient from '../clients/ShipmentsService';
+import ProductServiceClient from '../clients/ProductsService';
+import { useCart } from '../contexts/CartContext';
 
 const CheckoutPage = () => {
   const { isInitialized } = useKeycloakAuth();
@@ -19,8 +23,9 @@ const CheckoutPage = () => {
     voivodeship: ''
   });
   const [selectedShipping, setSelectedShipping] = useState('');
+  const { cart } = useCart();
+  const [paczkomatPoint, setPaczkomatPoint] = useState(null)
 
-  // Load user info
   useEffect(() => {
     const keycloak = getKeycloak();
     const fetchUserInfo = async () => {
@@ -51,33 +56,45 @@ const CheckoutPage = () => {
     }
   }, [isInitialized]);
 
-  // Load the Easypack script only once
   useEffect(() => {
-    if (!document.querySelector('#easypack-script')) {
+    const scriptId = 'easypack-script';
+    
+    if (!document.getElementById(scriptId)) {
       const script = document.createElement('script');
       script.src = 'https://geowidget.easypack24.net/js/sdk-for-javascript.js';
-      script.id = 'easypack-script';
+      script.id = scriptId;
       script.async = true;
       script.onload = () => {
-        window.easyPackAsyncInit = () => {
-          window.easyPack.init({
-            defaultLocale: 'pl',
-            mapType: 'osm',
-            searchType: 'osm',
-            points: {
-              types: ['parcel_locker'],
-              functions: ['parcel_collect'],
-            },
-            map: {
-              initialTypes: ['parcel_locker'],
-              initialFunctions: ['parcel_collect'],
-            },
-          });
-        };
+        if (window.easyPackAsyncInit) {
+          window.easyPackAsyncInit();
+        }
       };
       document.body.appendChild(script);
+    } else if (window.easyPack) {
+      window.easyPackAsyncInit();
     }
+  
+    window.easyPackAsyncInit = () => {
+      try {
+        window.easyPack.init({
+          defaultLocale: 'pl',
+          mapType: 'osm',
+          searchType: 'osm',
+          points: {
+            types: ['parcel_locker'],
+            functions: ['parcel_collect'],
+          },
+          map: {
+            initialTypes: ['parcel_locker'],
+            initialFunctions: ['parcel_collect'],
+          },
+        });
+      } catch (error) {
+        console.error('Error initializing EasyPack:', error);
+      }
+    };
   }, []);
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -87,18 +104,75 @@ const CheckoutPage = () => {
   const handleShippingChange = (e) => {
     setSelectedShipping(e.target.value);
 
-    // Display the Easypack map widget only when "Paczkomat" is selected
     if (e.target.value === 'paczkomat' && window.easyPack) {
       window.easyPack.mapWidget('easypack-map', function (point) {
         console.log('Selected point:', point);
+        setPaczkomatPoint(point); // Store the selected paczkomat point
       });
     }
   };
 
-  const handleCheckout = (e) => {
+  const handleCheckout = async (e) => {
     e.preventDefault();
-    console.log('Selected Shipping:', selectedShipping);
-    navigate('/payment');
+
+    // Determine the shipment company and address based on selected shipping
+    let shipmentCompany = 'brak';
+    let shipmentAddress = `${formValues.Address}, ${formValues.City} ${formValues.PostCode}`;
+
+    if (selectedShipping === 'kurier') {
+      shipmentCompany = 'kurier';
+    } else if (selectedShipping === 'paczkomat') {
+      shipmentCompany = 'paczkomat';
+      if (paczkomatPoint) {
+        shipmentAddress = `${paczkomatPoint.address.line1}, ${paczkomatPoint.address.line2}`;
+      } else {
+        alert('Please select a Paczkomat point.');
+        return;
+      }
+    } else if (selectedShipping === 'odbior_osobisty') {
+      shipmentCompany = 'odbior_osobisty';
+    }
+    
+
+    try {
+      const orderItems = cart.items.map(item => ({
+        id: item.id,
+        quantity: item.quantity,
+        price: item.price,
+        weight: item.weight,
+        grind: item.grind,
+      }));
+
+      const orderResponse = await OrderServiceClient.post('/create', {
+        user_id: getKeycloak().subject,
+        items: orderItems,
+        total_price: cart.total,
+      });
+      if (orderResponse.status !== 201) {
+        throw new Error('Failed to create order');
+      }
+      
+      const orderId = orderResponse.data.order_id;
+
+      // Step 3: Create a shipping entry
+      const shippingResponse = await ShipmentServiceClient.post('/create', {
+        order_id: orderId,
+        user_id: getKeycloak().subject,
+        shipment_address: shipmentAddress,
+        company: shipmentCompany
+
+      });
+
+      if (shippingResponse.status !== 201) {
+        throw new Error('Failed to create shipping entry');
+      }
+
+      // Step 4: Redirect to the payment page
+      navigate('/payment', { state: { orderId: orderId, fromCheckout: true } });
+    } catch (error) {
+      console.error('Error during checkout process:', error);
+      alert('An error occurred during the checkout process. Please try again.');
+    }
   };
 
   return (
@@ -193,7 +267,7 @@ const CheckoutPage = () => {
                 checked={selectedShipping === 'kurier'}
                 onChange={handleShippingChange}
               />
-              Kurier
+              Kurier - 9.99 zł (Dostawa w ciągu 2-3 dni roboczych)
             </label>
           </div>
           <div>
@@ -205,7 +279,7 @@ const CheckoutPage = () => {
                 checked={selectedShipping === 'paczkomat'}
                 onChange={handleShippingChange}
               />
-              Paczkomat
+              Paczkomat - 7.99 zł (Dostawa w ciągu 2-3 dni roboczych)
             </label>
             {selectedShipping === 'paczkomat' && (
               <div id="easypack-map"></div>

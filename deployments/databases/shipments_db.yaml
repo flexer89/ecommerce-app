@@ -70,7 +70,7 @@ data:
     DROP TYPE IF EXISTS shipment_status_enum;
 
     -- Create enum type for shipment status
-    CREATE TYPE shipment_status_enum AS ENUM ('pending', 'shipped', 'delivered', 'cancelled');
+    CREATE TYPE shipment_status_enum AS ENUM ('pending', 'processing', 'shipped', 'delivered', 'cancelled', 'on_hold');
 
     -- Create shipments table
     CREATE TABLE shipments (

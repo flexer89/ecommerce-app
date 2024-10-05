@@ -20,7 +20,8 @@ import CartPage from './CartPage';
 import UserProfilePage from './UserProfilePage';
 import LoginOrRegisterPage from '../pages/LoginOrRegisterPage';
 import CheckoutPage from '../pages/CheckoutPage';
-import PaymentPage from '../pages/PaymentPage';
+import ForbiddenComponent from "./ForbiddenComponent";
+import ProceedPaymentPage from "../pages/ProceedPaymentPage";
 import OrderConfirmationPage from '../pages/OrderConfirmationPage';
 import { CartProvider } from '../contexts/CartContext';
 import { KeycloakAuthProvider, useKeycloakAuth } from '../contexts/KeycloakContext';
@@ -108,40 +109,6 @@ const ProceedCheckoutPage = () => (
   </div>
 );
 
-const ProceedPaymentPage = () => {
-  const [clientSecret, setClientSecret] = useState("");
-
-  useEffect(() => {
-    fetch("/api/payments/create-payment-intent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: [{ id: "xl-tshirt" }] }),
-    })
-      .then((res) => res.json())
-      .then((data) => setClientSecret(data.clientSecret));
-  }, []);
-
-  const appearance = {
-    theme: 'stripe',
-  };
-
-  const options = {
-    clientSecret,
-    appearance,
-  };
-
-  return (
-    clientSecret && (
-      <Elements options={options} stripe={stripePromise}>
-        <div>
-        <Header />
-        <PaymentPage />
-        <Footer />
-      </div>
-      </Elements>
-    )
-  );
-};
 
 const OrderConfirmation = () => (
   <div>
@@ -175,6 +142,14 @@ const NotFoundPage = () => (
   </div>
 );
 
+const ForbiddenPage = () => (
+  <div>
+    <Header />
+    <ForbiddenComponent />
+    <Footer />
+  </div>
+);
+
 const OurMissionPage = () => (
   <div>
     <Header />
@@ -198,11 +173,19 @@ const App = () => {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/login-or-register" element={<ContinueShoppingPage />} />
             <Route path="/checkout" element={<ProceedCheckoutPage />} />
-            <Route path="/payment" element={ <ProceedPaymentPage />} />
+            <Route
+              path="/payment"
+              element={
+                <Elements stripe={stripePromise}>
+                  <ProceedPaymentPage />
+                </Elements>
+              }
+            />
             <Route path="/order-confirmation" element={<OrderConfirmation />} />
             <Route path="/regulations" element={<RegulationsPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/our-mission" element={<OurMissionPage />} />
+            <Route path="/forbidden" element={<ForbiddenPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <BackToTop />

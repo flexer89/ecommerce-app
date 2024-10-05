@@ -5,6 +5,7 @@ import { useKeycloakAuth } from '../contexts/KeycloakContext';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ProductsServiceClient from '../clients/ProductsService';
 import '../assets/style/style.css';
 
 const CartPage = () => {
@@ -36,7 +37,25 @@ const CartPage = () => {
     fetchProductImages();
   }, [cart.items]);
 
-  const handleRemoveFromCart = (id, grind, weight, quantity) => {
+  const handleRemoveFromCart = async (id, grind, weight, quantity) => {
+    // call update-quantity to update stock (if we remove from cart, we add to stock)
+    // Create the items payload as expected by the API
+    const updateQuantityPayload = {
+      items: [
+        {
+          product_id: id,
+          quantity: weight === 500 ? -2 : -1 // If weight is 500g, set quantity as 2, otherwise 1
+        }
+      ]
+    };
+
+    // Make the API call to check and update the product quantity
+    const response = await ProductsServiceClient.post(`/update-quantity`, updateQuantityPayload);
+    console.log(response);  
+    if (response.status !== 200) {
+      toast.error('Nie udało się zaktualizować stanu magazynowego!', { autoClose: 3000 });
+      return;
+    }
     removeItemFromCart(id, grind, weight, quantity);
     toast.success(`Usunięto ${quantity} sztuk produktu z koszyka!`, { autoClose: 3000 });
   };
@@ -83,7 +102,7 @@ const CartPage = () => {
                     <h2>{item.name}</h2>
                     <p>{item.description}</p>
                     <p>Stopień zmielenia: {item.grind}</p>
-                    <p>Waga: {item.weight}</p>
+                    <p>Waga: {item.weight}g</p>
                     <p>Cena jednostkowa: {item.price.toFixed(2)} zł</p>
                     <p>Ilość: {item.quantity}</p>
                     <p>Cena całkowita: {(parseFloat(item.price) * item.quantity).toFixed(2)} zł</p>

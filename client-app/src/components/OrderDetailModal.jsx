@@ -114,9 +114,6 @@ const OrderDetailModal = ({ order, onClose }) => {
             <p>Nie znaleziono szczegółów wysyłki dla tego zamówienia.</p>
           )}
         </div>
-        <div className="modal-footer">
-          <button onClick={onClose} className="our-mission-button">Zamknij</button>
-        </div>
       </div>
     </div>
   );

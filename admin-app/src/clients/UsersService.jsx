@@ -11,24 +11,24 @@ const UserServiceClient = axios.create({
   }
 });
 
-// UserServiceClient.interceptors.request.use(
-//   async (config) => {
-//     if (keycloak.isTokenExpired()) {
-//       try {
-//         await keycloak.updateToken();
-//       } catch (refreshError) {
-//         keycloak.logout();
-//         return Promise.reject(refreshError);
-//       }
-//     }
+UserServiceClient.interceptors.request.use(
+  async (config) => {
+    if (keycloak.isTokenExpired()) {
+      try {
+        await keycloak.updateToken();
+      } catch (refreshError) {
+        keycloak.logout();
+        return Promise.reject(refreshError);
+      }
+    }
     
-//     config.headers.authorization = keycloak.token;
+    config.headers.authorization = keycloak.token;
 
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export default UserServiceClient;

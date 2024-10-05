@@ -85,5 +85,6 @@ data:
         quantity INTEGER,
         price FLOAT,
         weight FLOAT,
+        grind VARCHAR,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );

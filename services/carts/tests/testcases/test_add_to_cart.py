@@ -1,62 +1,93 @@
-from httpx import AsyncClient
-from unittest.mock import patch, AsyncMock
-from src.app import app
 import pytest
+from httpx import AsyncClient
+from unittest.mock import patch
+from src.app import app
+import json
+import uuid
+
+
+@pytest.fixture
+def mock_redis():
+    """Fixture to mock redis client."""
+    with patch('src.routes.redis_client') as mock_redis:
+        yield mock_redis
+
+@pytest.mark.asyncio
+async def test_add_to_cart_success(mock_redis):
+    """Test successfully adding items to the cart."""
+    user_id = str(uuid.uuid4())
+    
+    mock_redis.hgetall.return_value = {}
+
+    cart_payload = {
+        "items": [
+            {"id": "1", "name": "Product 1", "price": 10.0, "quantity": 2, "weight": 500, "grind": "fine", "discount": 0.0},
+            {"id": "2", "name": "Product 2", "price": 20.0, "quantity": 1, "weight": 250, "grind": "medium", "discount": 0.0}
+        ]
+    }
+
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        response = await client.post(f"/add/{user_id}", json=cart_payload)
+    
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
 
 
 @pytest.mark.asyncio
-@patch("src.routes.redis_client", new_callable=AsyncMock)
-async def test_add_to_cart(mock_redis_client: AsyncMock) -> None:
-    mock_redis_client.hgetall.return_value = {"item1": "value1", "item2": "value2"}
+async def test_add_to_cart_update_existing_item(mock_redis):
+    """Test adding more quantity to an existing item in the cart."""
+    user_id = str(uuid.uuid4())
+
+    existing_cart = {
+        '1:500g:fine': json.dumps({"id": "1", "name": "Product 1", "price": 10.0, "quantity": 2, "weight": 500, "grind": "fine", "discount": 0.0})
+    }
+    mock_redis.hgetall.return_value = existing_cart
+
+    cart_payload = {
+        "items": [
+            {"id": "1", "name": "Product 1", "price": 10.0, "quantity": 2, "weight": 500, "grind": "fine", "discount": 0.0}
+        ]
+    }
 
     async with AsyncClient(app=app, base_url="http://test") as client:
-        response = await client.post(
-            "/add",
-            params={"email": "test@example.com"},
-            json=[
-                {"product_id": "product1", "quantity": 2},
-                {"product_id": "product2", "quantity": 3},
-            ],
-        )
+        response = await client.post(f"/add/{user_id}", json=cart_payload)
 
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
-    mock_redis_client.hgetall.assert_called_once_with("email:test@example.com")
-    mock_redis_client.hset.assert_called_once_with(
-        "email:test@example.com", mapping={"product1": 2, "product2": 3}
-    )
-
 
 @pytest.mark.asyncio
-async def test_add_to_cart_invalid_quantity() -> None:
+async def test_add_to_cart_invalid_item(mock_redis):
+    """Test adding an item with invalid data (e.g., negative price or quantity)."""
+    user_id = str(uuid.uuid4())
+    
+    mock_redis.hgetall.return_value = {}
+    cart_payload = {
+        "items": [
+            {"id": "1", "name": "Product 1", "price": -10.0, "quantity": 2, "weight": 500, "grind": "fine", "discount": 0.0}
+        ]
+    }
+
     async with AsyncClient(app=app, base_url="http://test") as client:
-        response = await client.post(
-            "/add",
-            params={"email": "test@example.com"},
-            json=[
-                {"product_id": "product1", "quantity": -1},
-                {"product_id": "product2", "quantity": 3},
-            ],
-        )
+        response = await client.post(f"/add/{user_id}", json=cart_payload)
 
     assert response.status_code == 400
-    assert response.json() == {"detail": "Quantity must be greater than 0"}
-
+    assert response.json() == {"detail": "Invalid item attributes for product 1"}
 
 @pytest.mark.asyncio
-@patch("src.routes.redis_client", new_callable=AsyncMock)
-async def test_add_to_cart_cart_does_not_exist(mock_redis_client: AsyncMock) -> None:
-    mock_redis_client.hgetall.return_value = {}
+async def test_add_to_cart_no_cart_found(mock_redis):
+    """Test scenario where cart does not exist (but we are adding items for the first time)."""
+    user_id = str(uuid.uuid4())
+
+    mock_redis.hgetall.return_value = {}
+
+    cart_payload = {
+        "items": [
+            {"id": "1", "name": "Product 1", "price": 10.0, "quantity": 2, "weight": 500, "grind": "fine", "discount": 0.0}
+        ]
+    }
 
     async with AsyncClient(app=app, base_url="http://test") as client:
-        response = await client.post(
-            "/add",
-            params={"email": "test@example.com"},
-            json=[
-                {"product_id": "product1", "quantity": 2},
-                {"product_id": "product2", "quantity": 3},
-            ],
-        )
+        response = await client.post(f"/add/{user_id}", json=cart_payload)
 
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
