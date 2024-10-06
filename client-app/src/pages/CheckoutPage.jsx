@@ -58,7 +58,7 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     const scriptId = 'easypack-script';
-    
+
     if (!document.getElementById(scriptId)) {
       const script = document.createElement('script');
       script.src = 'https://geowidget.easypack24.net/js/sdk-for-javascript.js';
@@ -73,7 +73,7 @@ const CheckoutPage = () => {
     } else if (window.easyPack) {
       window.easyPackAsyncInit();
     }
-  
+
     window.easyPackAsyncInit = () => {
       try {
         window.easyPack.init({
@@ -94,7 +94,7 @@ const CheckoutPage = () => {
       }
     };
   }, []);
-  
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -132,7 +132,7 @@ const CheckoutPage = () => {
     } else if (selectedShipping === 'odbior_osobisty') {
       shipmentCompany = 'odbior_osobisty';
     }
-    
+
 
     try {
       const orderItems = cart.items.map(item => ({
@@ -151,7 +151,7 @@ const CheckoutPage = () => {
       if (orderResponse.status !== 201) {
         throw new Error('Failed to create order');
       }
-      
+
       const orderId = orderResponse.data.order_id;
 
       // Step 3: Create a shipping entry

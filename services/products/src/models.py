@@ -1,14 +1,16 @@
-from sqlalchemy import Column, Integer, String, Float, Text, BLOB, TIMESTAMP
 import os
 from datetime import datetime
+
+from sqlalchemy import BLOB, TIMESTAMP, Column, Float, Integer, String, Text
 from sqlalchemy.dialects.postgresql import BYTEA
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+
 class Product(Base):
     __tablename__ = "products"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
     description = Column(Text)

@@ -1,6 +1,8 @@
-from pydantic import BaseModel
-from typing import Optional, List
 from datetime import datetime
+from typing import List, Optional
+
+from pydantic import BaseModel
+
 
 class ProductBase(BaseModel):
     name: str
@@ -8,11 +10,13 @@ class ProductBase(BaseModel):
     price: float
     stock: Optional[int] = 0
     discount: Optional[float] = 0
-    category: Optional[str] = 'uncategorized'
+    category: Optional[str] = "uncategorized"
+
 
 class ProductCreate(ProductBase):
     image: Optional[bytes]
-    
+
+
 class ProductResponse(BaseModel):
     id: int
     name: str
@@ -28,20 +32,25 @@ class ProductResponse(BaseModel):
 class ProductUpdate(ProductBase):
     pass
 
+
 class Product(ProductBase):
     id: int
-    
+
+
 class ProductsListResponse(BaseModel):
     products: List[ProductResponse]
     total: int
     total_max_price: float
 
+
 class UpdateQuantityItem(BaseModel):
     product_id: int
     quantity: int
 
+
 class UpdateQuantityRequest(BaseModel):
     items: List[UpdateQuantityItem]
-    
+
+
 class ErrorResponse(BaseModel):
     detail: str

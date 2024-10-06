@@ -1,22 +1,27 @@
-from pydantic import BaseModel
-from typing import List
 from datetime import datetime
 from enum import Enum
+from typing import List
 from uuid import UUID
+
+from pydantic import BaseModel
+
 
 class ErrorResponse(BaseModel):
     detail: str
-    
+
+
 class CreateOrderResponse(BaseModel):
     order_id: int
 
+
 class StatusEnum(str, Enum):
-    pending = 'pending'
-    processing = 'processing'
-    shipped = 'shipped'
-    delivered = 'delivered'
-    cancelled = 'cancelled'
-    on_hold = 'on_hold'
+    pending = "pending"
+    processing = "processing"
+    shipped = "shipped"
+    delivered = "delivered"
+    cancelled = "cancelled"
+    on_hold = "on_hold"
+
 
 class OrderItemBase(BaseModel):
     product_id: int
@@ -25,8 +30,10 @@ class OrderItemBase(BaseModel):
     weight: float
     grind: str
 
+
 class OrderItemCreate(OrderItemBase):
     pass
+
 
 class OrderItem(OrderItemBase):
     id: int
@@ -35,16 +42,20 @@ class OrderItem(OrderItemBase):
     class Config:
         from_attributes = True
 
+
 class OrderBase(BaseModel):
     user_id: UUID
     total_price: float
     status: StatusEnum
 
+
 class OrderCreate(OrderBase):
     items: List[OrderItemCreate]
 
+
 class OrderUpdateStatus(BaseModel):
     status: StatusEnum
+
 
 class Order(OrderBase):
     id: int
@@ -54,27 +65,33 @@ class Order(OrderBase):
 
     class Config:
         from_attributes = True
-        
-class OrderTrendResponse(BaseModel):
-    month: str
-    total_orders: int
-    total_revenue: float
+
 
 class OrderTrendResponse(BaseModel):
     month: str
     total_orders: int
     total_revenue: float
+
+
+class OrderTrendResponse(BaseModel):
+    month: str
+    total_orders: int
+    total_revenue: float
+
 
 class OrderStatusCountResponse(BaseModel):
     status: str
     order_count: int
-    
+
+
 class Bestseller(BaseModel):
     product_id: int
     order_count: int
-    
+
+
 class BestsellersResponse(BaseModel):
     List[Bestseller]
+
 
 class OrderItem(BaseModel):
     id: int
@@ -83,10 +100,12 @@ class OrderItem(BaseModel):
     weight: float
     grind: str
 
+
 class CreateOrderRequest(BaseModel):
     user_id: UUID
     items: List[OrderItem]
     total_price: float
+
 
 class OrderResponse(BaseModel):
     created_at: datetime
@@ -95,7 +114,8 @@ class OrderResponse(BaseModel):
     total_price: float
     updated_at: datetime
     user_id: UUID
-    
+
+
 class GetOrdersResponse(BaseModel):
     orders: List[OrderResponse]
     total: int

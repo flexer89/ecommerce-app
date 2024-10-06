@@ -63,7 +63,7 @@ const ProductListPage = () => {
 
       // Fetch the products with queryParams
       const response = await ProductsServiceClient.get(`/get?${queryParams}`);
-      
+
       const { products: fetchedProducts, total, total_max_price: TotalMaxPrice } = response.data;
 
       setTotalProducts(total);
@@ -152,7 +152,7 @@ const ProductListPage = () => {
           <button onClick={() => setIsSortModalOpen(true)} className="our-mission-button">Sortuj Produkty</button>
         </div>
       </div>
-  
+
       {loading ? (
         <p>Loading products...</p>
       ) : (

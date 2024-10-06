@@ -31,9 +31,9 @@ const Header = () => {
     <header className="header">
       <div className="header-top" data-header>
         <div className="container">
-          <button 
-            className={`nav-open-btn ${isPanelOpen ? 'active' : ''}`} 
-            aria-label="open menu" 
+          <button
+            className={`nav-open-btn ${isPanelOpen ? 'active' : ''}`}
+            aria-label="open menu"
             onClick={togglePanel}
           >
             <span className="line line-1"></span>
@@ -73,9 +73,9 @@ const Header = () => {
       </div>
 
       <div className={`panel ${isPanelOpen ? 'active' : ''}`}>
-        <button 
-          className="nav-close-btn" 
-          aria-label="close menu" 
+        <button
+          className="nav-close-btn"
+          aria-label="close menu"
           onClick={togglePanel}
         >
           &times;
@@ -91,17 +91,17 @@ const Header = () => {
           </ul>
         </nav>
         {isLogin ? (
-          <button 
-            className="header-action-btn log-in-out" 
-            aria-label="logout" 
+          <button
+            className="header-action-btn log-in-out"
+            aria-label="logout"
             onClick={handleLogout}
           >
             <IonIcon className='in-out-icon' icon="log-out-outline" aria-hidden="true" />
           </button>
         ) : (
-          <button 
-            className="header-action-btn log-in-out" 
-            aria-label="login" 
+          <button
+            className="header-action-btn log-in-out"
+            aria-label="login"
             onClick={login}
           >
             <IonIcon className='in-out-icon' icon={personOutline} aria-hidden="true" />

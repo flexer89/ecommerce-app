@@ -1,8 +1,9 @@
+from unittest.mock import MagicMock, patch
+
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import patch, MagicMock
-from src.app import app
 from keycloak.exceptions import KeycloakError
+from src.app import app
 
 client = TestClient(app)
 
@@ -18,8 +19,8 @@ mock_users = [
             "Address": ["123 Main St"],
             "City": ["Springfield"],
             "PostCode": ["12345"],
-            "voivodeship": ["Illinois"]
-        }
+            "voivodeship": ["Illinois"],
+        },
     },
     {
         "id": "user-2",
@@ -32,20 +33,23 @@ mock_users = [
             "Address": ["456 Elm St"],
             "City": ["Greenville"],
             "PostCode": ["54321"],
-            "voivodeship": ["Texas"]
-        }
-    }
+            "voivodeship": ["Texas"],
+        },
+    },
 ]
 
 
 def test_get_user_data_success():
     """Test successful retrieval of users with pagination and search."""
-    
-    with patch('src.keycloak_client.keycloak_admin.get_users', return_value=mock_users):
-        with patch('src.keycloak_client.keycloak_admin.users_count', return_value=len(mock_users)):
-            
+
+    with patch("src.keycloak_client.keycloak_admin.get_users", return_value=mock_users):
+        with patch(
+            "src.keycloak_client.keycloak_admin.users_count",
+            return_value=len(mock_users),
+        ):
+
             response = client.get("/get?limit=10&offset=0&search=testuser")
-            
+
             assert response.status_code == 200
             json_response = response.json()
             assert json_response["total"] == 2
@@ -56,12 +60,14 @@ def test_get_user_data_success():
 
 def test_get_user_data_by_ids_success():
     """Test successful retrieval of users by their IDs."""
-    
-    with patch('src.keycloak_client.keycloak_admin.get_user') as mock_get_user:
-        mock_get_user.side_effect = lambda user_id: next(user for user in mock_users if user["id"] == user_id)
-        
+
+    with patch("src.keycloak_client.keycloak_admin.get_user") as mock_get_user:
+        mock_get_user.side_effect = lambda user_id: next(
+            user for user in mock_users if user["id"] == user_id
+        )
+
         response = client.get("/get?ids=user-1,user-2")
-        
+
         assert response.status_code == 200
         json_response = response.json()
         assert json_response["total"] == 2
@@ -72,30 +78,32 @@ def test_get_user_data_by_ids_success():
 
 def test_get_user_data_no_users_found():
     """Test the scenario where no users are found."""
-    
-    with patch('src.keycloak_client.keycloak_admin.get_users', return_value=[]):
-        with patch('src.keycloak_client.keycloak_admin.users_count', return_value=0):
-            
+
+    with patch("src.keycloak_client.keycloak_admin.get_users", return_value=[]):
+        with patch("src.keycloak_client.keycloak_admin.users_count", return_value=0):
+
             response = client.get("/get?search=nonexistent")
-            
+
             assert response.status_code == 200
             assert response.json() == {"users": [], "total": 0}
 
 
 def test_get_user_data_invalid_params():
     """Test invalid search parameters resulting in a bad request."""
-    
+
     response = client.get("/get?limit=invalid&offset=invalid")
-    
+
     assert response.status_code == 422
+
 
 def test_get_user_data_internal_server_error():
     """Test internal server error during user retrieval."""
-    
-    with patch('src.keycloak_client.keycloak_admin.get_users', side_effect=KeycloakError):
-        
+
+    with patch(
+        "src.keycloak_client.keycloak_admin.get_users", side_effect=KeycloakError
+    ):
+
         response = client.get("/get?limit=10&offset=0")
-        
+
         assert response.status_code == 500
         assert response.json() == {"detail": "Internal server error"}
-

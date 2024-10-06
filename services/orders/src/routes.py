@@ -1,20 +1,24 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
-import os
 import logging
-from sqlalchemy import func
-from src.database import *
-from src.schemas import *
+import os
 from typing import Dict
+
+from fastapi import APIRouter, Depends, HTTPException, Request
+from sqlalchemy import func
+from sqlalchemy.orm import Session
+from src.database import *
 from src.models import Base
 from src.models import Order as OrderModel
-from sqlalchemy.orm import Session
+from src.schemas import *
 
 # Set up logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 Base.metadata.create_all(bind=engine)
 router = APIRouter()
+
 
 def get_db():
     db = SessionLocal()
@@ -31,39 +35,54 @@ def health():
 
 
 @router.get(
-    "/get/{order_id}", 
-    response_model=Order, 
+    "/get/{order_id}",
+    response_model=Order,
     status_code=200,
     responses={
-        200: {"description": "Order found and returned successfully", "content": {"application/json": {}}},
-        404: {"model": ErrorResponse, "description": "Order not found", },
+        200: {
+            "description": "Order found and returned successfully",
+            "content": {"application/json": {}},
+        },
+        404: {
+            "model": ErrorResponse,
+            "description": "Order not found",
+        },
     },
     description="Retrieve the details of a specific order by its ID. "
-                "If the order exists, it returns the order details. "
-                "If the order is not found, a 404 error is raised."
+    "If the order exists, it returns the order details. "
+    "If the order is not found, a 404 error is raised.",
 )
 def read_order(order_id: int, db: Session = Depends(get_db)):
     logger.info(f"Request received to retrieve order {order_id}")
     order = get_order_db(db, order_id=order_id)
-    
+
     if order is None:
         logger.warning(f"Order {order_id} not found")
         raise HTTPException(status_code=404, detail="Order not found")
     logger.info(f"Order {order_id} retrieved successfully")
     return order
 
+
 @router.post(
-    "/create", 
-    response_model=CreateOrderResponse, 
+    "/create",
+    response_model=CreateOrderResponse,
     status_code=201,
     responses={
-        201: {"model": CreateOrderResponse, "description": "Order created successfully"},
-        500: {"model": ErrorResponse, "description": "Internal server error or database error"}
+        201: {
+            "model": CreateOrderResponse,
+            "description": "Order created successfully",
+        },
+        500: {
+            "model": ErrorResponse,
+            "description": "Internal server error or database error",
+        },
     },
     description="Create a new order in the database. This endpoint accepts order details in the request body and "
-                "returns the ID of the newly created order."
+    "returns the ID of the newly created order.",
 )
-async def create_order(order: CreateOrderRequest, db: Session = Depends(get_db)) -> Dict[str, str]:
+async def create_order(
+    order: CreateOrderRequest, db: Session = Depends(get_db)
+) -> Dict[str, str]:
     logger.info("Request received to create a new order")
     try:
         created_order_id = create_order_db(db, order)
@@ -76,17 +95,21 @@ async def create_order(order: CreateOrderRequest, db: Session = Depends(get_db))
 
 
 @router.put(
-    "/update/{order_id}/status", 
-    response_model=Order, 
+    "/update/{order_id}/status",
+    response_model=Order,
     status_code=200,
     responses={
         200: {"description": "Order status updated successfully"},
         404: {"model": ErrorResponse, "description": "Order not found"},
     },
-    description="Update the status of a specific order. The client must provide the order ID and the new status."
+    description="Update the status of a specific order. The client must provide the order ID and the new status.",
 )
-def update_order_status(order_id: int, order_update: OrderUpdateStatus, db: Session = Depends(get_db)):
-    logger.info(f"Request received to update status of order {order_id} to {order_update.status}")
+def update_order_status(
+    order_id: int, order_update: OrderUpdateStatus, db: Session = Depends(get_db)
+):
+    logger.info(
+        f"Request received to update status of order {order_id} to {order_update.status}"
+    )
     order = update_order_status_db(db, order_id=order_id, status=order_update.status)
     if order is None:
         logger.warning(f"Order {order_id} not found for status update")
@@ -94,16 +117,20 @@ def update_order_status(order_id: int, order_update: OrderUpdateStatus, db: Sess
     logger.info(f"Order {order_id} status updated to {order_update.status}")
     return order
 
+
 @router.get(
-    "/getbyuser/{user_id}", 
-    response_model=list[Order], 
+    "/getbyuser/{user_id}",
+    response_model=list[Order],
     status_code=200,
     responses={
         200: {"description": "Orders retrieved successfully"},
-        404: {"model": ErrorResponse, "description": "No orders found for the specified user"},
+        404: {
+            "model": ErrorResponse,
+            "description": "No orders found for the specified user",
+        },
     },
     description="Retrieve all orders for a specific user by their user ID. A limit can be provided to restrict the "
-                "number of returned orders."
+    "number of returned orders.",
 )
 def read_orders_by_user(user_id: UUID, limit: int = 10, db: Session = Depends(get_db)):
     logger.info(f"Request received to retrieve orders for user {user_id}")
@@ -114,100 +141,115 @@ def read_orders_by_user(user_id: UUID, limit: int = 10, db: Session = Depends(ge
     logger.info(f"Orders for user {user_id} retrieved successfully")
     return orders
 
+
 @router.get(
-    "/bestsellers", 
-    response_model=list[Bestseller], 
+    "/bestsellers",
+    response_model=list[Bestseller],
     status_code=200,
     responses={
         200: {"description": "Bestselling products retrieved successfully"},
     },
     description="Retrieve a list of the best-selling products. The result contains the product ID and the count of orders. "
-                "You can limit the number of bestsellers returned by specifying the `limit` parameter."
+    "You can limit the number of bestsellers returned by specifying the `limit` parameter.",
 )
 def get_bestsellers(limit: int = 3, db: Session = Depends(get_db)):
     logger.info(f"Request received to retrieve bestsellers with a limit of {limit}")
     result = get_bestsellers_db(db, limit=limit)
     logger.info(f"Bestsellers retrieved successfully")
     return [
-        {
-            "product_id": product_id,
-            "order_count": order_count
-        }
+        {"product_id": product_id, "order_count": order_count}
         for product_id, order_count in result
     ]
 
+
 @router.get(
-    "/trends", 
-    response_model=Dict, 
+    "/trends",
+    response_model=Dict,
     status_code=200,
     responses={
         200: {"description": "Order trends retrieved successfully"},
     },
     description="Retrieve order trends, including monthly trends for orders and revenue, average processing time, "
-                "order status counts, cancellations, conversion rate, and top customers. This endpoint returns "
-                "various metrics related to the order data."
+    "order status counts, cancellations, conversion rate, and top customers. This endpoint returns "
+    "various metrics related to the order data.",
 )
 def get_order_trends(db: Session = Depends(get_db)):
     logger.info("Request received to retrieve order trends")
-    
+
     monthly_trends = (
         db.query(
-            func.date_trunc('month', OrderModel.created_at).label('month'),
-            func.count(OrderModel.id).label('total_orders'),
-            func.sum(OrderModel.total_price).label('total_revenue')
+            func.date_trunc("month", OrderModel.created_at).label("month"),
+            func.count(OrderModel.id).label("total_orders"),
+            func.sum(OrderModel.total_price).label("total_revenue"),
         )
-        .group_by(func.date_trunc('month', OrderModel.created_at))
-        .order_by(func.date_trunc('month', OrderModel.created_at))
+        .group_by(func.date_trunc("month", OrderModel.created_at))
+        .order_by(func.date_trunc("month", OrderModel.created_at))
         .all()
     )
-    
-    avg_processing_time = db.query(
-        func.avg(
-            func.extract('epoch', OrderModel.updated_at - OrderModel.created_at) / 3600
+
+    avg_processing_time = (
+        db.query(
+            func.avg(
+                func.extract("epoch", OrderModel.updated_at - OrderModel.created_at)
+                / 3600
+            )
         )
-    ).filter(OrderModel.status == 'shipped').scalar()
+        .filter(OrderModel.status == "shipped")
+        .scalar()
+    )
 
     if not avg_processing_time:
         avg_processing_time = 0
 
-    order_status_counts = db.query(OrderModel.status, func.count(OrderModel.id).label("order_count")) \
-                            .group_by(OrderModel.status).all()
-                            
+    order_status_counts = (
+        db.query(OrderModel.status, func.count(OrderModel.id).label("order_count"))
+        .group_by(OrderModel.status)
+        .all()
+    )
+
     order_status_counts_transformed = [
         {"status": status, "order_count": count}
         for status, count in order_status_counts
     ]
-    
+
     total_orders = db.query(func.count(OrderModel.id)).scalar()
 
-    cancellations_count = db.query(func.count(OrderModel.id)) \
-                            .filter(OrderModel.status == 'cancelled').scalar()
+    cancellations_count = (
+        db.query(func.count(OrderModel.id))
+        .filter(OrderModel.status == "cancelled")
+        .scalar()
+    )
 
-    from sqlalchemy import case, cast, Float
+    from sqlalchemy import Float, case, cast
 
     conversion_rate = db.query(
         cast(
-            func.sum(
-                case(
-                    (OrderModel.status.in_(['shipped', 'delivered']), 1)
-                )
-            ), Float
-        ) / func.count(OrderModel.id)
+            func.sum(case((OrderModel.status.in_(["shipped", "delivered"]), 1))), Float
+        )
+        / func.count(OrderModel.id)
     ).scalar()
 
     if not conversion_rate:
         conversion_rate = 0
 
-    top_customers = db.query(
-        OrderModel.user_id,
-        func.count(OrderModel.id).label('orders_count'),
-        func.sum(OrderModel.total_price).label('total_spent')
-    ).group_by(OrderModel.user_id) \
-     .order_by(func.sum(OrderModel.total_price).desc()) \
-     .limit(3).all()
+    top_customers = (
+        db.query(
+            OrderModel.user_id,
+            func.count(OrderModel.id).label("orders_count"),
+            func.sum(OrderModel.total_price).label("total_spent"),
+        )
+        .group_by(OrderModel.user_id)
+        .order_by(func.sum(OrderModel.total_price).desc())
+        .limit(3)
+        .all()
+    )
 
     top_customers_transformed = [
-        {"user_id": customer.user_id, "orders_count": customer.orders_count, "total_spent": float(customer.total_spent)}
+        {
+            "user_id": customer.user_id,
+            "orders_count": customer.orders_count,
+            "total_spent": float(customer.total_spent),
+        }
         for customer in top_customers
     ]
 
@@ -215,9 +257,9 @@ def get_order_trends(db: Session = Depends(get_db)):
     return {
         "monthly_trends": [
             OrderTrendResponse(
-                month=trend.month.strftime('%Y-%m'),
+                month=trend.month.strftime("%Y-%m"),
                 total_orders=trend.total_orders,
-                total_revenue=float(trend.total_revenue or 0)
+                total_revenue=float(trend.total_revenue or 0),
             ).dict()
             for trend in monthly_trends
         ],
@@ -228,15 +270,15 @@ def get_order_trends(db: Session = Depends(get_db)):
         "top_customers": top_customers_transformed,
     }
 
-    
+
 @router.get(
-    "/count", 
-    response_model=int, 
+    "/count",
+    response_model=int,
     status_code=200,
     responses={
         200: {"description": "Total number of orders retrieved successfully"},
     },
-    description="Retrieve the total count of all orders in the system."
+    description="Retrieve the total count of all orders in the system.",
 )
 def get_orders_count(db: Session = Depends(get_db)):
     logger.info("Request received to retrieve total order count")
@@ -244,18 +286,32 @@ def get_orders_count(db: Session = Depends(get_db)):
     logger.info(f"Total order count is {count}")
     return count
 
+
 @router.get(
-    "/get", 
-    response_model=GetOrdersResponse, 
+    "/get",
+    response_model=GetOrdersResponse,
     status_code=200,
     responses={
-        200: {"model": GetOrdersResponse, "description": "Orders retrieved successfully"}
+        200: {
+            "model": GetOrdersResponse,
+            "description": "Orders retrieved successfully",
+        }
     },
     description="Retrieve a list of orders with optional filters such as status, search by order ID, pagination with limit "
-                "and offset. Returns the list of orders and the total count."
+    "and offset. Returns the list of orders and the total count.",
 )
-def get_orders(db: Session = Depends(get_db), limit: int = 10, offset: int = 0, status: str = None, search: int = None):
-    logger.info(f"Request received to retrieve orders with limit={limit}, offset={offset}, status={status}, search={search}")
-    orders = get_orders_db(db=db, limit=limit, offset=offset, status=status, search=search)
+def get_orders(
+    db: Session = Depends(get_db),
+    limit: int = 10,
+    offset: int = 0,
+    status: str = None,
+    search: int = None,
+):
+    logger.info(
+        f"Request received to retrieve orders with limit={limit}, offset={offset}, status={status}, search={search}"
+    )
+    orders = get_orders_db(
+        db=db, limit=limit, offset=offset, status=status, search=search
+    )
     logger.info("Orders retrieved successfully")
     return orders

@@ -14,37 +14,37 @@ spec:
         app: postgres
     spec:
       containers:
-      - name: postgres
-        image: postgres:16.2-alpine3.19
-        env:
-          - name: POSTGRES_USER
-            valueFrom:
-              secretKeyRef:
-                name: keycloak-db-secret
-                key: postgres-user
-          - name: POSTGRES_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: keycloak-db-secret
-                key: postgres-password
-          - name: POSTGRES_DB
-            valueFrom:
-              secretKeyRef:
-                name: keycloak-db-secret
-                key: postgres-db
-        ports:
-          - containerPort: 5432
-        volumeMounts:
-        - name: postgres-data
-          mountPath: /var/lib/postgresql/data
+        - name: postgres
+          image: postgres:16.2-alpine3.19
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-db-secret
+                  key: postgres-user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-db-secret
+                  key: postgres-password
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-db-secret
+                  key: postgres-db
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
   volumeClaimTemplates:
-  - metadata:
-      name: postgres-data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
 
 ---
 apiVersion: v1
@@ -53,6 +53,6 @@ metadata:
   name: postgres
 spec:
   ports:
-  - port: 5432
+    - port: 5432
   selector:
     app: postgres

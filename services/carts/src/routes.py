@@ -1,15 +1,18 @@
-from fastapi import APIRouter, HTTPException
-from typing import Dict
 import json
-import uuid
-from redis.asyncio import Redis
-from src.models import CartItems, RemoveItemRequest, CartSchema, ErrorResponse, StatusResponse
 import logging
+import uuid
+from typing import Dict
+
+from fastapi import APIRouter, HTTPException
+from redis.asyncio import Redis
+from src.models import (CartItems, CartSchema, ErrorResponse,
+                        RemoveItemRequest, StatusResponse)
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
 redis_client = Redis(host="carts-db-service", port=6379, decode_responses=True)
+
 
 def get_cart_key(user_id: str) -> str:
     return f"cart:{user_id}"
@@ -39,9 +42,9 @@ async def get_cart(user_id: uuid.UUID):
     response_data = {
         "items": cart_items,
         "total": sum(item["price"] * item["quantity"] for item in cart_items),
-        "quantity": sum(item["quantity"] for item in cart_items)
+        "quantity": sum(item["quantity"] for item in cart_items),
     }
-    
+
     logger.info(f"Successfully retrieved cart for user_id={user_id}: {response_data}")
     return response_data
 
@@ -53,25 +56,38 @@ async def get_cart(user_id: uuid.UUID):
 )
 async def add_to_cart(user_id: uuid.UUID, cart: CartItems) -> Dict[str, str]:
     cart_key = get_cart_key(user_id)
-    logger.info(f"Adding items to cart for user_id={user_id}, cart_key={cart_key}, items={cart.items}")
+    logger.info(
+        f"Adding items to cart for user_id={user_id}, cart_key={cart_key}, items={cart.items}"
+    )
 
     existing_cart = await redis_client.hgetall(cart_key)
-    existing_cart_items = {item_key: json.loads(item_data) for item_key, item_data in existing_cart.items()}
+    existing_cart_items = {
+        item_key: json.loads(item_data) for item_key, item_data in existing_cart.items()
+    }
 
     for item in cart.items:
         if item.quantity <= 0 or item.price < 0:
-            logger.error(f"Invalid item attributes for product {item.id}: {item.dict()}")
-            raise HTTPException(status_code=400, detail=f"Invalid item attributes for product {item.id}")
+            logger.error(
+                f"Invalid item attributes for product {item.id}: {item.dict()}"
+            )
+            raise HTTPException(
+                status_code=400, detail=f"Invalid item attributes for product {item.id}"
+            )
 
         item_key = f"{item.id}:{item.weight}:{item.grind}"
         if item_key in existing_cart_items:
             existing_cart_items[item_key]["quantity"] += item.quantity
-            logger.info(f"Updated quantity for item {item_key} in user_id={user_id}'s cart.")
+            logger.info(
+                f"Updated quantity for item {item_key} in user_id={user_id}'s cart."
+            )
         else:
             existing_cart_items[item_key] = item.dict()
             logger.info(f"Added new item {item_key} to user_id={user_id}'s cart.")
 
-    updated_cart = {str(item_key): json.dumps(item_data) for item_key, item_data in existing_cart_items.items()}
+    updated_cart = {
+        str(item_key): json.dumps(item_data)
+        for item_key, item_data in existing_cart_items.items()
+    }
     await redis_client.hset(cart_key, mapping=updated_cart)
     await redis_client.expire(cart_key, 86400)
 
@@ -84,9 +100,13 @@ async def add_to_cart(user_id: uuid.UUID, cart: CartItems) -> Dict[str, str]:
     response_model=StatusResponse,
     summary="Remove items from the user's shopping cart",
 )
-async def remove_from_cart(user_id: uuid.UUID, remove_request: RemoveItemRequest) -> Dict[str, str]:
+async def remove_from_cart(
+    user_id: uuid.UUID, remove_request: RemoveItemRequest
+) -> Dict[str, str]:
     cart_key = get_cart_key(user_id)
-    logger.info(f"Removing items from cart for user_id={user_id}, cart_key={cart_key}, remove_request={remove_request.dict()}")
+    logger.info(
+        f"Removing items from cart for user_id={user_id}, cart_key={cart_key}, remove_request={remove_request.dict()}"
+    )
 
     existing_cart = await redis_client.hgetall(cart_key)
     if not existing_cart:
@@ -102,13 +122,19 @@ async def remove_from_cart(user_id: uuid.UUID, remove_request: RemoveItemRequest
 
         if current_quantity > quantity:
             existing_item["quantity"] = current_quantity - quantity
-            await redis_client.hset(cart_key, mapping={product_key: json.dumps(existing_item)})
-            logger.info(f"Updated quantity for product {product_key} in cart of user_id={user_id}")
+            await redis_client.hset(
+                cart_key, mapping={product_key: json.dumps(existing_item)}
+            )
+            logger.info(
+                f"Updated quantity for product {product_key} in cart of user_id={user_id}"
+            )
         else:
             await redis_client.hdel(cart_key, product_key)
             logger.info(f"Removed product {product_key} from cart of user_id={user_id}")
     else:
-        logger.warning(f"Product not found in cart for user_id={user_id}, product_key={product_key}")
+        logger.warning(
+            f"Product not found in cart for user_id={user_id}, product_key={product_key}"
+        )
         raise HTTPException(status_code=404, detail="Product not found in cart")
 
     return {"status": "ok"}

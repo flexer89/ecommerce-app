@@ -11,28 +11,28 @@ const OurMission = () => {
       <div className="mission-section">
         <h3 className="mission-subtitle">Wspieranie Lokalnych Społeczności</h3>
         <p className="mission-description">
-          Pracujemy bezpośrednio z lokalnymi rolnikami, zapewniając im uczciwe ceny za ich plony i inwestując w rozwój ich społeczności. 
+          Pracujemy bezpośrednio z lokalnymi rolnikami, zapewniając im uczciwe ceny za ich plony i inwestując w rozwój ich społeczności.
           Poprzez długoterminowe partnerstwa pomagamy poprawiać jakość życia w regionach produkujących kawę.
         </p>
       </div>
       <div className="mission-section">
         <h3 className="mission-subtitle">Zrównoważona Produkcja</h3>
         <p className="mission-description">
-          Stosujemy zrównoważone metody uprawy, które chronią środowisko i promują bioróżnorodność. 
+          Stosujemy zrównoważone metody uprawy, które chronią środowisko i promują bioróżnorodność.
           Używamy technik organicznych i dbamy o zachowanie zdrowia gleby oraz oszczędzanie wody.
         </p>
       </div>
       <div className="mission-section">
         <h3 className="mission-subtitle">Edukacja Konsumentów</h3>
         <p className="mission-description">
-          Uświadamiamy naszych klientów o pochodzeniu i procesie produkcji kawy, aby mogli podejmować świadome decyzje. 
+          Uświadamiamy naszych klientów o pochodzeniu i procesie produkcji kawy, aby mogli podejmować świadome decyzje.
           Organizujemy warsztaty i degustacje, aby dzielić się wiedzą o kawie.
         </p>
       </div>
       <div className="mission-section">
         <h3 className="mission-subtitle">Etyczne Praktyki</h3>
         <p className="mission-description">
-          Dbamy o to, aby każdy etap produkcji kawy odbywał się zgodnie z najwyższymi standardami etycznymi. 
+          Dbamy o to, aby każdy etap produkcji kawy odbywał się zgodnie z najwyższymi standardami etycznymi.
           Nasze podejście obejmuje zarówno warunki pracy rolników, jak i transparentność łańcucha dostaw.
         </p>
       </div>

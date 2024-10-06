@@ -68,10 +68,10 @@
               }
             ]
           };
-    
+
           // Make the API call to check and update the product quantity
           const response = await ProductsServiceClient.post(`/update-quantity`, updateQuantityPayload);
-    
+
           if (response.status === 200) {
             // Add the item to the cart
             addItemToCart(product, selectedGrind, selectedWeight);
@@ -119,7 +119,7 @@
         });
       }
     };
-    
+
 
     if (!product) {
       return <div>Loading...</div>;
@@ -149,7 +149,7 @@
           ) : (
             <p className="product-price">{displayedPrice.toFixed(2)} zł</p>
           )}
-          
+
           <div className="product-options">
             <div className="option-group">
               <h2>Stopień zmielenia</h2>

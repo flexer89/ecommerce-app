@@ -1,17 +1,21 @@
+from io import BytesIO
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from src.app import app
-from src.routes import get_db
 from src.models import Base, Product
-from io import BytesIO
+from src.routes import get_db
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base.metadata.create_all(bind=engine)
+
 
 def override_get_db():
     try:
@@ -20,9 +24,11 @@ def override_get_db():
     finally:
         db.close()
 
+
 app.dependency_overrides[get_db] = override_get_db
 
 client = TestClient(app)
+
 
 @pytest.fixture
 def test_db():
@@ -32,9 +38,17 @@ def test_db():
     db.close()
     Base.metadata.drop_all(bind=engine)
 
+
 def test_update_product_image_success(test_db):
     # Create a test product
-    test_product = Product(name="Test Product", description="Test Description", price=10.0, stock=10, discount=0.1, category="Test Category")
+    test_product = Product(
+        name="Test Product",
+        description="Test Description",
+        price=10.0,
+        stock=10,
+        discount=0.1,
+        category="Test Category",
+    )
     test_db.add(test_product)
     test_db.commit()
     test_db.refresh(test_product)
@@ -46,11 +60,12 @@ def test_update_product_image_success(test_db):
 
     response = client.put(
         f"/update/{test_product.id}/image",
-        files={"image": ("test_image.png", image_file, "image/png")}
+        files={"image": ("test_image.png", image_file, "image/png")},
     )
 
     assert response.status_code == 200
     assert response.json()["id"] == test_product.id
+
 
 def test_update_product_image_not_found(test_db):
     # Prepare the image file
@@ -60,7 +75,7 @@ def test_update_product_image_not_found(test_db):
 
     response = client.put(
         "/update/9999/image",
-        files={"image": ("test_image.png", image_file, "image/png")}
+        files={"image": ("test_image.png", image_file, "image/png")},
     )
 
     assert response.status_code == 404

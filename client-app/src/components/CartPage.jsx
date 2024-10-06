@@ -51,7 +51,7 @@ const CartPage = () => {
 
     // Make the API call to check and update the product quantity
     const response = await ProductsServiceClient.post(`/update-quantity`, updateQuantityPayload);
-    console.log(response);  
+    console.log(response);
     if (response.status !== 200) {
       toast.error('Nie udało się zaktualizować stanu magazynowego!', { autoClose: 3000 });
       return;
@@ -70,7 +70,7 @@ const CartPage = () => {
     removeItemFromCart(id, grind, weight, cart.items.find(item => item.id === id).quantity);
     toast.success('Usunięto wszystkie produkty z koszyka!', { autoClose: 3000 });
   };
-  
+
 
   const handleCheckout = () => {
     if (isLogin) {

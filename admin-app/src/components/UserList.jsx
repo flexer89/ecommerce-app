@@ -40,7 +40,7 @@ const UserList = () => {
             search: searchQuery,
           },
         });
-        
+
         totalUsers = response.data.total;
         fetchedUsers = response.data.users;
       }

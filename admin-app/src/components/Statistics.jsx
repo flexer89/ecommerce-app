@@ -146,7 +146,7 @@ const OrdersStatistics = () => {
       try {
         const ordersResponse = await OrdersServiceClient.get('/count');
         const ordersTrendsResponse = await OrdersServiceClient.get('/trends');
-        
+
         setOrdersCount(ordersResponse.data);
         setOrdersData(ordersTrendsResponse.data.monthly_trends);
         setAverageProcessingTime(Number(ordersTrendsResponse.data.avg_processing_time) || 0);
@@ -161,8 +161,8 @@ const OrdersStatistics = () => {
         const customerPromises = topCustomersData.map(async (customer) => {
           const userResponse = await UsersServiceClient.get(`/get/${customer.user_id}`);
           const userData = userResponse.data.users[0];
-          return { 
-            ...customer, 
+          return {
+            ...customer,
             name: `${userData.firstName} ${userData.lastName}`,
             email: `${userData.email}`
           };

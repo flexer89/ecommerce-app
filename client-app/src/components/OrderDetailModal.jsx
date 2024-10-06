@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import OrderServiceClient from '../clients/OrdersService';
 import ProductsServiceClient from '../clients/ProductsService';
-import ShipmentServiceClient from '../clients/ShipmentsService'; 
+import ShipmentServiceClient from '../clients/ShipmentsService';
 import { orderStatusTranslationMap, shipmentStatuses } from '../utils/utils';
 import '../assets/style/style.css';
 

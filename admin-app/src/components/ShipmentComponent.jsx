@@ -104,9 +104,9 @@ const ShipmentComponent = () => {
 
   const columns = [
     { field: 'id', headerName: 'ID wysyłki', flex: 0.75 }, // Używamy flex zamiast width
-    { field: 'user_id', headerName: 'ID użytkownika', flex: 1.5 }, 
-    { field: 'order_id', headerName: 'ID zamówienia', flex: 0.75 }, 
-    { field: 'shipment_address', headerName: 'Adres dostawy', flex: 2 }, 
+    { field: 'user_id', headerName: 'ID użytkownika', flex: 1.5 },
+    { field: 'order_id', headerName: 'ID zamówienia', flex: 0.75 },
+    { field: 'shipment_address', headerName: 'Adres dostawy', flex: 2 },
     { field: 'shipment_date', headerName: 'Data wysyłki', flex: 1 }, // Data już sformatowana w mapowaniu
     { field: 'delivery_date', headerName: 'Data dostawy', flex: 1 },
     {
@@ -149,7 +149,7 @@ const ShipmentComponent = () => {
       filterable: false,
     },
   ];
-  
+
 
   return (
     <div className="shipments-page container">

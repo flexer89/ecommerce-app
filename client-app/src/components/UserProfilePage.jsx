@@ -52,7 +52,7 @@ const Orders = () => {
       setLoading(true);
       try {
         const response = await OrderServiceClient.get(`/getbyuser/${getKeycloak().subject}?limit=10000`);
-        
+
         if (response.status === 404) {
           setOrders([]);
           setError(null);
@@ -67,7 +67,7 @@ const Orders = () => {
         setLoading(false);
       }
     };
-  
+
     fetchOrders();
   }, []);
 
@@ -181,7 +181,7 @@ const PersonalInfo = () => {
       },
     };
 
-    const response = await UserServiceClient.patch(`/update/${userId}`, updateData).catch(function (error) {   
+    const response = await UserServiceClient.patch(`/update/${userId}`, updateData).catch(function (error) {
       alert("Upewnij się, że wszystkie pola są wypełnione poprawnie.");
       return null;
     });
@@ -190,7 +190,7 @@ const PersonalInfo = () => {
       setUserInfo({ ...userInfo, ...formValues });
     }
   };
-  
+
   return (
     <div>
       <h2>Dane użytkownika</h2>
@@ -240,7 +240,7 @@ const Shipments = () => {
     setLoading(true);
     try {
       const response = await ShipmentServiceClient.get(`/getbyuser/${getKeycloak().subject}`);
-      
+
       if (response.status === 404) {
         setShipments([]);
         setError(null);

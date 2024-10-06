@@ -1,6 +1,7 @@
-from locust import HttpUser, task, constant_throughput
-from time import time_ns
 import random
+from time import time_ns
+
+from locust import HttpUser, constant_throughput, task
 
 
 class User(HttpUser):

@@ -1,5 +1,7 @@
-from pydantic import BaseModel
 from typing import List
+
+from pydantic import BaseModel
+
 
 class CartItemSchema(BaseModel):
     id: int
@@ -15,18 +17,22 @@ class CartSchema(BaseModel):
     items: List[CartItemSchema]
     total: float
     quantity: int
-    
+
+
 class CartItems(BaseModel):
     items: List[CartItemSchema]
+
 
 class RemoveItemRequest(BaseModel):
     product_id: int
     quantity: int
     grind: str
     weight: float
-    
+
+
 class ErrorResponse(BaseModel):
     message: str
-    
+
+
 class StatusResponse(BaseModel):
     status: str

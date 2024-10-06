@@ -1,14 +1,15 @@
+import uuid
+from unittest.mock import patch
+
 import pytest
 from httpx import AsyncClient
-from unittest.mock import patch
 from src.app import app
-import uuid
 
 
 @pytest.fixture
 def mock_redis():
     """Fixture to mock redis client."""
-    with patch('src.routes.redis_client') as mock_redis:
+    with patch("src.routes.redis_client") as mock_redis:
         yield mock_redis
 
 
@@ -44,4 +45,3 @@ async def test_delete_cart_not_found(mock_redis):
     assert response.json() == {"detail": "Cart not found"}
 
     mock_redis.delete.assert_called_once_with(cart_key)
-

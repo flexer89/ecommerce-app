@@ -135,7 +135,7 @@ To log in, type:
 3.2  Enter dashboard ID for Keycloak: `19659`
 3.2. Import deployments/dashboards/fastapi-dashboard.json
 
-# Secrets 
+# Secrets
 You need to provide the secrets for the services. You need to create a file called `.secrets.yaml` in the deploments/secrets directory. The file should look like .secrets-example.yaml file.
 You also need to fill .env files in the services directories. The file should look like .env-example file.
 
@@ -149,9 +149,8 @@ SMTP Server is needed to send email confirmation to the user, password reset and
 
 You also need to go to authentication -> required actions and enable VERIFY_EMAIL
 
-# Sample data 
+# Sample data
 To add sample data to all services, you need to run `./port_forward.sh` and then run `./sample_data.sh` in another terminal.
 
 # Sources
 free-psd-templates.com
-

@@ -1,18 +1,21 @@
-from sqlalchemy import Column, Integer, String, Enum, TIMESTAMP
-from sqlalchemy.ext.declarative import declarative_base
-from datetime import datetime
 import enum
+from datetime import datetime
+
+from sqlalchemy import TIMESTAMP, Column, Enum, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+
 class ShipmentStatusEnum(str, enum.Enum):
-    pending = 'pending'
-    shipped = 'shipped'
-    delivered = 'delivered'
-    cancelled = 'cancelled'
+    pending = "pending"
+    shipped = "shipped"
+    delivered = "delivered"
+    cancelled = "cancelled"
+
 
 class Shipment(Base):
-    __tablename__ = 'shipments'
+    __tablename__ = "shipments"
 
     id = Column(Integer, primary_key=True, index=True)
     order_id = Column(Integer, nullable=False)

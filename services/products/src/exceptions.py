@@ -1,6 +1,7 @@
+from typing import Literal, Optional
+
 from fastapi import HTTPException as BaseHTTPException
 from fastapi import status
-from typing import Literal, Optional
 
 
 class HTTPException(BaseHTTPException):

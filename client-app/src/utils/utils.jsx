@@ -1,15 +1,15 @@
 const formatDateTime = (input) => {
     const [datePart, timePart] = input.split(' | ');
-  
+
     let [day, month, year] = datePart.split('.');
     const [hour, minute] = timePart.split(':');
 
     if (day.length === 1) {
       day = `0${day}`;
     }
-  
+
     const formattedDate = `${year}-${month}-${day}T${hour}:${minute}`;
-  
+
     return formattedDate;
   };
 

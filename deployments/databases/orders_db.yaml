@@ -13,33 +13,33 @@ spec:
         app: orders-db
     spec:
       containers:
-      - name: orders-db
-        image: postgres:16.2-alpine3.19
-        env:
-          - name: POSTGRES_USER
-            valueFrom:
-              secretKeyRef:
-                name: orders-db-secret
-                key: postgres-user
-          - name: POSTGRES_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: orders-db-secret
-                key: postgres-password
-          - name: POSTGRES_DB
-            valueFrom:
-              secretKeyRef:
-                name: orders-db-secret
-                key: postgres-db
-        ports:
-        - containerPort: 5432
-        volumeMounts:
-        - name: init-script
-          mountPath: /docker-entrypoint-initdb.d
+        - name: orders-db
+          image: postgres:16.2-alpine3.19
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: orders-db-secret
+                  key: postgres-user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: orders-db-secret
+                  key: postgres-password
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: orders-db-secret
+                  key: postgres-db
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: init-script
+              mountPath: /docker-entrypoint-initdb.d
       volumes:
-      - name: init-script 
-        configMap:
-          name: init-sql-configmap-orders
+        - name: init-script
+          configMap:
+            name: init-sql-configmap-orders
 
 ---
 apiVersion: v1

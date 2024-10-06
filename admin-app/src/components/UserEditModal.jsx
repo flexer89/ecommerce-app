@@ -34,7 +34,7 @@ const UserEditModal = ({ user, onClose, onSubmit }) => {
       email,
       attributes
     };
-    
+
     await onSubmit(updatedUserData);
   };
 

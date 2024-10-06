@@ -5,7 +5,7 @@ prometheus:
     podMonitorSelectorNilUsesHelmValues: false
     serviceMonitorSelectorNilUsesHelmValues: false
     additionalScrapeConfigs:
-      - job_name: 'products'
+      - job_name: "products"
         scrape_interval: 30s
         scrape_timeout: 10s
         kubernetes_sd_configs:
@@ -14,7 +14,7 @@ prometheus:
           - source_labels: [__meta_kubernetes_service_name]
             action: keep
             regex: products-service
-      - job_name: 'users'
+      - job_name: "users"
         scrape_interval: 30s
         scrape_timeout: 10s
         kubernetes_sd_configs:
@@ -23,7 +23,7 @@ prometheus:
           - source_labels: [__meta_kubernetes_service_name]
             action: keep
             regex: users-service
-      - job_name: 'orders'
+      - job_name: "orders"
         scrape_interval: 30s
         scrape_timeout: 10s
         kubernetes_sd_configs:
@@ -32,7 +32,7 @@ prometheus:
           - source_labels: [__meta_kubernetes_service_name]
             action: keep
             regex: orders-service
-      - job_name: 'payments'
+      - job_name: "payments"
         scrape_interval: 30s
         scrape_timeout: 10s
         kubernetes_sd_configs:
@@ -41,7 +41,7 @@ prometheus:
           - source_labels: [__meta_kubernetes_service_name]
             action: keep
             regex: payments-service
-      - job_name: 'shipments'
+      - job_name: "shipments"
         scrape_interval: 30s
         scrape_timeout: 10s
         kubernetes_sd_configs:
@@ -50,7 +50,7 @@ prometheus:
           - source_labels: [__meta_kubernetes_service_name]
             action: keep
             regex: shipments-service
-      - job_name: 'carts'
+      - job_name: "carts"
         scrape_interval: 30s
         scrape_timeout: 10s
         kubernetes_sd_configs:
@@ -59,7 +59,7 @@ prometheus:
           - source_labels: [__meta_kubernetes_service_name]
             action: keep
             regex: carts-service
-      - job_name: 'keycloak'
+      - job_name: "keycloak"
         scrape_interval: 30s
         scrape_timeout: 10s
         metrics_path: /realms/jolszak/metrics
@@ -69,7 +69,7 @@ prometheus:
           - source_labels: [__meta_kubernetes_service_name]
             action: keep
             regex: keycloak
-      - job_name: 'kraken'
+      - job_name: "kraken"
         scrape_interval: 30s
         scrape_timeout: 10s
         kubernetes_sd_configs:
@@ -88,9 +88,9 @@ prometheus:
       dashboardproviders.yaml:
         apiVersion: 1
         providers:
-          - name: 'default'
+          - name: "default"
             orgId: 1
-            folder: ''
+            folder: ""
             type: file
             disableDeletion: false
             editable: true

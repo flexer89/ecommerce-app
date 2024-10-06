@@ -63,7 +63,7 @@ const fetchProducts = async () => {
 
     // Fetch the products with queryParams
     const response = await ProductsServiceClient.get(`/get?${queryParams}`);
-    
+
     // Assuming response.data is { products: [...], total: number }
     const { products: fetchedProducts, total, total_max_price: TotalMaxPrice } = response.data;
 
@@ -209,7 +209,7 @@ const fetchProducts = async () => {
         </button>
         </div>
       </div>
-  
+
       {loading ? (
         <p>Loading products...</p>
       ) : (

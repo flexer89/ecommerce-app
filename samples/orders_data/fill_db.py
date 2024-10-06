@@ -1,5 +1,7 @@
-import requests
 import random
+
+import requests
+
 from keycloak import KeycloakAdmin, KeycloakOpenIDConnection
 
 KC_URL = "https://auth.jolszak.test"
@@ -34,7 +36,7 @@ def get_users():
         print("Failed to fetch users from Keycloak")
         return []
     return user_list
-    
+
 
 def get_products():
     response = requests.get(f"{products_service_url}/getall")
@@ -43,19 +45,19 @@ def get_products():
         return []
     return response.json()
 
+
 def main():
     # Fetch users and products
     users = get_users()
     products = get_products()
-    
 
     # Generate and insert orders
     for i in range(num_orders):
         user = random.choice(users)
-        user_id = user['id']
+        user_id = user["id"]
 
         # Randomly select order status
-        status = random.choice(['pending', 'processing', 'shipped'])
+        status = random.choice(["pending", "processing", "shipped"])
 
         # Randomly select number of items in the order
         num_items = random.randint(1, 5)
@@ -70,35 +72,42 @@ def main():
             weight = random.choice([250, 500])
             print(f"weight: {weight}")
             print(f"item_price: {item['price']}")
-            price = item['price'] if weight == 250 else item['price'] * 2
+            price = item["price"] if weight == 250 else item["price"] * 2
             print(f"full_item_price: {price}")
             item_total = price * quantity
             print(f"item_total: {item_total}")
             total_price += item_total
             print(f"total_price: {total_price}")
-            grind = random.choice(['Całe ziarna', 'Grubo mielone', 'Mocno zmielone'])
-            
-            print(f"Creating order for user: {user_id}, item: {item['id']}, quantity: {quantity}, price: {price}, weight: {weight}, grind: {grind}")
-            items_to_insert.append({
-                'id': item['id'],
-                'quantity': quantity,
-                'price': price,
-                'weight': weight,
-                'grind': grind
-            })
+            grind = random.choice(["Całe ziarna", "Grubo mielone", "Mocno zmielone"])
+
+            print(
+                f"Creating order for user: {user_id}, item: {item['id']}, quantity: {quantity}, price: {price}, weight: {weight}, grind: {grind}"
+            )
+            items_to_insert.append(
+                {
+                    "id": item["id"],
+                    "quantity": quantity,
+                    "price": price,
+                    "weight": weight,
+                    "grind": grind,
+                }
+            )
         # create order
-        order = requests.post(f"{orders_service_url}/create", json={
-            'user_id': user_id,
-            'total_price': total_price,
-            'items': items_to_insert
-        })
+        order = requests.post(
+            f"{orders_service_url}/create",
+            json={
+                "user_id": user_id,
+                "total_price": total_price,
+                "items": items_to_insert,
+            },
+        )
         if order.status_code != 201:
             print(f"Failed to create order: {order}")
             continue
         print(f"Order created: {order.json()}")
-        
-        # add shipping info 
-        order_id = order.json().get('order_id')
+
+        # add shipping info
+        order_id = order.json().get("order_id")
         shipping_info = {
             "order_id": order_id,
             "user_id": user_id,
@@ -106,12 +115,13 @@ def main():
             "company": "UPS",
             "current_location": "Warszawska 24, Kraków, małopolskie, 31-155",
         }
-        
+
         shipment = requests.post(f"{shipments_service_url}/create", json=shipping_info)
         if shipment.status_code != 201:
             print(f"Failed to create shipment: {shipment.json()}")
             continue
         print(f"Shipment created: {shipment.json()}")
+
 
 if __name__ == "__main__":
     main()

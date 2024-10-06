@@ -1,9 +1,10 @@
+from datetime import datetime, timedelta
+from unittest.mock import patch
+
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import patch
-from src.app import app
 from keycloak.exceptions import KeycloakError
-from datetime import datetime, timedelta
+from src.app import app
 
 client = TestClient(app)
 
@@ -14,7 +15,7 @@ mock_active_users = [
         "email": "activeuser1@example.com",
         "firstName": "Active",
         "lastName": "User1",
-        "lastLogin": (datetime.now() - timedelta(days=10)).timestamp() * 1000
+        "lastLogin": (datetime.now() - timedelta(days=10)).timestamp() * 1000,
     },
     {
         "id": "user-2",
@@ -22,8 +23,8 @@ mock_active_users = [
         "email": "activeuser2@example.com",
         "firstName": "Active",
         "lastName": "User2",
-        "lastLogin": (datetime.now() - timedelta(days=5)).timestamp() * 1000
-    }
+        "lastLogin": (datetime.now() - timedelta(days=5)).timestamp() * 1000,
+    },
 ]
 
 mock_new_users = [
@@ -33,7 +34,7 @@ mock_new_users = [
         "email": "newuser1@example.com",
         "firstName": "New",
         "lastName": "User1",
-        "createdAt": (datetime.now() - timedelta(days=15)).timestamp() * 1000
+        "createdAt": (datetime.now() - timedelta(days=15)).timestamp() * 1000,
     },
     {
         "id": "user-4",
@@ -41,8 +42,8 @@ mock_new_users = [
         "email": "newuser2@example.com",
         "firstName": "New",
         "lastName": "User2",
-        "createdAt": (datetime.now() - timedelta(days=20)).timestamp() * 1000
-    }
+        "createdAt": (datetime.now() - timedelta(days=20)).timestamp() * 1000,
+    },
 ]
 
 total_users_mock = 100
@@ -50,12 +51,14 @@ total_users_mock = 100
 
 def test_get_user_statistics_success():
     """Test successful retrieval of user statistics."""
-    
-    with patch('src.keycloak_client.keycloak_admin.get_users') as mock_get_users, patch('src.keycloak_client.keycloak_admin.users_count', return_value=total_users_mock):
+
+    with patch("src.keycloak_client.keycloak_admin.get_users") as mock_get_users, patch(
+        "src.keycloak_client.keycloak_admin.users_count", return_value=total_users_mock
+    ):
         mock_get_users.side_effect = [mock_active_users, mock_new_users]
-        
+
         response = client.get("/statistics")
-        
+
         assert response.status_code == 200
         json_response = response.json()
         assert json_response["total_users"] == total_users_mock
@@ -65,21 +68,25 @@ def test_get_user_statistics_success():
 
 def test_get_user_statistics_keycloak_error():
     """Test KeycloakError handling when fetching user statistics fails."""
-    
-    with patch('src.keycloak_client.keycloak_admin.get_users', side_effect=KeycloakError):
-        
+
+    with patch(
+        "src.keycloak_client.keycloak_admin.get_users", side_effect=KeycloakError
+    ):
+
         response = client.get("/statistics")
-        
+
         assert response.status_code == 500
         assert response.json() == {"detail": "Internal server error"}
 
 
 def test_get_user_statistics_general_exception():
     """Test general exception handling for bad request or failed request."""
-    
-    with patch('src.keycloak_client.keycloak_admin.get_users', side_effect=Exception):
-        
+
+    with patch("src.keycloak_client.keycloak_admin.get_users", side_effect=Exception):
+
         response = client.get("/statistics")
-        
+
         assert response.status_code == 400
-        assert response.json() == {"detail": "Bad request - invalid parameters or failed request"}
+        assert response.json() == {
+            "detail": "Bad request - invalid parameters or failed request"
+        }

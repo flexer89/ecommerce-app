@@ -1,11 +1,12 @@
-from keycloak import KeycloakAdmin, KeycloakOpenIDConnection
 import os
+
+from keycloak import KeycloakAdmin, KeycloakOpenIDConnection
 
 KC_URL = "http://keycloak"
 KC_PORT = "8080"
 KC_REALM = "jolszak"
 KC_CLIENT_ID = "python"
-KC_CLIENT_SECRET = "python-secret" #os.getenv("KC_CLIENT_SECRET")
+KC_CLIENT_SECRET = "python-secret"  # os.getenv("KC_CLIENT_SECRET")
 
 keycloak_connection = KeycloakOpenIDConnection(
     server_url=f"{KC_URL}:{KC_PORT}",
@@ -19,4 +20,3 @@ keycloak_connection = KeycloakOpenIDConnection(
 )
 
 keycloak_admin = KeycloakAdmin(connection=keycloak_connection)
-

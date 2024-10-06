@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../assets/style/style.css'; 
+import '../assets/style/style.css';
 
 const ProductCard = ({ product, onClick, isBestseller }) => {
 
@@ -11,7 +11,7 @@ const ProductCard = ({ product, onClick, isBestseller }) => {
           Przecena! -{product.discount * 100}%
         </div>
       )}
-      
+
       <div className="product-card-image-container" onClick={onClick}>
         <img src={product.image} alt={product.name} className="product-card-image" />
         {isBestseller && <span className="card-badge">Bestseller</span>}
@@ -26,5 +26,3 @@ const ProductCard = ({ product, onClick, isBestseller }) => {
 };
 
 export default ProductCard;
-
-

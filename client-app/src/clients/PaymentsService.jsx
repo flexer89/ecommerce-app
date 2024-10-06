@@ -22,7 +22,7 @@ PaymentsServiceClient.interceptors.request.use(
         return Promise.reject(refreshError);
       }
     }
-    
+
     config.headers.authorization = keycloak.token;
   }
     return config;

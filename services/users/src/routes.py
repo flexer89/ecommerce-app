@@ -1,11 +1,12 @@
-from fastapi import APIRouter, HTTPException
-from datetime import datetime, timedelta
 import uuid
-from src.keycloak_client import keycloak_admin
-from keycloak.exceptions import KeycloakError
-from src.schemas import UserUpdateRequest, UpdateResponse, UserStatisticsResponse, UserListResponse, ErrorResponse
-from keycloak.exceptions import KeycloakPutError
+from datetime import datetime, timedelta
 from typing import Optional
+
+from fastapi import APIRouter, HTTPException
+from keycloak.exceptions import KeycloakError, KeycloakPutError
+from src.keycloak_client import keycloak_admin
+from src.schemas import (ErrorResponse, UpdateResponse, UserListResponse,
+                         UserStatisticsResponse, UserUpdateRequest)
 
 router = APIRouter()
 
@@ -19,18 +20,20 @@ router = APIRouter()
         200: {"description": "User data retrieved successfully."},
         404: {"model": ErrorResponse, "description": "User not found."},
         500: {"model": ErrorResponse, "description": "Internal server error."},
-    }
+    },
 )
 def get_user_data(user_id: uuid.UUID):
     try:
         user = keycloak_admin.get_user(user_id)
-        
+
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
-        
-        attributes = {key: value[0] if isinstance(value, list) and value else value 
-                      for key, value in user.get("attributes", {}).items()}
-        
+
+        attributes = {
+            key: value[0] if isinstance(value, list) and value else value
+            for key, value in user.get("attributes", {}).items()
+        }
+
         user_data = {
             "id": user.get("id"),
             "username": user.get("username"),
@@ -39,13 +42,14 @@ def get_user_data(user_id: uuid.UUID):
             "lastName": user.get("lastName"),
             "attributes": attributes,
         }
-        
+
         return {
             "total": 1,
             "users": [user_data],
         }
     except KeycloakError:
         raise HTTPException(status_code=500, detail="Failed to retrieve user data.")
+
 
 @router.patch(
     "/update/{user_id}",
@@ -54,14 +58,17 @@ def get_user_data(user_id: uuid.UUID):
     description="Updates a user's data in Keycloak, including fields such as first name, last name, email, and user-defined attributes like phone number, address, and city.",
     responses={
         200: {"description": "User data updated successfully", "model": UpdateResponse},
-        400: {"description": "Bad request - Error updating user data", "model": ErrorResponse},
+        400: {
+            "description": "Bad request - Error updating user data",
+            "model": ErrorResponse,
+        },
         404: {"description": "User not found", "model": ErrorResponse},
-        500: {"description": "Internal server error", "model": ErrorResponse}
-    }
+        500: {"description": "Internal server error", "model": ErrorResponse},
+    },
 )
 def update_user_data(user_id: uuid.UUID, update_data: UserUpdateRequest):
     user = keycloak_admin.get_user(user_id)
-    
+
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -69,15 +76,15 @@ def update_user_data(user_id: uuid.UUID, update_data: UserUpdateRequest):
         "firstName": user.get("firstName"),
         "lastName": user.get("lastName"),
         "email": user.get("email"),
-        "attributes": user.get("attributes", {})
+        "attributes": user.get("attributes", {}),
     }
 
     if update_data.firstName is not None:
         user_update_payload["firstName"] = update_data.firstName
-    
+
     if update_data.lastName is not None:
         user_update_payload["lastName"] = update_data.lastName
-    
+
     if update_data.email is not None:
         user_update_payload["email"] = update_data.email
 
@@ -107,52 +114,72 @@ def update_user_data(user_id: uuid.UUID, update_data: UserUpdateRequest):
 
     return {"detail": "User updated successfully"}
 
-    
+
 @router.get(
     "/get",
     response_model=UserListResponse,
     summary="Search and paginate through users",
     description="Retrieves a paginated list of users based on search criteria, including support for searching by IDs or keywords.",
     responses={
-        200: {"description": "Successful retrieval of users", "model": UserListResponse},
-        400: {"description": "Bad request - Invalid search parameters", "model": ErrorResponse},
+        200: {
+            "description": "Successful retrieval of users",
+            "model": UserListResponse,
+        },
+        400: {
+            "description": "Bad request - Invalid search parameters",
+            "model": ErrorResponse,
+        },
         404: {"description": "No users found", "model": ErrorResponse},
-        500: {"description": "Internal server error", "model": ErrorResponse}
-    }
+        500: {"description": "Internal server error", "model": ErrorResponse},
+    },
 )
-def get_user_data(limit: int = 10, offset: int = 0, search: Optional[str] = None, ids: Optional[str] = None):
+def get_user_data(
+    limit: int = 10,
+    offset: int = 0,
+    search: Optional[str] = None,
+    ids: Optional[str] = None,
+):
     try:
         if ids:
             ids = ids.split(",")
             users = [keycloak_admin.get_user(user_id) for user_id in ids]
             total = len(users)
         else:
-            users = keycloak_admin.get_users({"max": limit, "first": offset, "search": search})
+            users = keycloak_admin.get_users(
+                {"max": limit, "first": offset, "search": search}
+            )
             total = keycloak_admin.users_count(query={"search": search})
-        
+
         users_data = []
         for user in users:
-            attributes = {key: value[0] if isinstance(value, list) and value else value 
-                        for key, value in user.get("attributes", {}).items()}
-            users_data.append({
-                "id": user.get("id"),
-                "username": user.get("username"),
-                "email": user.get("email"),
-                "firstName": user.get("firstName"),
-                "lastName": user.get("lastName"),
-                "attributes": attributes,
-            })
-        
+            attributes = {
+                key: value[0] if isinstance(value, list) and value else value
+                for key, value in user.get("attributes", {}).items()
+            }
+            users_data.append(
+                {
+                    "id": user.get("id"),
+                    "username": user.get("username"),
+                    "email": user.get("email"),
+                    "firstName": user.get("firstName"),
+                    "lastName": user.get("lastName"),
+                    "attributes": attributes,
+                }
+            )
+
         return {
             "users": users_data,
             "total": total,
         }
-    
+
     except KeycloakError:
         raise HTTPException(status_code=500, detail="Internal server error")
-    
+
     except Exception:
-        raise HTTPException(status_code=400, detail="Bad request - Invalid search parameters")
+        raise HTTPException(
+            status_code=400, detail="Bad request - Invalid search parameters"
+        )
+
 
 @router.get(
     "/statistics",
@@ -160,17 +187,25 @@ def get_user_data(limit: int = 10, offset: int = 0, search: Optional[str] = None
     summary="User statistics",
     description="Provides user statistics, including active users in the last 30 days, new users, users grouped by region, and users grouped by roles.",
     responses={
-        200: {"description": "User statistics retrieved successfully", "model": UserStatisticsResponse},
-        400: {"description": "Bad request - invalid parameters or failed request", "model": ErrorResponse},
-        500: {"description": "Internal server error", "model": ErrorResponse}
-    }
+        200: {
+            "description": "User statistics retrieved successfully",
+            "model": UserStatisticsResponse,
+        },
+        400: {
+            "description": "Bad request - invalid parameters or failed request",
+            "model": ErrorResponse,
+        },
+        500: {"description": "Internal server error", "model": ErrorResponse},
+    },
 )
 def get_user_statistics():
     try:
         # Fetch active users from Keycloak in the last 30 days
-        active_users = keycloak_admin.get_users({
-            'lastLogin': f">={int((datetime.now() - timedelta(days=30)).timestamp()) * 1000}"
-        })
+        active_users = keycloak_admin.get_users(
+            {
+                "lastLogin": f">={int((datetime.now() - timedelta(days=30)).timestamp()) * 1000}"
+            }
+        )
         active_users_count = len(active_users)
 
         # Fetch total users
@@ -178,9 +213,9 @@ def get_user_statistics():
 
         # Fetch new users in the last 30 days
         cutoff_date = datetime.now() - timedelta(days=30)
-        new_users = keycloak_admin.get_users({
-            'createdAt': f">={int(cutoff_date.timestamp()) * 1000}"
-        })
+        new_users = keycloak_admin.get_users(
+            {"createdAt": f">={int(cutoff_date.timestamp()) * 1000}"}
+        )
         new_users_count = len(new_users)
 
         # Return the user statistics response
@@ -194,5 +229,6 @@ def get_user_statistics():
         raise HTTPException(status_code=500, detail="Internal server error")
 
     except Exception:
-        raise HTTPException(status_code=400, detail="Bad request - invalid parameters or failed request")
-    
+        raise HTTPException(
+            status_code=400, detail="Bad request - invalid parameters or failed request"
+        )

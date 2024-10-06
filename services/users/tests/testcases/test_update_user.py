@@ -1,7 +1,8 @@
+from unittest.mock import MagicMock, patch
+
 import pytest
 from fastapi.testclient import TestClient
 from keycloak.exceptions import KeycloakPutError
-from unittest.mock import patch, MagicMock
 from src.app import app
 
 client = TestClient(app)
@@ -17,16 +18,19 @@ mock_user = {
         "Address": ["123 Main St"],
         "City": ["Springfield"],
         "PostCode": ["12345"],
-        "voivodeship": ["Illinois"]
-    }
+        "voivodeship": ["Illinois"],
+    },
 }
 
 
 def test_update_user_success():
     """Test successful user update."""
 
-    with patch('src.keycloak_client.keycloak_admin.get_user', return_value=mock_user) as mock_get_user, \
-         patch('src.keycloak_client.keycloak_admin.update_user', return_value=None) as mock_update_user:
+    with patch(
+        "src.keycloak_client.keycloak_admin.get_user", return_value=mock_user
+    ) as mock_get_user, patch(
+        "src.keycloak_client.keycloak_admin.update_user", return_value=None
+    ) as mock_update_user:
 
         update_data = {
             "firstName": "Jane",
@@ -37,8 +41,8 @@ def test_update_user_success():
                 "Address": "456 Another St",
                 "City": "Metropolis",
                 "PostCode": "54321",
-                "voivodeship": "Metropolis State"
-            }
+                "voivodeship": "Metropolis State",
+            },
         }
 
         response = client.patch(f"/update/{mock_user['id']}", json=update_data)
@@ -46,14 +50,16 @@ def test_update_user_success():
         assert response.status_code == 200
         assert response.json() == {"detail": "User updated successfully"}
 
-        mock_get_user.assert_called_once_with(mock_user['id'])
+        mock_get_user.assert_called_once_with(mock_user["id"])
         mock_update_user.assert_called_once()
 
 
 def test_update_user_not_found():
     """Test user not found scenario."""
 
-    with patch('src.keycloak_client.keycloak_admin.get_user', return_value=None) as mock_get_user:
+    with patch(
+        "src.keycloak_client.keycloak_admin.get_user", return_value=None
+    ) as mock_get_user:
 
         response = client.patch(f"/update/non-existent-user", json={})
 
@@ -66,8 +72,12 @@ def test_update_user_not_found():
 def test_update_user_keycloak_error():
     """Test Keycloak error during the update."""
 
-    with patch('src.keycloak_client.keycloak_admin.get_user', return_value=mock_user) as mock_get_user, \
-         patch('src.keycloak_client.keycloak_admin.update_user', side_effect=KeycloakPutError("Error")) as mock_update_user:
+    with patch(
+        "src.keycloak_client.keycloak_admin.get_user", return_value=mock_user
+    ) as mock_get_user, patch(
+        "src.keycloak_client.keycloak_admin.update_user",
+        side_effect=KeycloakPutError("Error"),
+    ) as mock_update_user:
 
         update_data = {
             "firstName": "Jane",
@@ -79,17 +89,17 @@ def test_update_user_keycloak_error():
         assert response.status_code == 400
         assert response.json() == {"detail": "Error updating user"}
 
-        mock_get_user.assert_called_once_with(mock_user['id'])
+        mock_get_user.assert_called_once_with(mock_user["id"])
         mock_update_user.assert_called_once()
 
 
 def test_update_user_invalid_payload():
     """Test with invalid request payload."""
 
-    with patch('src.keycloak_client.keycloak_admin.update_user', return_value=mock_user) as mock_get_user:
-        invalid_payload = {
-            "firstName": 123
-        }
+    with patch(
+        "src.keycloak_client.keycloak_admin.update_user", return_value=mock_user
+    ) as mock_get_user:
+        invalid_payload = {"firstName": 123}
 
         response = client.patch(f"/update/{mock_user['id']}", json=invalid_payload)
 

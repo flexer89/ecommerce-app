@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,39 +14,39 @@ spec:
         app: shipments-db
     spec:
       containers:
-      - name: shipments-db
-        image: postgres:16.2-alpine3.19
-        env:
-          # - name: POSTGRES_USER
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: shipments-db-secret
-          #       key: postgres-user
-          # - name: POSTGRES_PASSWORD
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: shipments-db-secret
-          #       key: postgres-password
-          # - name: POSTGRES_DB
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: shipments-db-secret
-          #       key: postgres-db
-          - name: POSTGRES_USER
-            value: shipments
-          - name: POSTGRES_PASSWORD
-            value: password
-          - name: POSTGRES_DB
-            value: shipments
-        ports:
-        - containerPort: 5432
-        volumeMounts:
-        - name: init-script
-          mountPath: /docker-entrypoint-initdb.d
+        - name: shipments-db
+          image: postgres:16.2-alpine3.19
+          env:
+            # - name: POSTGRES_USER
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: shipments-db-secret
+            #       key: postgres-user
+            # - name: POSTGRES_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: shipments-db-secret
+            #       key: postgres-password
+            # - name: POSTGRES_DB
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: shipments-db-secret
+            #       key: postgres-db
+            - name: POSTGRES_USER
+              value: shipments
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_DB
+              value: shipments
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: init-script
+              mountPath: /docker-entrypoint-initdb.d
       volumes:
-      - name: init-script 
-        configMap:
-          name: init-sql-configmap-shipments
+        - name: init-script
+          configMap:
+            name: init-sql-configmap-shipments
 
 ---
 apiVersion: v1

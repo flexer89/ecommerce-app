@@ -21,7 +21,7 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem('tempCartId', tempCartId);
       }
       setCartId(tempCartId);
-    } 
+    }
     else {
       localStorage.setItem('tempCartId', keycloakMemo.subject);
       setCartId(keycloakMemo.subject);
@@ -58,7 +58,7 @@ export const CartProvider = ({ children }) => {
     if (weight === 500) {
       productPrice *= 2;
     }
-  
+
     const itemToAdd = {
       ...product,
       grind,
@@ -66,7 +66,7 @@ export const CartProvider = ({ children }) => {
       price: productPrice,
       quantity: 1,
     };
-  
+
     try {
       await CartServiceClient.post(`/add/${cartId}`, {
         items: [itemToAdd],

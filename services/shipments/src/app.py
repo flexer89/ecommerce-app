@@ -1,12 +1,12 @@
-from fastapi import FastAPI
-from prometheus_fastapi_instrumentator import Instrumentator
-from src.routes import router
-import logging
 import contextvars
+import logging
 import time
 import uuid
-from fastapi import Request, Response
 from typing import Any, Awaitable, Callable
+
+from fastapi import FastAPI, Request, Response
+from prometheus_fastapi_instrumentator import Instrumentator
+from src.routes import router
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -18,8 +18,33 @@ app = FastAPI(name="shipments-service")
 app.include_router(router=router)
 
 instrumentator = Instrumentator(excluded_handlers=["/metrics", "k8s"])
-latency_buckets = (0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 7.5, 10, 30, 60)
-instrumentator.instrument(app, latency_lowr_buckets=latency_buckets).expose(app, include_in_schema=False)
+latency_buckets = (
+    0.01,
+    0.025,
+    0.05,
+    0.075,
+    0.1,
+    0.25,
+    0.5,
+    0.75,
+    1,
+    1.5,
+    2,
+    2.5,
+    3,
+    3.5,
+    4,
+    4.5,
+    5,
+    7.5,
+    10,
+    30,
+    60,
+)
+instrumentator.instrument(app, latency_lowr_buckets=latency_buckets).expose(
+    app, include_in_schema=False
+)
+
 
 @app.middleware("http")
 async def log_requests_and_responses(
@@ -42,18 +67,18 @@ async def log_requests_and_responses(
     try:
         # Process the request and capture the response
         response = await call_next(request)
-        
+
         # Capture the response body
         response_body = b""
         async for chunk in response.body_iterator:
             response_body += chunk
-        
+
         # Rebuild the response with the captured body
         response = Response(
             content=response_body,
             status_code=response.status_code,
             headers=dict(response.headers),
-            media_type=response.media_type
+            media_type=response.media_type,
         )
     finally:
         assert req_id == request_id.get()
@@ -61,7 +86,7 @@ async def log_requests_and_responses(
     end_time = time.time()
     outcoming_json = {
         "status_code": response.status_code,
-        "content": response_body.decode('utf-8') if response_body else None,
+        "content": response_body.decode("utf-8") if response_body else None,
         "time": end_time - start_time,
     }
     logger.info(f"{request_id.get()} | Outcoming Response: {outcoming_json}")
