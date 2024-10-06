@@ -3,8 +3,12 @@ from logging import INFO, Logger, basicConfig
 import stripe
 from fastapi import APIRouter, HTTPException
 
-from .schemas import (CancelPaymentResponse, CreatePaymentIntentRequest,
-                      ErrorResponse, PaymentIntentResponse)
+from .schemas import (
+    CancelPaymentResponse,
+    CreatePaymentIntentRequest,
+    ErrorResponse,
+    PaymentIntentResponse,
+)
 
 # Set up logging configuration
 basicConfig(level=INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
