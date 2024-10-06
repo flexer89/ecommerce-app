@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Bar, Line, Doughnut } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
+import { Link } from 'react-router-dom';
 import ProductsServiceClient from '../clients/ProductsService';
 import OrdersServiceClient from '../clients/OrdersService';
-import ShipmentsServiceClient from '../clients/ShipmentsService';
 import UsersServiceClient from '../clients/UsersService';
-import PaymentsServiceClient from '../clients/PaymentsService';
 import '../assets/style/style.css';
 
 const ProductsStatistics = () => {
@@ -164,7 +163,8 @@ const OrdersStatistics = () => {
           const userData = userResponse.data.users[0];
           return { 
             ...customer, 
-            name: `${userData.firstName} ${userData.lastName} | ${userData.email}`
+            name: `${userData.firstName} ${userData.lastName}`,
+            email: `${userData.email}`
           };
         });
 
@@ -250,38 +250,50 @@ const OrdersStatistics = () => {
   return (
     <div className="section-container">
       <h2>Statystyki zamówień</h2>
-      <p>Ilość zamówień: {ordersCount}</p>
-      <p>Średni czas przetwarzania: {averageProcessingTime.toFixed(2)} godzin</p>
-      <p>Ilość anulacji: {cancellationsCount}</p>
-      <p>Wskaźnik konwersji: {(conversionRate * 100).toFixed(2)}%</p>
-
-      <div className="order-status-container">
-        <h3>Statusy zamówień</h3>
-        <Doughnut
-          data={orderStatusChartData}
-          options={{
-            responsive: true,
-          }}
-        />
-      </div>
-
-      <div className="chart">
-        <div className='chart-container'>
-          <h3>Trend zamówień</h3>
-          <Line data={orderAmountChartData} options={chartOptions} />
+      <div className="low-stock-list">
+        <div className="stat-card">
+          <h3>Ilość zamówień: </h3>
+          <p>{ordersCount}</p>
         </div>
-        <div className='chart-container'>
+        <div className="stat-card">
+          <h3>Średni czas przetwarzania</h3>
+          <p>{averageProcessingTime.toFixed(2)} godzin</p>
+        </div>
+        <div className="stat-card">
+          <h3>Ilość anulacji</h3>
+          <p>{cancellationsCount}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Wskaźnik konwersji</h3>
+          <p>{(conversionRate * 100).toFixed(2)}%</p>
+        </div>
+      </div>
+      <div className="chart">
+          <h3>Trend zamówień</h3>
+          <Line data={orderAmountChartData} options={chartOptions} height={"100%"}/>
           <h3>Trend przychodu</h3>
-          <Line data={orderRevenueChartData} options={chartOptions} />
+          <Line data={orderRevenueChartData} options={chartOptions} height={"100%"} />
+        <h3>Statusy zamówień</h3>
+        <div className='chart-container'>
+          <Doughnut
+            data={orderStatusChartData}
+            options={{
+              responsive: true,
+            }}
+          />
         </div>
       </div>
 
       <div className="top-customers-container">
-        <h3>Najlepsi klienci</h3>
+        <h2>Najlepsi klienci</h2>
         <div className="top-customers-list">
           {topCustomers.map(customer => (
             <div key={customer.user_id} className="customer-card">
-              <h4>{customer.name}</h4>
+              <h4 className='product-name'>{customer.name}</h4>
+              <div className="customer-info">
+                <h5><Link to={`/users/${customer.user_id}`}>{customer.email}</Link></h5>
+                <h5><Link to={`/users/${customer.user_id}`}>{customer.user_id}</Link></h5>
+              </div>
               <p>Liczba zamówień: {customer.orders_count}</p>
               <p>Wartość zamówień: {customer.total_spent.toFixed(2)} zł</p>
             </div>
@@ -292,49 +304,6 @@ const OrdersStatistics = () => {
   );
 };
 
-// Shipments Statistics Section
-const ShipmentsStatistics = () => {
-  const [shipmentsCount, setShipmentsCount] = useState(0);
-
-  useEffect(() => {
-    const fetchShipmentsStats = async () => {
-      const shipmentsResponse = await ShipmentsServiceClient.get('/count');
-      console.log(shipmentsResponse);
-      setShipmentsCount(shipmentsResponse.data.total);
-    };
-
-    fetchShipmentsStats();
-  }, []);
-
-  return (
-    <div className="section-container">
-      <h2>Statystyki Wysyłek</h2>
-      <p>Ilość wysyłek: {shipmentsCount}</p>
-    </div>
-  );
-};
-
-// Users Statistics Section
-const UsersStatistics = () => {
-  const [usersCount, setUsersCount] = useState(0);
-  const [userGrowth, setUserGrowth] = useState([]);
-
-  useEffect(() => {
-    const fetchUsersStats = async () => {
-      const usersResponse = await UsersServiceClient.get('/statistics');
-      setUsersCount(usersResponse.data.total_users);
-    };
-
-    fetchUsersStats();
-  }, []);
-
-  return (
-    <div className="section-container">
-      <h2>Statystyki użytkowników</h2>
-      <p>Ilość użytkowników: {usersCount}</p>
-    </div>
-  );
-};
 
 // Main Statistics Component
 const Statistics = () => {
@@ -342,8 +311,6 @@ const Statistics = () => {
     <div className="statistics-page container">
       <ProductsStatistics />
       <OrdersStatistics />
-      <ShipmentsStatistics />
-      <UsersStatistics />
     </div>
   );
 };

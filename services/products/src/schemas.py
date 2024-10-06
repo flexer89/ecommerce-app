@@ -42,3 +42,6 @@ class UpdateQuantityItem(BaseModel):
 
 class UpdateQuantityRequest(BaseModel):
     items: List[UpdateQuantityItem]
+    
+class ErrorResponse(BaseModel):
+    detail: str

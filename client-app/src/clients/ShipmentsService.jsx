@@ -14,6 +14,7 @@ const ShipmentServiceClient = axios.create({
 // Request interceptor to add the token to the request
 ShipmentServiceClient.interceptors.request.use(
   async (config) => {
+    if (keycloak.authenticated) {
     if (keycloak.isTokenExpired()) {
       try {
         await keycloak.updateToken();
@@ -24,7 +25,7 @@ ShipmentServiceClient.interceptors.request.use(
     }
 
     config.headers.authorization = keycloak.token;
-
+  }
     return config;
   },
   (error) => {

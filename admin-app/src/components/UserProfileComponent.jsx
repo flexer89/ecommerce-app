@@ -6,14 +6,17 @@ import ShipmentServiceClient from '../clients/ShipmentsService';
 import OrderDetailModal from './OrderDetailModal';
 import { shipmentStatuses, orderStatusTranslationMap } from '../utils/utils';
 import '../assets/style/style.css';
+import ShipmentDetailModal from './ShipmentDetailModal';
 
 const UserProfileComponent = () => {
   const { userId } = useParams();
   const [userInfo, setUserInfo] = useState(null);
   const [userOrders, setUserOrders] = useState([]);
   const [userShipments, setUserShipments] = useState([]);
+  const [selectedShipment, setSelectedShipment] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isShipmentDetailModalOpen, setIsShipmentDetailModalOpen] = useState(false);
 
   const fetchUserInfo = async () => {
     try {
@@ -55,10 +58,20 @@ const UserProfileComponent = () => {
     setIsDetailModalOpen(true);
   };
 
+  const openShipmentDetailModal = (shipment) => {
+    setSelectedShipment(shipment);
+    setIsShipmentDetailModalOpen(true);
+  };
+
   const closeDetailModal = () => {
     setSelectedOrder(null);
     setIsDetailModalOpen(false);
   };
+
+  const closeShipmentDetailModal = () => {
+    setSelectedShipment(null);
+    setIsShipmentDetailModalOpen(false);
+  }
 
   return (
     <div className="user-profile-page container">
@@ -67,6 +80,8 @@ const UserProfileComponent = () => {
       {userInfo ? (
         <div className="user-info">
           <h2>Informacje osobiste</h2>
+          <p><strong>ID Użytkownika:</strong> {userInfo.id}</p>
+          <p><strong>Login:</strong> {userInfo.username}</p>
           <p><strong>Adres Email:</strong> {userInfo.email}</p>
           <p><strong>Imię:</strong> {userInfo.firstName}</p>
           <p><strong>Nazwisko:</strong> {userInfo.lastName}</p>
@@ -120,6 +135,7 @@ const UserProfileComponent = () => {
                 <th>Status</th>
                 <th>Data wysłania</th>
                 <th>Data dostarczenia</th>
+                <th>Akcje</th>
               </tr>
             </thead>
             <tbody>
@@ -130,6 +146,9 @@ const UserProfileComponent = () => {
                   <td>{shipmentStatuses[shipment.status]}</td>
                   <td>{new Date(shipment.shipment_date).toLocaleDateString('pl-PL') + ' | ' + new Date(shipment.shipment_date).toLocaleTimeString('pl-PL')}</td>
                   <td>{new Date(shipment.delivery_date).toLocaleDateString('pl-PL') + ' | ' + new Date(shipment.delivery_date).toLocaleTimeString('pl-PL')}</td>
+                  <td>
+                    <button onClick={() => openShipmentDetailModal(shipment)}>Szczegóły</button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -143,6 +162,12 @@ const UserProfileComponent = () => {
         <OrderDetailModal
           order={selectedOrder}
           onClose={closeDetailModal}
+        />
+      )}
+      {isShipmentDetailModalOpen && selectedShipment && (
+        <ShipmentDetailModal
+          shipment={selectedShipment}
+          onClose={closeShipmentDetailModal}
         />
       )}
     </div>

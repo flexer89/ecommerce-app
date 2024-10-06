@@ -1,15 +1,19 @@
 from fastapi import APIRouter, HTTPException
 import stripe
 from .schemas import CreatePaymentIntentRequest, PaymentIntentResponse, CancelPaymentResponse, ErrorResponse
-from logging import Logger
+from logging import Logger, basicConfig, INFO
 
+# Set up logging configuration
+basicConfig(level=INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = Logger(__name__)
+
 stripe.api_key = "sk_test_51PdvfxHm9ZvcVN2EHa7Ulxugn22qjBP5i0ajZeVXISn4Bf4LQaZEpvFIvM2yIeQ8f8MylsSWQEJaSJvXXi91LzEF00gSm3rlCL"
 router = APIRouter()
 
 
 @router.get("/health")
 def health():
+    logger.info("Health check requested")
     return {"status": "ok"}
 
 
@@ -27,12 +31,15 @@ def health():
     }
 )
 async def create_payment_intent(request: CreatePaymentIntentRequest):
+    logger.info(f"Received request to create payment intent for order {request.order_id} with total amount {request.total}")
+
     if request.total <= 0:
+        logger.warning(f"Invalid total amount: {request.total}. Must be greater than 0.")
         raise HTTPException(status_code=400, detail="Total amount must be greater than 0.")
     
     try:
         intent = stripe.PaymentIntent.create(
-            amount=int(request.total * 100),
+            amount=int(request.total * 100),  # Convert to cents
             currency="pln",
             automatic_payment_methods={"enabled": True},
             metadata={
@@ -40,7 +47,9 @@ async def create_payment_intent(request: CreatePaymentIntentRequest):
                 "user_id": request.user_id
             }
         )
+        logger.info(f"Payment intent created successfully for order {request.order_id} with payment ID {intent.id}")
     except stripe.error.StripeError as e:
+        logger.error(f"Stripe error occurred while creating payment intent: {e}")
         raise HTTPException(status_code=500, detail=f"Stripe error: {str(e)}")
 
     return {
@@ -65,13 +74,17 @@ async def create_payment_intent(request: CreatePaymentIntentRequest):
     }
 )
 async def cancel_payment(payment_id: str):
+    logger.info(f"Received request to cancel payment with ID {payment_id}")
+    
     try:
         intent = stripe.PaymentIntent.cancel(payment_id)
+        logger.info(f"Payment with ID {payment_id} cancelled successfully")
         return {"status": "ok"}
 
     except stripe.error.InvalidRequestError as e:
+        logger.warning(f"Failed to cancel payment {payment_id}: {e}")
         raise HTTPException(status_code=403, detail=f"Stripe error: {str(e)}")
     
     except stripe.error.StripeError as e:
+        logger.error(f"Stripe error occurred while canceling payment {payment_id}: {e}")
         raise HTTPException(status_code=500, detail=f"Stripe error: {str(e)}")
-

@@ -65,7 +65,7 @@ def upload_product(product):
     if image_file:
         image_file.close()
 
-    if response.status_code == 200:
+    if response.status_code == 201:
         print(f"Successfully uploaded product: {product['name']}")
     else:
         print(f"Failed to upload product: {product['name']}. Status Code: {response.status_code}")

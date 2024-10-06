@@ -82,6 +82,7 @@ const Header = () => {
         </button>
         <nav className="navbar-mobile">
           <ul className="navbar-list">
+              <li><Link to="/profile" className="navbar-link has-after">Profil</Link></li>
               <li><Link to="/statistics" className="navbar-link has-after">Statystyki</Link></li>
               <li><Link to="/products" className="navbar-link has-after">Produkty</Link></li>
               <li><Link to="/users" className="navbar-link has-after">Użytkownicy</Link></li>

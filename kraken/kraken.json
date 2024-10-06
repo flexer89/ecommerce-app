@@ -3,7 +3,7 @@
   "timeout": "3s",
   "endpoints": [
     {
-      "endpoint": "/api/products/{get1}",
+      "endpoint": "/api/products/count",
       "input_headers": [
         "*"
       ],
@@ -11,7 +11,7 @@
       "output_encoding": "no-op",
       "backend": [
         {
-          "url_pattern": "/{get1}",
+          "url_pattern": "/count",
           "encoding": "no-op",
           "sd": "static",
           "method": "GET",
@@ -21,6 +21,38 @@
           "disable_host_sanitize": false
         }
       ]
+    },
+    {
+      "endpoint": "/api/products/trends",
+      "input_headers": [
+        "*"
+      ],
+      "method": "GET",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/trends",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://products-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin"
+          ]
+        }
+      }
     },
     {
       "endpoint": "/api/products/get",
@@ -77,7 +109,7 @@
       ]
     },
     {
-      "endpoint": "/api/products/{get1}/{get2}",
+      "endpoint": "/api/products/getbyid/{product_id}",
       "input_headers": [
         "*"
       ],
@@ -85,7 +117,7 @@
       "output_encoding": "no-op",
       "backend": [
         {
-          "url_pattern": "/{get1}/{get2}",
+          "url_pattern": "/getbyid/{product_id}",
           "encoding": "no-op",
           "sd": "static",
           "method": "GET",
@@ -97,7 +129,7 @@
       ]
     },
     {
-      "endpoint": "/api/products/{get1}/{get2}/{get3}",
+      "endpoint": "/api/products/download/bin/{product_id}",
       "input_headers": [
         "*"
       ],
@@ -105,7 +137,7 @@
       "output_encoding": "no-op",
       "backend": [
         {
-          "url_pattern": "/{get1}/{get2}/{get3}",
+          "url_pattern": "/download/bin/{product_id}",
           "encoding": "no-op",
           "sd": "static",
           "method": "GET",
@@ -117,7 +149,7 @@
       ]
     },
     {
-      "endpoint": "/api/products/{delete1}/{delete2}",
+      "endpoint": "/api/products/delete/{product_id}",
       "input_headers": [
         "*"
       ],
@@ -125,7 +157,7 @@
       "output_encoding": "no-op",
       "backend": [
         {
-          "url_pattern": "/{delete1}/{delete2}",
+          "url_pattern": "/delete/{product_id}",
           "encoding": "no-op",
           "sd": "static",
           "method": "DELETE",
@@ -134,7 +166,19 @@
           ],
           "disable_host_sanitize": false
         }
-      ]
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin"
+          ]
+        }
+      }
     },
     {
       "endpoint": "/api/products/create",
@@ -149,6 +193,16 @@
             "*"
           ],
           "allow_multipart_form_data": true
+        },
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin"
+          ]
         }
       },
       "backend": [
@@ -185,7 +239,7 @@
       ]
     },
     {
-      "endpoint": "/api/products/update/{update1}",
+      "endpoint": "/api/products/update/{product_id}",
       "input_headers": [
         "*"
       ],
@@ -197,11 +251,21 @@
             "*"
           ],
           "allow_multipart_form_data": true
+        },
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin"
+          ]
         }
       },
       "backend": [
         {
-          "url_pattern": "/update/{update1}",
+          "url_pattern": "/update/{product_id}",
           "encoding": "no-op",
           "sd": "static",
           "method": "PUT",
@@ -213,7 +277,7 @@
       ]
     },
     {
-      "endpoint": "/api/products/update/{update1}/{update2}",
+      "endpoint": "/api/products/update/{product_id}/image",
       "input_headers": [
         "*"
       ],
@@ -225,11 +289,21 @@
             "*"
           ],
           "allow_multipart_form_data": true
+        },
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin"
+          ]
         }
       },
       "backend": [
         {
-          "url_pattern": "/update/{update1}/{update2}",
+          "url_pattern": "/update/{product_id}/image",
           "encoding": "no-op",
           "sd": "static",
           "method": "PUT",
@@ -263,7 +337,13 @@
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
-          "disable_jwk_security": true
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin",
+            "client"
+          ]
         }
       }
     },
@@ -296,7 +376,12 @@
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
-          "disable_jwk_security": true
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin"
+          ]
         }
       }
     },
@@ -323,7 +408,13 @@
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
-          "disable_jwk_security": true
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin",
+            "client"
+          ]
         }
       }
     },
@@ -350,7 +441,13 @@
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
-          "disable_jwk_security": true
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin",
+            "client"
+          ]
         }
       }
     },
@@ -377,7 +474,13 @@
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
-          "disable_jwk_security": true
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin",
+            "client"
+          ]
         }
       }
     },
@@ -417,7 +520,12 @@
           "host": [
             "http://orders-service:5010"
           ],
-          "disable_host_sanitize": false
+          "disable_host_sanitize": false,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin"
+          ]
         }
       ],
       "extra_config": {
@@ -451,7 +559,13 @@
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
-          "disable_jwk_security": true
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin",
+            "client"
+          ]
         }
       }
     },
@@ -473,7 +587,20 @@
           ],
           "disable_host_sanitize": false
         }
-      ]
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin",
+            "client"
+          ]
+        }
+      }
     },
     {
       "endpoint": "/api/shipments/{get1}/{get2}",
@@ -483,7 +610,13 @@
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
-          "disable_jwk_security": true
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin",
+            "client"
+          ]
         }
       },
       "backend": [
@@ -507,7 +640,13 @@
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
-          "disable_jwk_security": true
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin",
+            "client"
+          ]
         }
       },
       "backend": [
@@ -536,7 +675,13 @@
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
-          "disable_jwk_security": true
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin",
+            "client"
+          ]
         }
       },
       "backend": [
@@ -576,7 +721,18 @@
         "offset",
         "status",
         "search"
-      ]
+      ],
+      "auth/validator": {
+        "alg": "RS256",
+        "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+        "disable_jwk_security": true,
+        "roles_key_is_nested": true,
+        "roles_key": "realm_access.roles",
+        "roles": [
+          "admin",
+          "client"
+        ]
+      }
     },
     {
       "endpoint": "/api/payments/create-payment-intent",
@@ -603,6 +759,17 @@
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
           "disable_jwk_security": true
         }
+      },
+      "auth/validator": {
+        "alg": "RS256",
+        "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+        "disable_jwk_security": true,
+        "roles_key_is_nested": true,
+        "roles_key": "realm_access.roles",
+        "roles": [
+          "admin",
+          "client"
+        ]
       }
     },
     {
@@ -613,7 +780,13 @@
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
-          "disable_jwk_security": true
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin",
+            "client"
+          ]
         }
       },
       "backend": [
@@ -640,7 +813,11 @@
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
           "disable_jwk_security": true,
-          "roles": []
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin"
+          ]
         }
       },
       "output_encoding": "no-op",
@@ -673,7 +850,12 @@
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
-          "disable_jwk_security": true
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin"
+          ]
         }
       },
       "output_encoding": "no-op",
@@ -698,7 +880,13 @@
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
-          "disable_jwk_security": true
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin",
+            "client"
+          ]
         }
       },
       "backend": [
@@ -715,12 +903,12 @@
       ]
     },
     {
-      "endpoint": "/api/carts/get/{userId}",
+      "endpoint": "/api/carts/get/{user_id}",
       "method": "GET",
       "output_encoding": "no-op",
       "backend": [
         {
-          "url_pattern": "/get/{userId}",
+          "url_pattern": "/get/{user_id}",
           "encoding": "no-op",
           "sd": "static",
           "method": "GET",
@@ -732,12 +920,12 @@
       ]
     },
     {
-      "endpoint": "/api/carts/delete/{userId}",
+      "endpoint": "/api/carts/delete/{user_id}",
       "method": "DELETE",
       "output_encoding": "no-op",
       "backend": [
         {
-          "url_pattern": "/delete/{userId}",
+          "url_pattern": "/delete/{user_id}",
           "encoding": "no-op",
           "sd": "static",
           "method": "DELETE",
@@ -749,12 +937,12 @@
       ]
     },
     {
-      "endpoint": "/api/carts/add/{userId}",
+      "endpoint": "/api/carts/add/{user_id}",
       "method": "POST",
       "output_encoding": "no-op",
       "backend": [
         {
-          "url_pattern": "/add/{userId}",
+          "url_pattern": "/add/{user_id}",
           "encoding": "no-op",
           "sd": "static",
           "method": "POST",
@@ -766,12 +954,12 @@
       ]
     },
     {
-      "endpoint": "/api/carts/remove/{userId}",
+      "endpoint": "/api/carts/remove/{user_id}",
       "method": "POST",
       "output_encoding": "no-op",
       "backend": [
         {
-          "url_pattern": "/remove/{userId}",
+          "url_pattern": "/remove/{user_id}",
           "encoding": "no-op",
           "sd": "static",
           "method": "POST",
@@ -824,22 +1012,9 @@
         }
       }
     },
-    "plugin/http-server": {
-      "name": [
-        "ip-filter"
-      ],
-      "ip-filter": {
-        "allow": false,
-        "client_ip_headers": [
-          "X-Forwarded-For",
-          "X-Real-IP",
-          "X-Appengine-Remote-Addr"
-        ]
-      }
+    "security/bot-detector": {
+      "empty_user_agent_is_bot": true,
+      "cache_size": 10000
     }
-  },
-  "plugin": {
-    "pattern": ".so",
-    "folder": "/opt/krakend/plugins/"
   }
 }

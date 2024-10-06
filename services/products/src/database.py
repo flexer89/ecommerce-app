@@ -10,7 +10,11 @@ load_dotenv()
 
 DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
 DATABASE_USER = os.getenv("DATABASE_USER")
-DATABASE_URL = f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@products-db/products"
+
+if os.getenv("ENV") == "test":
+    DATABASE_URL = "sqlite:///./test.db"
+else:
+    DATABASE_URL = f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@products-db/products"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

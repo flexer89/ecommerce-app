@@ -11,28 +11,28 @@ const ProductsServiceClient = axios.create({
   }
 });
 
-// todo not every request needs to be authenticated
 
-// // Request interceptor to add the token to the request
-// ProductsServiceClient.interceptors.request.use(
-//   async (config) => {
-//     if (keycloak.isTokenExpired()) {
-//       try {
-//         await keycloak.updateToken();
-//       } catch (refreshError) {
-//         keycloak.logout();
-//         return Promise.reject(refreshError);
-//       }
-//     }
+// Request interceptor to add the token to the request
+ProductsServiceClient.interceptors.request.use(
+  async (config) => {
+    if (keycloak.authenticated) {
+      if (keycloak.isTokenExpired()) {
+        try {
+          await keycloak.updateToken();
+        } catch (refreshError) {
+          keycloak.logout();
+          return Promise.reject(refreshError);
+        }
+      }
 
-//     config.headers.authorization = keycloak.token;
-
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
+      config.headers.authorization = keycloak.token;
+    }
+      return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // Response interceptor to handle 404 without throwing an error
 ProductsServiceClient.interceptors.response.use(

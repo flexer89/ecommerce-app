@@ -23,6 +23,7 @@ class OrderItemBase(BaseModel):
     quantity: int
     price: float
     weight: float
+    grind: str
 
 class OrderItemCreate(OrderItemBase):
     pass

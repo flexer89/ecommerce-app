@@ -1,10 +1,9 @@
-from uuid import UUID
 from pydantic import BaseModel
 
 class CreatePaymentIntentRequest(BaseModel):
     order_id: int
     total: float
-    user_id: UUID
+    user_id: str
 
 class PaymentIntentResponse(BaseModel):
     payment_id: str

@@ -108,7 +108,7 @@ def main():
         }
         
         shipment = requests.post(f"{shipments_service_url}/create", json=shipping_info)
-        if shipment.status_code != 200:
+        if shipment.status_code != 201:
             print(f"Failed to create shipment: {shipment.json()}")
             continue
         print(f"Shipment created: {shipment.json()}")

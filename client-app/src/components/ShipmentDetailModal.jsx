@@ -82,8 +82,8 @@ const ShipmentDetailModal = ({ shipment, onClose }) => {
           <p><strong>ID Zamówienia:</strong> {shipment.order_id}</p>
           <p><strong>Adres wysyłki:</strong> {shipment.shipment_address}</p>
           <p><strong>Obecna lokalizacja:</strong> {shipment.current_location}</p>
-          <p><strong>Data wysyłki:</strong> {shipment.shipment_date}</p>
-          <p><strong>Data dostawy:</strong> {shipment.delivery_date}</p>
+          <p><strong>Data wysyłki:</strong> {new Date(shipment.shipment_date).toLocaleString()}</p>
+          <p><strong>Data dostawy:</strong> {new Date(shipment.delivery_date).toLocaleString()}</p>
           <p><strong>Status:</strong> {statusTranslationMap[shipment.status]}</p>
           <p><strong>Firma:</strong> {shipment.company}</p>
         </div>

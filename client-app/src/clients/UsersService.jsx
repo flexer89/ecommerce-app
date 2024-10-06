@@ -13,6 +13,7 @@ const UserServiceClient = axios.create({
 
 UserServiceClient.interceptors.request.use(
   async (config) => {
+    if (keycloak.authenticated) {
     if (keycloak.isTokenExpired()) {
       try {
         await keycloak.updateToken();
@@ -23,7 +24,7 @@ UserServiceClient.interceptors.request.use(
     }
     
     config.headers.authorization = keycloak.token;
-
+  }
     return config;
   },
   (error) => {

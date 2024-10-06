@@ -24,14 +24,10 @@ const ProceedPaymentPage = () => {
         const paymentIntentResponse = await PaymentsServiceClient.post("/create-payment-intent", {
           user_id: keycloak.subject,
           order_id: location.state.orderId,
-          total: cart.total,
+          total: cart.total + 9.99, // Add delivery fee
         });
 
-        if (!paymentIntentResponse.ok) {
-          throw new Error("Failed to create payment intent");
-        }
-
-        const paymentData = await paymentIntentResponse.json();
+        const paymentData = paymentIntentResponse.data;
         setPaymentId(paymentData.payment_id);
         setClientSecret(paymentData.client_secret);
       } catch (error) {

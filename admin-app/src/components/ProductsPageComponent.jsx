@@ -194,6 +194,7 @@ const fetchProducts = async () => {
     <div className="product-list-page container">
       <div className="product-list-header">
         <h1>Lista produktów</h1>
+        <div className="product-list-controls">
         <button
           onClick={() => setIsFilterModalOpen(true)}
           className="our-mission-button"
@@ -206,6 +207,7 @@ const fetchProducts = async () => {
         <button onClick={() => setIsSortModalOpen(true)} className="our-mission-button">
           Sortuj Produkty
         </button>
+        </div>
       </div>
   
       {loading ? (

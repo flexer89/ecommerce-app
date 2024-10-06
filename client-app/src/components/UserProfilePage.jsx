@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useKeycloakAuth } from '../contexts/KeycloakContext';
 import getKeycloak from '../auth/keycloak';
 import '../assets/style/style.css';
@@ -235,40 +236,39 @@ const Shipments = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchShipments = async () => {
-      setLoading(true);
-      try {
-        const response = await ShipmentServiceClient.get(`/getbyuser/${getKeycloak().subject}`);
-        
-        if (response.status === 404) {
-          setShipments([]);
-          setError(null);
-        } else if (response.status === 200) {
-          setShipments(response.data);
-        } else {
-          throw new Error('Unexpected error occurred');
-        }
-      } catch (error) {
-        setError('Błąd podczas ładowania wysyłek.');
-      } finally {
-        setLoading(false);
+  const fetchShipments = async () => {
+    setLoading(true);
+    try {
+      const response = await ShipmentServiceClient.get(`/getbyuser/${getKeycloak().subject}`);
+      
+      if (response.status === 404) {
+        setShipments([]);
+        setError(null);
+      } else if (response.status === 200) {
+        setShipments(response.data);
+      } else {
+        throw new Error('Unexpected error occurred');
       }
-    };
-  
+    } catch (error) {
+      setError('Błąd podczas ładowania wysyłek.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchShipments();
   }, []);
 
   const handleEditSubmit = async (updatedShipmentData, shipmentId) => {
     try {
       await ShipmentServiceClient.patch(`/update/${shipmentId}`, updatedShipmentData);
-      alert('Shipment updated successfully!');
+      toast.success('Wysyłka zaktualizowana.');
       fetchShipments();
     } catch (error) {
-      console.error('Error updating shipment:', error);
-      alert('Error updating shipment');
+      toast.error('Błąd podczas aktualizacji wysyłki.');
     } finally {
-      closeEditModal();
+      closeShipmentEditModal();
     }
   };
 
@@ -313,10 +313,12 @@ const Shipments = () => {
               <p><strong>Adres dostawy:</strong> {shipment.shipment_address}</p>
               <p><strong>Data wysyłki:</strong> {new Date(shipment.shipment_date).toLocaleString()}</p>
               <p><strong>Data dostawy:</strong> {new Date(shipment.delivery_date).toLocaleString()}</p>
-              <button className="our-mission-button" onClick={() => handleShipmentClick(shipment)}>Szczegóły</button>
-              {shipment.status === "pending" && (
-                <button className='our-mission-button' onClick={() => handleEditClick(shipment)}>Edytuj</button>
-              )}
+              <div className='shipment-actions'>
+                <button className="our-mission-button" onClick={() => handleShipmentClick(shipment)}>Szczegóły</button>
+                {shipment.status === "pending" && (
+                  <button className='our-mission-button' onClick={() => handleEditClick(shipment)}>Edytuj</button>
+                )}
+              </div>
             </div>
           ))}
         </div>

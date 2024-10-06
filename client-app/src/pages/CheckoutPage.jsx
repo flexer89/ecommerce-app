@@ -279,7 +279,7 @@ const CheckoutPage = () => {
                 checked={selectedShipping === 'paczkomat'}
                 onChange={handleShippingChange}
               />
-              Paczkomat - 7.99 zł (Dostawa w ciągu 2-3 dni roboczych)
+              Paczkomat - 9.99 zł (Dostawa w ciągu 2-3 dni roboczych)
             </label>
             {selectedShipping === 'paczkomat' && (
               <div id="easypack-map"></div>

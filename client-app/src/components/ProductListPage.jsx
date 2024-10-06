@@ -147,8 +147,10 @@ const ProductListPage = () => {
     <div className="product-list-page container">
       <div className="product-list-header">
         <h1>Lista produktów</h1>
-        <button onClick={() => setIsFilterModalOpen(true)} className="our-mission-button">Otwórz Filtry</button>
-        <button onClick={() => setIsSortModalOpen(true)} className="our-mission-button">Sortuj Produkty</button>
+        <div className="product-list-controls">
+          <button onClick={() => setIsFilterModalOpen(true)} className="our-mission-button">Otwórz Filtry</button>
+          <button onClick={() => setIsSortModalOpen(true)} className="our-mission-button">Sortuj Produkty</button>
+        </div>
       </div>
   
       {loading ? (

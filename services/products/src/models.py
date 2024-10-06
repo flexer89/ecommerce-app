@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Float, Text, TIMESTAMP
+from sqlalchemy import Column, Integer, String, Float, Text, BLOB, TIMESTAMP
+import os
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import BYTEA
 from sqlalchemy.ext.declarative import declarative_base
@@ -12,7 +13,7 @@ class Product(Base):
     name = Column(String(255), nullable=False)
     description = Column(Text)
     price = Column(Float, nullable=False)
-    image = Column(BYTEA)
+    image = Column(BLOB) if os.getenv("ENV") == "test" else Column(BYTEA)
     stock = Column(Integer, default=0)
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
     updated_at = Column(TIMESTAMP, default=datetime.utcnow)

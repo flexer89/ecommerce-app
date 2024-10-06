@@ -22,7 +22,6 @@ const ShipmentEditModal = ({ isOpen, onClose, onSubmit, shipment }) => {
       const order = response.data;
 
       if (order) {
-        // Update the order status based on the new shipment status
         await OrderServiceClient.put(`/update/${order.id}/status`, { status: newStatus });
         toast.success(`Order status updated to ${newStatus}`);
       }

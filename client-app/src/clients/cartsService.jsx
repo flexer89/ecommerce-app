@@ -11,25 +11,26 @@ const CartServiceClient = axios.create({
   }
 });
 
-// CartServiceClient.interceptors.request.use(
-//   async (config) => {
-//     if (keycloak.isTokenExpired()) {
-//       try {
-//         await keycloak.updateToken();
-//       } catch (refreshError) {
-//         keycloak.logout();
-//         return Promise.reject(refreshError);
-//       }
-//     }
+CartServiceClient.interceptors.request.use(
+  async (config) => {
+    if (keycloak.authenticated) {
+    if (keycloak.isTokenExpired()) {
+      try {
+        await keycloak.updateToken();
+      } catch (refreshError) {
+        keycloak.logout();
+        return Promise.reject(refreshError);
+      }
+    }
     
-//     config.headers.authorization = keycloak.token;
-
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
+    config.headers.authorization = keycloak.token;
+  }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // Response interceptor to handle 404 without throwing an error
 CartServiceClient.interceptors.response.use(

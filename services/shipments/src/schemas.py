@@ -37,3 +37,9 @@ class ShipmentResponse(BaseModel):
 class GetShipmentResponse(BaseModel):
     total: int
     shipments: list[ShipmentResponse]
+    
+class ErrorResponse(BaseModel):
+    detail: str
+    
+class CountResponse(BaseModel):
+    total: int
