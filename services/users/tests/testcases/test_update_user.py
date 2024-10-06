@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from fastapi.testclient import TestClient
 from keycloak.exceptions import KeycloakPutError
+
 from src.app import app
 
 client = TestClient(app)

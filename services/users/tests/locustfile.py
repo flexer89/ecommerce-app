@@ -1,8 +1,7 @@
 from random import randint
 
-from locust import HttpUser, between, task
-
 from keycloak import KeycloakAdmin, KeycloakOpenIDConnection
+from locust import HttpUser, between, task
 
 KC_URL = "https://auth.jolszak.test"
 KC_REALM = "jolszak"

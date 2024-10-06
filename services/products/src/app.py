@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from prometheus_fastapi_instrumentator import Instrumentator
+
 from src.routes import router
 
 app = FastAPI(name="products-service")

@@ -4,6 +4,7 @@ from unittest.mock import patch
 import pytest
 from fastapi.testclient import TestClient
 from keycloak.exceptions import KeycloakError
+
 from src.app import app
 
 client = TestClient(app)

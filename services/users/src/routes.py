@@ -4,6 +4,7 @@ from typing import Optional
 
 from fastapi import APIRouter, HTTPException
 from keycloak.exceptions import KeycloakError, KeycloakPutError
+
 from src.keycloak_client import keycloak_admin
 from src.schemas import (ErrorResponse, UpdateResponse, UserListResponse,
                          UserStatisticsResponse, UserUpdateRequest)
