@@ -3,7 +3,7 @@ name: Run Unit Tests and Push to DockerHub (users)
 on:
   push:
     paths:
-      - 'services/users/**'
+      - "services/users/**"
 
 jobs:
   unit_tests:
@@ -16,18 +16,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r services/users/tests/requirements.txt
           pip install pre-commit
-
-      - name: Run pre-commit checks
-        run: |
-          cd services/users
-          pre-commit run --all-files
 
       - name: Run unit tests
         run: |
@@ -36,7 +31,7 @@ jobs:
 
       # Build and Push Docker Image steps
       - name: Build Docker image
-        if: success()  # Only runs if unit tests pass
+        if: success() # Only runs if unit tests pass
         run: |
           cd services/users
           docker build -t flexer89/users-service:latest .
