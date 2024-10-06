@@ -3,7 +3,7 @@ name: Run Unit Tests and Push to DockerHub (carts)
 on:
   push:
     paths:
-      - 'services/carts/**'
+      - "services/carts/**"
 
 jobs:
   unit_tests:
@@ -13,31 +13,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # - name: Set up Python
-      #   uses: actions/setup-python@v2
-      #   with:
-      #     python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.11"
 
-      # - name: Install dependencies
-      #   run: |
-      #     python -m pip install --upgrade pip
-      #     pip install -r services/carts/tests/requirements.txt
-      #     pip install mypy
-      #     pip install pre-commit
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r services/carts/tests/requirements.txt
+          pip install pre-commit
 
-      # - name: Run pre-commit checks
-      #   run: |
-      #     cd services/carts
-      #     pre-commit run --all-files
+      - name: Run pre-commit checks
+        run: |
+          cd services/carts
+          pre-commit run --all-files
 
-      # - name: Run unit tests
-      #   run: |
-      #     cd services/carts
-      #     ./scripts/test.sh
+      - name: Run unit tests
+        run: |
+          cd services/carts
+          ./scripts/test.sh
 
       # Build and Push Docker Image steps
       - name: Build Docker image
-        if: success()  # Only runs if unit tests pass
+        if: success() # Only runs if unit tests pass
         run: |
           cd services/carts
           docker build -t flexer89/carts-service:latest .
