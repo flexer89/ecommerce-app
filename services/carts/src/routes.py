@@ -5,7 +5,6 @@ from typing import Dict
 
 from fastapi import APIRouter, HTTPException
 from redis.asyncio import Redis
-
 from src.models import (CartItems, CartSchema, ErrorResponse,
                         RemoveItemRequest, StatusResponse)
 

@@ -3,7 +3,6 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy import asc, create_engine, desc
 from sqlalchemy.orm import Session, sessionmaker
-
 from src.models import Product
 from src.schemas import ProductCreate, ProductUpdate
 

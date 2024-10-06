@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine, func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
-
 from src.models import Order, OrderItem, StatusEnum
 
 load_dotenv()

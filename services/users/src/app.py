@@ -6,7 +6,6 @@ from typing import Any, Awaitable, Callable
 
 from fastapi import FastAPI, Request, Response
 from prometheus_fastapi_instrumentator import Instrumentator
-
 from src.routes import router
 
 logger = logging.getLogger(__name__)

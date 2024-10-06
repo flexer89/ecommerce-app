@@ -2,7 +2,6 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
 from src.app import app  # Assuming your FastAPI app is in src/main.py
 from src.models import Base, Product
 from src.routes import get_db
