@@ -4,7 +4,7 @@ from locust import HttpUser, between, task
 
 from keycloak import KeycloakAdmin, KeycloakOpenIDConnection
 
-KC_URL = "https://auth.jolszak.test"
+KC_URL = "http://keycloak:8080"
 KC_REALM = "jolszak"
 KC_CLIENT_ID = "python"
 KC_CLIENT_SECRET = "python-secret"

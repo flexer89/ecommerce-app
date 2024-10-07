@@ -4,7 +4,7 @@
 minikube delete
 
 # Start Minikube cluster
-minikube start --cpus 6 --memory 6144
+minikube start --cpus 10 --memory 7168
 
 # Add addons
 minikube addons enable metrics-server

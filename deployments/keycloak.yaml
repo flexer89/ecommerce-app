@@ -23,7 +23,7 @@ spec:
               containerPort: 8080
           args:
             - start
-            - --hostname=auth.jolszak.test
+            - --hostname=auth.jolszak.ovh
             - --http-enabled=true
             - --proxy-headers=xforwarded
             - --db-url-host=postgres

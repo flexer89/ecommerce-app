@@ -4,7 +4,7 @@ import getKeycloak from '../auth/keycloak';
 const keycloak = getKeycloak();
 
 const PaymentsServiceClient = axios.create({
-  baseURL: "https://jolszak.test/api/payments",
+  baseURL: "https://shop.jolszak.ovh/api/payments",
   timeout: 5020,
   headers: {
     'Accept': 'application/json',

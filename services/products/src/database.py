@@ -45,6 +45,8 @@ def get_products_list_db(
     sort_order: str,
 ):
     products = db.query(Product)
+    if not products.count():
+        return {"products": [], "total": 0, "max_price": 0}
     max_price = products.order_by(Product.price.desc()).first().price
 
     # Apply filters based on arabica and robusta

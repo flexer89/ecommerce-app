@@ -1,0 +1,2 @@
+kubectl create secret generic tunnel-credentials --from-file=credentials.json=/Users/olsza/.cloudflared/93eebdb4-63a7-471f-b992-8be2b653c6d8.json
+kubectl apply -f deployments/cloudflared.yml
