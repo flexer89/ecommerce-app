@@ -7,4 +7,4 @@ CONTAINER_NAME="users-service-unit-tests"
 DOCKERFILE_PATH="../tests/Dockerfile"
 
 docker build -t $IMAGE_NAME -f $DOCKERFILE_PATH ..
-docker run --rm --name $CONTAINER_NAME $IMAGE_NAME
+docker run --name $CONTAINER_NAME $IMAGE_NAME

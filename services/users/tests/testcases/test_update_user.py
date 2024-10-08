@@ -1,5 +1,5 @@
 from unittest.mock import MagicMock, patch
-
+import uuid
 import pytest
 from fastapi.testclient import TestClient
 from keycloak.exceptions import KeycloakPutError
@@ -9,7 +9,7 @@ client = TestClient(app)
 
 
 mock_user = {
-    "id": "test-user-id",
+    "id": "70e3b1e6-58d5-4460-b5c2-d2ac56df8ff9",
     "firstName": "John",
     "lastName": "Doe",
     "email": "john.doe@example.com",
@@ -50,7 +50,7 @@ def test_update_user_success():
         assert response.status_code == 200
         assert response.json() == {"detail": "User updated successfully"}
 
-        mock_get_user.assert_called_once_with(mock_user["id"])
+        mock_get_user.assert_called_once_with(uuid.UUID(mock_user["id"]))
         mock_update_user.assert_called_once()
 
 
@@ -61,12 +61,16 @@ def test_update_user_not_found():
         "src.keycloak_client.keycloak_admin.get_user", return_value=None
     ) as mock_get_user:
 
-        response = client.patch(f"/update/non-existent-user", json={})
+        response = client.patch(
+            f"/update/872a2f20-8873-4e47-ac70-b5562e26231f", json={}
+        )
 
         assert response.status_code == 404
         assert response.json() == {"detail": "User not found"}
 
-        mock_get_user.assert_called_once_with("non-existent-user")
+        mock_get_user.assert_called_once_with(
+            uuid.UUID("872a2f20-8873-4e47-ac70-b5562e26231f")
+        )
 
 
 def test_update_user_keycloak_error():
@@ -89,7 +93,7 @@ def test_update_user_keycloak_error():
         assert response.status_code == 400
         assert response.json() == {"detail": "Error updating user"}
 
-        mock_get_user.assert_called_once_with(mock_user["id"])
+        mock_get_user.assert_called_once_with(uuid.UUID(mock_user["id"]))
         mock_update_user.assert_called_once()
 
 

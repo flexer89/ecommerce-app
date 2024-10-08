@@ -1,5 +1,10 @@
 {
   "dependencies": {
     "keycloak-js": "^25.0.4"
-  }
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.2",
+    "@types/node": "^22.7.5"
+  },
+  "scripts": {}
 }

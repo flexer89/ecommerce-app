@@ -8,7 +8,7 @@ from src.app import app
 client = TestClient(app)
 
 mock_user = {
-    "id": "test-user-id",
+    "id": "70e3b1e6-58d5-4460-b5c2-d2ac56df8ff9",
     "username": "testuser",
     "email": "testuser@example.com",
     "firstName": "Test",
@@ -45,7 +45,7 @@ def test_get_user_not_found():
 
     with patch("src.keycloak_client.keycloak_admin.get_user", return_value=None):
 
-        response = client.get("/get/non-existent-user")
+        response = client.get("/get/872a2f20-8873-4e47-ac70-b5562e26231f")
 
         assert response.status_code == 404
         assert response.json() == {"detail": "User not found"}
