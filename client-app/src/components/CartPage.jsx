@@ -37,9 +37,11 @@ const CartPage = () => {
     fetchProductImages();
   }, [cart.items]);
 
-  const handleRemoveFromCart = async (id, grind, weight, quantity) => {
+  const handleRemoveFromCart = async (id, weight, quantity) => {
     // call update-quantity to update stock (if we remove from cart, we add to stock)
     // Create the items payload as expected by the API
+    // check if product is in cart
+
     const updateQuantityPayload = {
       items: [
         {
@@ -56,20 +58,102 @@ const CartPage = () => {
       toast.error('Nie udało się zaktualizować stanu magazynowego!', { autoClose: 3000 });
       return;
     }
-    removeItemFromCart(id, grind, weight, quantity);
+    removeItemFromCart(id, weight, quantity);
     toast.success(`Usunięto ${quantity} sztuk produktu z koszyka!`, { autoClose: 3000 });
   };
 
-  const handleAddToCart = (item) => {
-    // Call addItemToCart with the full item object, grind, and weight
-    addItemToCart(item, item.grind, item.weight);
-    toast.success(`Dodano 1 sztukę ${item.name} do koszyka!`, { autoClose: 3000 });
-  };
+const handleAddToCart = async (item) => {
+  try {
+    // Fetch the latest stock info before adding to the cart
+    const response = await ProductsServiceClient.get(`/getbyid/${item.id}`);
+    const productData = response.data;
 
-  const handleClearCart = (id, grind, weight) => {
-    removeItemFromCart(id, grind, weight, cart.items.find(item => item.id === id).quantity);
+    // Check if adding this item would exceed available stock
+    const cartItem = cart.items.find(
+      (cartItem) =>
+        cartItem.id === item.id &&
+        cartItem.weight === item.weight
+    );
+
+    const quantityInCart = cartItem ? cartItem.quantity : 0;
+    const newQuantity = quantityInCart + 1;
+
+    if (newQuantity > productData.stock) {
+      toast.error('Przekroczono dostępny stan magazynowy!', {
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      return;
+    }
+
+    // Add the item to the cart if the stock check passes
+    addItemToCart(item, item.weight);
+    toast.success(`Dodano 1 sztukę ${item.name} do koszyka!`, {
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  } catch (error) {
+    console.error('Error fetching product data:', error);
+    toast.error('Wystąpił błąd podczas dodawania do koszyka.', {
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
+};
+
+
+const handleClearCart = async (id, weight) => {
+  // Find the item in the cart to determine its quantity
+  const cartItem = cart.items.find(item => item.id === id && item.weight === weight);
+  const quantityToRemove = cartItem ? cartItem.quantity : 0;
+
+  if (quantityToRemove === 0) {
+    toast.error('Nie ma produktów do usunięcia.', { autoClose: 3000 });
+    return;
+  }
+
+  try {
+    // Create the payload to update the stock by adding back the removed quantity
+    const updateQuantityPayload = {
+      items: [
+        {
+          product_id: id,
+          quantity: weight === 500 ? -2 * quantityToRemove : -1 * quantityToRemove,
+        },
+      ],
+    };
+
+    // Make the API call to update the stock quantity
+    const response = await ProductsServiceClient.post(`/update-quantity`, updateQuantityPayload);
+
+    if (response.status !== 200) {
+      toast.error('Nie udało się zaktualizować stanu magazynowego!', { autoClose: 3000 });
+      return;
+    }
+
+    // Remove the item from the cart after the stock update
+    removeItemFromCart(id, weight, quantityToRemove);
     toast.success('Usunięto wszystkie produkty z koszyka!', { autoClose: 3000 });
-  };
+  } catch (error) {
+    console.error('Error updating stock when clearing cart:', error);
+    toast.error('Wystąpił błąd podczas usuwania produktów z koszyka.', {
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
+};
 
 
   const handleCheckout = () => {
@@ -90,8 +174,7 @@ const CartPage = () => {
         ) : (
           <div className="cart-items">
             {cartItemsWithImages.map((item) => (
-              // Use a composite key combining id, weight, and grind
-              <div key={`${item.id}-${item.weight}-${item.grind}`} className="cart-item">
+              <div key={`${item.id}-${item.weight}`} className="cart-item">
                 <div className="cart-item-details">
                   {item.image ? (
                     <img src={item.image} alt={item.name} className="cart-item-image" />
@@ -101,7 +184,6 @@ const CartPage = () => {
                   <div className="cart-item-details-text">
                     <h2>{item.name}</h2>
                     <p>{item.description}</p>
-                    <p>Stopień zmielenia: {item.grind}</p>
                     <p>Waga: {item.weight}g</p>
                     <p>Cena jednostkowa: {item.price.toFixed(2)} zł</p>
                     <p>Ilość: {item.quantity}</p>
@@ -109,9 +191,9 @@ const CartPage = () => {
                   </div>
                 </div>
                 <div className="cart-item-actions">
-                  <button onClick={() => handleRemoveFromCart(item.id, item.grind, item.weight, 1)}>Usuń 1</button>
+                  <button onClick={() => handleRemoveFromCart(item.id, item.weight, 1)}>Usuń 1</button>
                   <button onClick={() => handleAddToCart(item)}>Dodaj 1</button>
-                  <button onClick={() => handleClearCart(item.id, item.grind, item.weight)}>Usuń wszystkie</button>
+                  <button onClick={() => handleClearCart(item.id, item.weight)}>Usuń wszystkie</button>
                 </div>
               </div>
             ))}

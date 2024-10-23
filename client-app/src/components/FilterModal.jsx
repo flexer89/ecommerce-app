@@ -1,25 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Modal from './Modal';
+import ProductServiceClient from '../clients/ProductsService';
 
 const FilterModal = ({ onFilterChange, maxPrice = 0, isOpen, onClose }) => {
   const validMaxPrice = Number.isFinite(maxPrice) ? maxPrice : 0;
 
   const [localPriceRange, setLocalPriceRange] = useState([0, validMaxPrice]);
   const [localSearchText, setLocalSearchText] = useState('');
-  const [localCategory1, setLocalCategory1] = useState(false);
-  const [localCategory2, setLocalCategory2] = useState(false);
+  const [localCategory, setLocalCategory] = useState('');
+  const [availableCategories, setAvailableCategories] = useState([]);
 
   useEffect(() => {
     setLocalPriceRange([0, validMaxPrice]);
+    fetchCategories();
   }, [validMaxPrice]);
 
   const handleApplyFilters = () => {
     const appliedFilters = {
       priceRange: localPriceRange,
       search: localSearchText,
-      arabica: localCategory1,
-      robusta: localCategory2,
+      category: localCategory,
     };
     onFilterChange(appliedFilters);
     onClose(); // Close modal after applying filters
@@ -35,12 +36,19 @@ const FilterModal = ({ onFilterChange, maxPrice = 0, isOpen, onClose }) => {
     setLocalSearchText(e.target.value);
   };
 
-  const handleCategory1Change = (e) => {
-    setLocalCategory1(e.target.checked);
+  const handleCategory = (e) => {
+    setLocalCategory(e.target.value);
   };
 
-  const handleCategory2Change = (e) => {
-    setLocalCategory2(e.target.checked);
+  const fetchCategories = async () => {
+    try {
+      let categories = await ProductServiceClient.get('/categories');
+      categories = categories.data;
+      setAvailableCategories(Array.isArray(categories) ? categories : []);
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+      setAvailableCategories([]); // Fallback to an empty array on error
+    }
   };
 
   return (
@@ -54,7 +62,6 @@ const FilterModal = ({ onFilterChange, maxPrice = 0, isOpen, onClose }) => {
             placeholder="Wyszukaj"
           />
         </div>
-        {/* Price Range Slider */}
         <div className="filter-item">
           <label>Zakres cen:</label>
           <input
@@ -72,23 +79,20 @@ const FilterModal = ({ onFilterChange, maxPrice = 0, isOpen, onClose }) => {
         <div className="filter-item">
           <label>Kategoria</label>
           <div className="category-filter">
-            <input
-              type="checkbox"
-              checked={localCategory1}
-              onChange={handleCategory1Change}
-            />
-            Arabica
-            <input
-              type="checkbox"
-              checked={localCategory2}
-              onChange={handleCategory2Change}
-            />
-            Robusta
+            <select value={localCategory} onChange={handleCategory}>
+              <option value="">Wszystkie</option>
+              {availableCategories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
-        {/* Apply Filters Button */}
         <div className="filter-item">
-          <button className='our-mission-button' onClick={handleApplyFilters}>Zastosuj filtry</button>
+          <button className="our-mission-button" onClick={handleApplyFilters}>
+            Zastosuj filtry
+          </button>
         </div>
       </div>
     </Modal>

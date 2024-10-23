@@ -8,16 +8,16 @@ const Banner = () => (
       <ul className="banner-list">
         <li>
           <div className="banner-card banner-card-1 has-before hover:shine">
-            <p className="card-subtitle">Prażona z pasją, pita z radością</p>
-            <h2 className="h2 card-title">Odkryj naszą kawę</h2>
+            <p className="card-subtitle">Stworzone z pasją, dostarczone z zaangażowaniem</p>
+            <h2 className="h2 card-title">Odkryj naszą ofertę</h2>
             <a href="/products" className="btn btn-secondary">Sprawdź</a>
             <div className="has-bg-image" style={{ backgroundImage: `url(${banner1})` }}></div>
           </div>
         </li>
         <li>
           <div className="banner-card banner-card-2 has-before hover:shine">
-            <p className="card-subtitle">Teraz również wersja mielona.</p>
-            <h2 className="h2 card-title">Odkryj naszą kawę</h2>
+            <p className="card-subtitle">Idealne rozwiązania dla każdego.</p>
+            <h2 className="h2 card-title">Odkryj naszą ofertę</h2>
             <a href="/products" className="btn btn-secondary">Sprawdź</a>
             <div className="has-bg-image" style={{ backgroundImage: `url(${banner2})` }}></div>
           </div>

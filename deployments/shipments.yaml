@@ -20,6 +20,13 @@ spec:
           image: shipments
           ports:
             - containerPort: 5050
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "50m"
+            limits:
+              memory: "200Mi"
+              cpu: "150m"
 ---
 apiVersion: v1
 kind: Service
@@ -33,3 +40,23 @@ spec:
       protocol: TCP
       name: tcp-5050
       targetPort: 5050
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: shipments-hpa
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: shipments
+  minReplicas: 1
+  maxReplicas: 4
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70

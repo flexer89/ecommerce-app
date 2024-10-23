@@ -10,14 +10,14 @@ const Hero = () => {
     {
       id: 1,
       image: heroBanner1,
-      title: 'Prawdziwa kawa. <br /> Każde ziarno.',
-      text: 'Nasza kawa to autentyczny smak natury. Każda kropla to jakość i perfekcja w każdym ziarnie.'
+      title: 'Autentyczna jakość. <br /> Każdy produkt.',
+      text: 'Nasza oferta to połączenie pasji i najwyższej jakości. Odkryj różnorodność, która spełni Twoje oczekiwania.'
     },
     {
       id: 2,
       image: heroBanner2,
-      title: 'Prawdziwy smak. <br /> każda filiżanka.',
-      text: 'Esencja natury i pasja zamknięte w każdej kropli kawy. Delektuj się wyjątkowym smakiem i aromatem.'
+      title: 'Wyjątkowy wybór. <br /> Każde zamówienie.',
+      text: 'Dostarczamy starannie wyselekcjonowane produkty, które łączą w sobie tradycję i nowoczesność. Ciesz się wyjątkowym wyborem i jakością.'
     }
   ];
 

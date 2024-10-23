@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useMemo, useCall
 import CartServiceClient from '../clients/CartsService';
 import { useKeycloakAuth } from './KeycloakContext';
 import getKeycloak from '../auth/keycloak';
-import { v4 as uuidv4 } from 'uuid'; // Import the UUID library
+import { v4 as uuidv4 } from 'uuid';
 
 const CartContext = createContext();
 
@@ -53,7 +53,7 @@ export const CartProvider = ({ children }) => {
     }
   }, [cartId, fetchCart]);
 
-  const addItemToCart = async (product, grind, weight) => {
+  const addItemToCart = async (product, weight) => {
     let productPrice = parseFloat(product.price * (product.discount > 0 ? (1 - product.discount) : 1));
     if (weight === 500) {
       productPrice *= 2;
@@ -61,7 +61,6 @@ export const CartProvider = ({ children }) => {
 
     const itemToAdd = {
       ...product,
-      grind,
       weight,
       price: productPrice,
       quantity: 1,
@@ -77,9 +76,9 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const removeItemFromCart = async (productId, grind, weight, quantityToRemove) => {
+  const removeItemFromCart = async (productId, weight, quantityToRemove) => {
     const existingProduct = cart.items.find(
-      (item) => item.id === productId && item.grind === grind && item.weight === weight
+      (item) => item.id === productId && item.weight === weight
     );
     if (!existingProduct) return;
 
@@ -87,7 +86,6 @@ export const CartProvider = ({ children }) => {
       await CartServiceClient.post(`/remove/${cartId}`, {
         product_id: productId,
         quantity: quantityToRemove,
-        grind,
         weight,
       });
       fetchCart();

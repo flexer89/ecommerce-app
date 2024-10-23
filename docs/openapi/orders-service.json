@@ -593,10 +593,6 @@
                     "weight": {
                         "type": "number",
                         "title": "Weight"
-                    },
-                    "grind": {
-                        "type": "string",
-                        "title": "Grind"
                     }
                 },
                 "type": "object",
@@ -604,8 +600,7 @@
                     "id",
                     "quantity",
                     "price",
-                    "weight",
-                    "grind"
+                    "weight"
                 ],
                 "title": "OrderItem"
             },
@@ -627,10 +622,6 @@
                         "type": "number",
                         "title": "Weight"
                     },
-                    "grind": {
-                        "type": "string",
-                        "title": "Grind"
-                    },
                     "id": {
                         "type": "integer",
                         "title": "Id"
@@ -647,7 +638,6 @@
                     "quantity",
                     "price",
                     "weight",
-                    "grind",
                     "id",
                     "created_at"
                 ],

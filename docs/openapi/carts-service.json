@@ -229,10 +229,6 @@
                         "type": "number",
                         "title": "Discount"
                     },
-                    "grind": {
-                        "type": "string",
-                        "title": "Grind"
-                    },
                     "weight": {
                         "type": "number",
                         "title": "Weight"
@@ -248,7 +244,6 @@
                     "name",
                     "price",
                     "discount",
-                    "grind",
                     "weight",
                     "quantity"
                 ],
@@ -319,10 +314,6 @@
                         "type": "integer",
                         "title": "Quantity"
                     },
-                    "grind": {
-                        "type": "string",
-                        "title": "Grind"
-                    },
                     "weight": {
                         "type": "number",
                         "title": "Weight"
@@ -332,7 +323,6 @@
                 "required": [
                     "product_id",
                     "quantity",
-                    "grind",
                     "weight"
                 ],
                 "title": "RemoveItemRequest"

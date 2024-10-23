@@ -22,10 +22,8 @@ keycloak_connection = KeycloakOpenIDConnection(
 
 keycloak_admin = KeycloakAdmin(connection=keycloak_connection)
 
-
 def get_token():
     return keycloak_admin.token["access_token"]
-
 
 def create_test_user():
     """Simulates the creation of a test user"""
@@ -59,45 +57,42 @@ class UserBehavior(HttpUser):
         self.client.verify = False
         self.token = get_token()
         self.user_id = create_test_user()
-        self.email = keycloak_admin.get_user(self.user_id)["email"]
 
     def on_request(self, request, **kwargs):
         if request.url.startswith("/api"):
             self.token = get_token()
-
-    @task(10)
-    def get_user_data(self):
-        self.client.get(
-            f"/api/users/get/{self.user_id}", headers={"Authorization": f"{self.token}"}
+        
+    @task(3)
+    def create_shipment(self):
+        self.client.post(
+            "/api/shipments/create",
+            headers={"Authorization": f"{self.token}"},
+            json= {
+                "order_id": 1,
+                "user_id": self.user_id,
+                "shipment_address": "Plac Defilad 1",
+                "current_location": "Plac Defilad 1",
+                "status": "pending",
+                "company": "DPD",
+            }
         )
-
+        
     @task(5)
-    def search_users(self):
-        request_payload = {"search": self.email}
-        self.client.get(
-            "/api/users/get",
-            json=request_payload,
-            headers={"Authorization": f"{self.token}"},
-        )
-
+    def get_shipments_by_user(self):
+        self.client.get(f"/api/shipments/getbyuser/{self.user_id}", headers={"Authorization": f"{self.token}"})
+        
+    @task(5)
+    def get_shipments_by_order(self):
+        self.client.get(f"/api/shipments/getbyorder/1", headers={"Authorization": f"{self.token}"})
+        
     @task(1)
-    def update_user_data(self):
-        update_payload = {
-            "firstName": "Updated",
-            "lastName": "User",
-            "attributes": {
-                "phoneNumber": "987654321",
-                "Address": "Updated Address",
-                "City": "city",
-                "PostCode": "54-321",
-                "voivodeship": "śląskie",
-            },
-        }
+    def update_shipment(self):
         self.client.patch(
-            f"/api/users/update/{self.user_id}",
-            json=update_payload,
+            "/api/shipments/update/1",
             headers={"Authorization": f"{self.token}"},
+            json= {
+                "shipment_address": "Plac Defilad 1",
+                "current_location": "Plac Defilad 1",
+                "status": "delivered",
+            }
         )
-
-    def on_stop(self):
-        keycloak_admin.delete_user(self.user_id)

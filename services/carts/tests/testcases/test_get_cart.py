@@ -19,7 +19,7 @@ async def test_get_cart_success(mock_redis):
     cart_key = f"cart:{user_id}"
 
     cart_data = {
-        "1:500:fine": '{"id": 1, "name": "Product 1", "price": 10.0, "discount": 0.0, "grind": "fine", "weight": 250.0, "quantity": 4}'
+        "1:500:fine": '{"id": 1, "name": "Product 1", "price": 10.0, "discount": 0.0, "weight": 250.0, "quantity": 4}'
     }
     mock_redis.hgetall.return_value = cart_data
 
@@ -35,7 +35,6 @@ async def test_get_cart_success(mock_redis):
             "name": "Product 1",
             "price": 10.0,
             "discount": 0.0,
-            "grind": "fine",
             "weight": 250.0,
             "quantity": 4,
         },

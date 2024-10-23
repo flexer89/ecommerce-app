@@ -7,6 +7,7 @@ import OrderDetailModal from './OrderDetailModal';
 import { shipmentStatuses, orderStatusTranslationMap } from '../utils/utils';
 import '../assets/style/style.css';
 import ShipmentDetailModal from './ShipmentDetailModal';
+import { Switch, FormControlLabel } from '@mui/material';
 
 const UserProfileComponent = () => {
   const { userId } = useParams();
@@ -17,11 +18,14 @@ const UserProfileComponent = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isShipmentDetailModalOpen, setIsShipmentDetailModalOpen] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
 
   const fetchUserInfo = async () => {
     try {
       const response = await UserServiceClient.get(`/get/${userId}`);
       setUserInfo(response.data.users[0]);
+      // Assume that the user object contains a field `isBlocked` that indicates if the user is blocked
+      setIsEnabled(response.data.users[0].enabled);
     } catch (error) {
       console.error('Error fetching user info:', error);
     }
@@ -52,6 +56,22 @@ const UserProfileComponent = () => {
       fetchUserShipments();
     }
   }, [userId]);
+
+  const toggleBlockStatus = async () => {
+    try {
+      if (isEnabled) {
+        // Unblock the user
+        await UserServiceClient.post(`/block/${userId}`);
+        setIsEnabled(false);
+      } else {
+        // Block the user
+        await UserServiceClient.post(`/unblock/${userId}`);
+        setIsEnabled(true);
+      }
+    } catch (error) {
+      console.error('Error updating block status:', error);
+    }
+  };
 
   const openDetailModal = (order) => {
     setSelectedOrder(order);
@@ -87,6 +107,19 @@ const UserProfileComponent = () => {
           <p><strong>Nazwisko:</strong> {userInfo.lastName}</p>
           <p><strong>Numer Telefonu:</strong> {userInfo.attributes?.phoneNumber}</p>
           <p><strong>Adres:</strong> {userInfo.attributes?.Address}, {userInfo.attributes?.City}, {userInfo.attributes?.PostCode}</p>
+          <div className="user-block-status">
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={isEnabled}
+                  onChange={toggleBlockStatus}
+                  name="blockToggle"
+                  color="primary"
+                />
+              }
+              label={isEnabled ? 'Aktywny' : 'Zablokowany'}
+            />
+          </div>
         </div>
       ) : (
         <p>Ładowanie informacji o użytkowniku</p>

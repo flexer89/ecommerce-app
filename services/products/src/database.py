@@ -37,8 +37,7 @@ def get_products_list_db(
     limit: int,
     offset: int,
     search: str,
-    arabica: bool,
-    robusta: bool,
+    category: str,
     minPrice: float,
     maxPrice: float,
     sort_by: str,
@@ -47,11 +46,9 @@ def get_products_list_db(
     products = db.query(Product)
     max_price = products.order_by(Product.price.desc()).first().price
 
-    # Apply filters based on arabica and robusta
-    if arabica:
-        products = products.filter(Product.category == "arabica")
-    if robusta:
-        products = products.filter(Product.category == "robusta")
+    # Apply filters based on category
+    if category:
+        products = products.filter(Product.category == category)
 
     # Apply price range filters
     if minPrice:
@@ -137,3 +134,11 @@ def delete_product_db(db: Session, product_id: int):
         db.delete(db_product)
         db.commit()
     return db_product
+
+
+def get_categories_db(db: Session):
+    db_categories = db.query(Product.category).distinct().all()
+    response = []
+    for row in db_categories:
+        response.append(row[0])
+    return response

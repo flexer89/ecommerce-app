@@ -3,7 +3,7 @@ from enum import Enum
 from typing import List
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ErrorResponse(BaseModel):
@@ -25,10 +25,9 @@ class StatusEnum(str, Enum):
 
 class OrderItemBase(BaseModel):
     product_id: int
-    quantity: int
-    price: float
-    weight: float
-    grind: str
+    quantity: float = Field(..., gt=0, description="Quantity should be greater than 0")
+    price: float = Field(..., gt=0, description="Price should be greater than 0")
+    weight: float = Field(..., gt=0, description="Weight should be greater than 0")
 
 
 class OrderItemCreate(OrderItemBase):
@@ -37,16 +36,18 @@ class OrderItemCreate(OrderItemBase):
 
 class OrderItem(OrderItemBase):
     id: int
-    created_at: datetime
+    created_at: datetime = Field(..., description="Created at datetime")
 
     class Config:
         from_attributes = True
 
 
 class OrderBase(BaseModel):
-    user_id: UUID
-    total_price: float
-    status: StatusEnum
+    user_id: UUID = Field(..., description="The user ID, a UUID.")
+    total_price: float = Field(
+        ..., gt=0, description="Total price should be greater than 0"
+    )
+    status: StatusEnum = StatusEnum.pending
 
 
 class OrderCreate(OrderBase):
@@ -59,8 +60,8 @@ class OrderUpdateStatus(BaseModel):
 
 class Order(OrderBase):
     id: int
-    created_at: datetime
-    updated_at: datetime
+    created_at: datetime = Field(..., description="Created at datetime")
+    updated_at: datetime = Field(..., description="Updated at datetime")
     items: List[OrderItem]
 
     class Config:
@@ -68,25 +69,19 @@ class Order(OrderBase):
 
 
 class OrderTrendResponse(BaseModel):
-    month: str
-    total_orders: int
-    total_revenue: float
-
-
-class OrderTrendResponse(BaseModel):
-    month: str
-    total_orders: int
-    total_revenue: float
+    month: str = Field(..., description="Month of the year")
+    total_orders: int = Field(..., description="Total number of orders")
+    total_revenue: float = Field(..., description="Total revenue")
 
 
 class OrderStatusCountResponse(BaseModel):
     status: str
-    order_count: int
+    order_count: int = Field(..., ge=0, description="Order amount for the status")
 
 
 class Bestseller(BaseModel):
     product_id: int
-    order_count: int
+    order_count: int = Field(..., ge=0, description="Order amount for the product")
 
 
 class BestsellersResponse(BaseModel):
@@ -95,27 +90,30 @@ class BestsellersResponse(BaseModel):
 
 class OrderItem(BaseModel):
     id: int
-    quantity: int
-    price: float
-    weight: float
-    grind: str
+    quantity: int = Field(..., gt=0, description="Quantity should be greater than 0")
+    price: float = Field(..., gt=0, description="Price should be greater than 0")
+    weight: float = Field(..., gt=0, description="Weight should be greater than 0")
 
 
 class CreateOrderRequest(BaseModel):
-    user_id: UUID
+    user_id: UUID = Field(..., description="The user ID, a UUID.")
     items: List[OrderItem]
-    total_price: float
+    total_price: float = Field(
+        ..., gt=0, description="Total price should be greater than 0"
+    )
 
 
 class OrderResponse(BaseModel):
-    created_at: datetime
+    created_at: datetime = Field(..., description="Created at datetime")
     id: int
     status: StatusEnum
-    total_price: float
+    total_price: float = Field(
+        ..., gt=0, description="Total price should be greater than 0"
+    )
     updated_at: datetime
-    user_id: UUID
+    user_id: UUID = Field(..., description="The user ID, a UUID.")
 
 
 class GetOrdersResponse(BaseModel):
     orders: List[OrderResponse]
-    total: int
+    total: int = Field(..., ge=0, description="Total number of orders")

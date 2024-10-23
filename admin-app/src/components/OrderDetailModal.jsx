@@ -79,7 +79,6 @@ const OrderDetailModal = ({ order, onClose }) => {
                 <tr>
                   <th>Produkt</th>
                   <th>Waga</th>
-                  <th>Stopień zmielenia</th>
                   <th>Ilość</th>
                   <th>Cena za jednostkę</th>
                   <th>Cena całkowita</th>
@@ -90,7 +89,6 @@ const OrderDetailModal = ({ order, onClose }) => {
                   <tr key={item.id}>
                     <td>{productNames[item.product_id] || 'Loading...'}</td>
                     <td>{item.weight}g</td>
-                    <td>{item.grind}</td>
                     <td>{item.quantity}</td>
                     <td>{item.price.toFixed(2)} zł</td>
                     <td>{(item.price * item.quantity).toFixed(2)} zł</td>

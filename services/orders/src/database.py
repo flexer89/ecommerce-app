@@ -52,7 +52,6 @@ def create_order_db(db: Session, order_data: Dict):
                 product_id=item.id,
                 quantity=item.quantity,
                 price=item.price,
-                grind=item.grind,
                 weight=item.weight,
             )
             db.add(order_item)

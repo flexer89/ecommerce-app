@@ -9,9 +9,43 @@
       ],
       "method": "GET",
       "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        }
+      },
       "backend": [
         {
           "url_pattern": "/count",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://products-service:5000"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/products/categories",
+      "input_headers": [
+        "*"
+      ],
+      "method": "GET",
+      "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/categories",
           "encoding": "no-op",
           "sd": "static",
           "method": "GET",
@@ -42,6 +76,11 @@
         }
       ],
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -61,6 +100,13 @@
       ],
       "method": "GET",
       "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        }
+      },
       "backend": [
         {
           "url_pattern": "/get",
@@ -76,8 +122,7 @@
       "input_query_strings": [
         "limit",
         "offset",
-        "arabica",
-        "robusta",
+        "category",
         "minPrice",
         "maxPrice",
         "search",
@@ -92,6 +137,13 @@
       ],
       "method": "GET",
       "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        }
+      },
       "backend": [
         {
           "url_pattern": "/download/images",
@@ -115,6 +167,13 @@
       ],
       "method": "GET",
       "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        }
+      },
       "backend": [
         {
           "url_pattern": "/getbyid/{product_id}",
@@ -135,6 +194,13 @@
       ],
       "method": "GET",
       "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        }
+      },
       "backend": [
         {
           "url_pattern": "/download/bin/{product_id}",
@@ -168,6 +234,11 @@
         }
       ],
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -193,6 +264,11 @@
             "*"
           ],
           "allow_multipart_form_data": true
+        },
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
         },
         "auth/validator": {
           "alg": "RS256",
@@ -225,6 +301,13 @@
       ],
       "method": "POST",
       "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        }
+      },
       "backend": [
         {
           "url_pattern": "/update-quantity",
@@ -251,6 +334,11 @@
             "*"
           ],
           "allow_multipart_form_data": true
+        },
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
         },
         "auth/validator": {
           "alg": "RS256",
@@ -289,6 +377,11 @@
             "*"
           ],
           "allow_multipart_form_data": true
+        },
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
         },
         "auth/validator": {
           "alg": "RS256",
@@ -334,6 +427,11 @@
         "limit"
       ],
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -373,6 +471,11 @@
         "search"
       ],
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -405,6 +508,11 @@
         }
       ],
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -438,6 +546,11 @@
         }
       ],
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -471,6 +584,11 @@
         }
       ],
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -478,8 +596,7 @@
           "roles_key_is_nested": true,
           "roles_key": "realm_access.roles",
           "roles": [
-            "admin",
-            "client"
+            "admin"
           ]
         }
       }
@@ -491,6 +608,13 @@
         "*"
       ],
       "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        }
+      },
       "backend": [
         {
           "url_pattern": "/bestsellers",
@@ -529,6 +653,11 @@
         }
       ],
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -556,6 +685,11 @@
         }
       ],
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -589,6 +723,11 @@
         }
       ],
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -607,6 +746,11 @@
       "method": "GET",
       "output_encoding": "no-op",
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -637,6 +781,11 @@
       "method": "PATCH",
       "output_encoding": "no-op",
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -672,6 +821,11 @@
       "method": "GET",
       "output_encoding": "no-op",
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -704,6 +858,13 @@
         "*"
       ],
       "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        }
+      },
       "backend": [
         {
           "url_pattern": "/get",
@@ -754,6 +915,11 @@
         }
       ],
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -777,6 +943,11 @@
       "method": "GET",
       "output_encoding": "no-op",
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -803,12 +974,85 @@
       ]
     },
     {
+      "endpoint": "/api/users/block/{user_id}",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin"
+          ]
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/block/{user_id}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "POST",
+          "host": [
+            "http://users-service:5030"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/users/unblock/{user_id}",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
+          "disable_jwk_security": true,
+          "roles_key_is_nested": true,
+          "roles_key": "realm_access.roles",
+          "roles": [
+            "admin"
+          ]
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/unblock/{user_id}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "POST",
+          "host": [
+            "http://users-service:5030"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
       "endpoint": "/api/users/get",
       "method": "GET",
       "input_headers": [
         "*"
       ],
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -847,6 +1091,11 @@
         "*"
       ],
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -877,6 +1126,11 @@
       "method": "PATCH",
       "output_encoding": "no-op",
       "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        },
         "auth/validator": {
           "alg": "RS256",
           "jwk_url": "http://keycloak:8080/realms/jolszak/protocol/openid-connect/certs",
@@ -906,6 +1160,13 @@
       "endpoint": "/api/carts/get/{user_id}",
       "method": "GET",
       "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        }
+      },
       "backend": [
         {
           "url_pattern": "/get/{user_id}",
@@ -923,6 +1184,13 @@
       "endpoint": "/api/carts/delete/{user_id}",
       "method": "DELETE",
       "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        }
+      },
       "backend": [
         {
           "url_pattern": "/delete/{user_id}",
@@ -940,6 +1208,13 @@
       "endpoint": "/api/carts/add/{user_id}",
       "method": "POST",
       "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        }
+      },
       "backend": [
         {
           "url_pattern": "/add/{user_id}",
@@ -957,6 +1232,13 @@
       "endpoint": "/api/carts/remove/{user_id}",
       "method": "POST",
       "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "every": "1s",
+          "client_max_rate": 10,
+          "strategy": "ip"
+        }
+      },
       "backend": [
         {
           "url_pattern": "/remove/{user_id}",
@@ -1015,6 +1297,17 @@
     "security/bot-detector": {
       "empty_user_agent_is_bot": true,
       "cache_size": 10000
+    },
+    "telemetry/logging": {
+      "level": "INFO",
+      "prefix": "[KRAKEND]",
+      "syslog": false,
+      "stdout": true,
+      "format": "default",
+      "syslog_facility": "local3"
+    },
+    "telemetry/logstash": {
+      "enabled": false
     }
   }
 }

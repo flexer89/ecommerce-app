@@ -41,8 +41,7 @@ const fetchProducts = async () => {
 
     // Only include filters in params if they have a value
     if (filters.search) params.search = filters.search;
-    if (filters.arabica) params.arabica = filters.arabica;
-    if (filters.robusta) params.robusta = filters.robusta;
+    if (filters.category) params.category = filters.category;
     if (filters.priceRange) {
       if (filters.priceRange[0] !== undefined) params.minPrice = filters.priceRange[0];
       if (filters.priceRange[1] !== undefined) params.maxPrice = filters.priceRange[1];

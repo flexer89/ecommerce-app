@@ -43,7 +43,6 @@ def test_update_order_success(mock_db_session, mock_update_order_status_db):
                 "weight": 0.0,
                 "id": 0,
                 "created_at": "2024-10-04T17:25:29.413458",
-                "grind": "string",
             }
         ],
     }

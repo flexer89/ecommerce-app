@@ -140,7 +140,6 @@ const CheckoutPage = () => {
         quantity: item.quantity,
         price: item.price,
         weight: item.weight,
-        grind: item.grind,
       }));
 
       const orderResponse = await OrderServiceClient.post('/create', {

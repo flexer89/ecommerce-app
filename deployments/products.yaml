@@ -20,6 +20,13 @@ spec:
           image: products
           ports:
             - containerPort: 5000
+          resources:
+            requests:
+              memory: "120Mi"
+              cpu: "80m"
+            limits:
+              memory: "300Mi"
+              cpu: "200m"
 ---
 apiVersion: v1
 kind: Service
@@ -33,3 +40,23 @@ spec:
       protocol: TCP
       name: tcp-5000
       targetPort: 5000
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: products-hpa
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: products
+  minReplicas: 1
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70

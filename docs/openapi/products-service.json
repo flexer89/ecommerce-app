@@ -125,7 +125,7 @@
         "/get": {
             "get": {
                 "summary": "Read Products",
-                "description": "Retrieve a paginated list of products with optional filtering by `arabica`, `robusta`, `minPrice`, `maxPrice`, and search by product name.",
+                "description": "Retrieve a paginated list of products with optional filtering by `category`, `minPrice`, `maxPrice`, and search by product name.",
                 "operationId": "read_products_get_get",
                 "parameters": [
                     {
@@ -156,23 +156,12 @@
                         }
                     },
                     {
-                        "name": "arabica",
+                        "name": "category",
                         "in": "query",
                         "required": false,
                         "schema": {
-                            "type": "boolean",
-                            "default": false,
-                            "title": "Arabica"
-                        }
-                    },
-                    {
-                        "name": "robusta",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean",
-                            "default": false,
-                            "title": "Robusta"
+                            "type": "string",
+                            "title": "Category"
                         }
                     },
                     {
@@ -643,6 +632,29 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/categories": {
+            "get": {
+                "summary": "Get Categories",
+                "description": "Retrieve all available categories for products.",
+                "operationId": "get_categories_categories_get",
+                "responses": {
+                    "200": {
+                        "description": "Categories retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Categories Categories Get"
                                 }
                             }
                         }

@@ -79,7 +79,7 @@ async def add_to_cart(user_id: uuid.UUID, cart: CartItems) -> Dict[str, str]:
                 status_code=400, detail=f"Invalid item attributes for product {item.id}"
             )
 
-        item_key = f"{item.id}:{item.weight}:{item.grind}"
+        item_key = f"{item.id}:{item.weight}"
         if item_key in existing_cart_items:
             existing_cart_items[item_key]["quantity"] += item.quantity
             logger.info(
@@ -118,7 +118,7 @@ async def remove_from_cart(
         logger.warning(f"Cart not found for user_id={user_id}")
         raise HTTPException(status_code=404, detail="Cart not found")
 
-    product_key = f"{remove_request.product_id}:{int(remove_request.weight)}:{remove_request.grind}"
+    product_key = f"{remove_request.product_id}:{remove_request.weight}"
     quantity = remove_request.quantity
 
     if product_key in existing_cart:

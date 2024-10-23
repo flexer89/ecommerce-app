@@ -22,10 +22,8 @@ keycloak_connection = KeycloakOpenIDConnection(
 
 keycloak_admin = KeycloakAdmin(connection=keycloak_connection)
 
-
 def get_token():
     return keycloak_admin.token["access_token"]
-
 
 def create_test_user():
     """Simulates the creation of a test user"""
@@ -59,45 +57,37 @@ class UserBehavior(HttpUser):
         self.client.verify = False
         self.token = get_token()
         self.user_id = create_test_user()
-        self.email = keycloak_admin.get_user(self.user_id)["email"]
 
     def on_request(self, request, **kwargs):
         if request.url.startswith("/api"):
             self.token = get_token()
 
-    @task(10)
-    def get_user_data(self):
-        self.client.get(
-            f"/api/users/get/{self.user_id}", headers={"Authorization": f"{self.token}"}
-        )
+    @task(5)
+    def get_user_orders(self):
+        self.client.get(f"/api/orders/getbyuser/{self.user_id}", headers={"Authorization": f"{self.token}"})
 
     @task(5)
-    def search_users(self):
-        request_payload = {"search": self.email}
-        self.client.get(
-            "/api/users/get",
-            json=request_payload,
+    def create_order(self):
+        self.client.post(
+            "/api/orders/create",
             headers={"Authorization": f"{self.token}"},
+            json= {
+                "user_id": self.user_id,
+                "items": [
+                    {"id": 1, "quantity": 2, "price": 50.0, "weight": 500},
+                    {"id": 2, "quantity": 1, "price": 50.0, "weight": 500},
+                ],
+                "total_price": 100.0,
+            }
         )
-
-    @task(1)
-    def update_user_data(self):
-        update_payload = {
-            "firstName": "Updated",
-            "lastName": "User",
-            "attributes": {
-                "phoneNumber": "987654321",
-                "Address": "Updated Address",
-                "City": "city",
-                "PostCode": "54-321",
-                "voivodeship": "śląskie",
-            },
-        }
-        self.client.patch(
-            f"/api/users/update/{self.user_id}",
-            json=update_payload,
-            headers={"Authorization": f"{self.token}"},
-        )
-
+        
+    @task(2)
+    def get_order_by_id(self):
+        self.client.get(f"/api/orders/get/1", headers={"Authorization": f"{self.token}"})
+        
+    @task(10)
+    def get_bestsellers(self):
+        self.client.get("/api/orders/bestsellers", headers={"Authorization": f"{self.token}"})
+    
     def on_stop(self):
         keycloak_admin.delete_user(self.user_id)

@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, timedelta
 from typing import Optional
-
+from logging import getLogger
 from fastapi import APIRouter, HTTPException
 from keycloak.exceptions import KeycloakError, KeycloakPutError
 from src.keycloak_client import keycloak_admin
@@ -14,6 +14,7 @@ from src.schemas import (
 )
 
 router = APIRouter()
+logger = getLogger(__name__)
 
 
 @router.get(
@@ -46,6 +47,7 @@ def get_user_data(user_id: uuid.UUID):
             "firstName": user.get("firstName"),
             "lastName": user.get("lastName"),
             "attributes": attributes,
+            "enabled": user.get("enabled"),
         }
 
         return {
@@ -168,6 +170,7 @@ def get_user_data(
                     "email": user.get("email"),
                     "firstName": user.get("firstName"),
                     "lastName": user.get("lastName"),
+                    "enabled": user.get("enabled"),
                     "attributes": attributes,
                 }
             )
@@ -237,3 +240,70 @@ def get_user_statistics():
         raise HTTPException(
             status_code=400, detail="Bad request - invalid parameters or failed request"
         )
+
+
+@router.post(
+    "/block/{user_id}",
+    summary="Block a user",
+    response_model=ErrorResponse,
+    description="Disables the specified user account in Keycloak, effectively blocking their access to the system.",
+    responses={
+        200: {
+            "description": "User blocked successfully",
+            "content": {
+                "application/json": {"example": {"detail": "User blocked successfully"}}
+            },
+        },
+        400: {
+            "description": "Bad request - error blocking user",
+            "content": {
+                "application/json": {"example": {"detail": "Error blocking user"}}
+            },
+        },
+    },
+)
+def block_user(user_id: uuid.UUID):
+
+    try:
+        keycloak_admin.update_user(user_id, {"enabled": False})
+        return {"detail": "User blocked successfully"}
+    except KeycloakPutError:
+        logger.error(f"Error blocking user with user_id={user_id}")
+        raise HTTPException(status_code=400, detail="Error blocking user")
+    except Exception as e:
+        logger.error(f"Unexpected error blocking user with user_id={user_id}: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+
+@router.post(
+    "/unblock/{user_id}",
+    summary="Unblock a user",
+    response_model=ErrorResponse,
+    description="Enables the specified user account in Keycloak, allowing them to regain access to the system.",
+    responses={
+        200: {
+            "description": "User unblocked successfully",
+            "content": {
+                "application/json": {
+                    "example": {"detail": "User unblocked successfully"}
+                }
+            },
+        },
+        400: {
+            "description": "Bad request - error unblocking user",
+            "content": {
+                "application/json": {"example": {"detail": "Error unblocking user"}}
+            },
+        },
+    },
+)
+def unblock_user(user_id: uuid.UUID):
+    try:
+        keycloak_admin.update_user(user_id, {"enabled": True})
+        return {"detail": "User unblocked successfully"}
+    except KeycloakPutError:
+        logger.error(f"Error unblocking user with user_id={user_id}")
+        raise HTTPException(status_code=400, detail="Error unblocking user")
+    except Exception as e:
+        logger.error(f"Unexpected error unblocking user with user_id={user_id}: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")

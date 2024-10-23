@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IonIcon } from '@ionic/react';
 import { Link, useNavigate } from 'react-router-dom';
-import { personOutline, bagHandleOutline } from 'ionicons/icons';
+import { personOutline } from 'ionicons/icons';
 import { useKeycloakAuth } from '../contexts/KeycloakContext';
 import '../assets/style/style.css';
 import logo from '../assets/images/logo-brown-admin.png';
@@ -41,7 +41,7 @@ const Header = () => {
             <span className="line line-3"></span>
           </button>
           <Link to="/statistics" className="btn-link">
-            <img src={logo} width="179" height="26" alt="Glowing" />
+            <img src={logo} width="179" height="26" />
           </Link>
           <nav className="navbar">
             <ul className="navbar-list">

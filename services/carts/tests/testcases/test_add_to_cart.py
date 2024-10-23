@@ -29,7 +29,6 @@ async def test_add_to_cart_success(mock_redis):
                 "price": 10.0,
                 "quantity": 2,
                 "weight": 500,
-                "grind": "fine",
                 "discount": 0.0,
             },
             {
@@ -38,7 +37,6 @@ async def test_add_to_cart_success(mock_redis):
                 "price": 20.0,
                 "quantity": 1,
                 "weight": 250,
-                "grind": "medium",
                 "discount": 0.0,
             },
         ]
@@ -64,7 +62,6 @@ async def test_add_to_cart_update_existing_item(mock_redis):
                 "price": 10.0,
                 "quantity": 2,
                 "weight": 500,
-                "grind": "fine",
                 "discount": 0.0,
             }
         )
@@ -79,7 +76,6 @@ async def test_add_to_cart_update_existing_item(mock_redis):
                 "price": 10.0,
                 "quantity": 2,
                 "weight": 500,
-                "grind": "fine",
                 "discount": 0.0,
             }
         ]
@@ -106,7 +102,6 @@ async def test_add_to_cart_invalid_item(mock_redis):
                 "price": -10.0,
                 "quantity": 2,
                 "weight": 500,
-                "grind": "fine",
                 "discount": 0.0,
             }
         ]
@@ -134,7 +129,6 @@ async def test_add_to_cart_no_cart_found(mock_redis):
                 "price": 10.0,
                 "quantity": 2,
                 "weight": 500,
-                "grind": "fine",
                 "discount": 0.0,
             }
         ]

@@ -78,10 +78,9 @@ def main():
             print(f"item_total: {item_total}")
             total_price += item_total
             print(f"total_price: {total_price}")
-            grind = random.choice(["Całe ziarna", "Grubo mielone", "Mocno zmielone"])
 
             print(
-                f"Creating order for user: {user_id}, item: {item['id']}, quantity: {quantity}, price: {price}, weight: {weight}, grind: {grind}"
+                f"Creating order for user: {user_id}, item: {item['id']}, quantity: {quantity}, price: {price}, weight: {weight}"
             )
             items_to_insert.append(
                 {
@@ -89,7 +88,6 @@ def main():
                     "quantity": quantity,
                     "price": price,
                     "weight": weight,
-                    "grind": grind,
                 }
             )
         # create order

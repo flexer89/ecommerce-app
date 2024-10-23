@@ -81,14 +81,13 @@ def read_product(product_id: int, db: Session = Depends(get_db)):
             "description": "No products found with the specified filters",
         },
     },
-    description="Retrieve a paginated list of products with optional filtering by `arabica`, `robusta`, `minPrice`, `maxPrice`, and search by product name.",
+    description="Retrieve a paginated list of products with optional filtering by `category`, `minPrice`, `maxPrice`, and search by product name.",
 )
 def read_products(
     limit: int,
     offset: int,
     search: str = None,
-    arabica: bool = False,
-    robusta: bool = False,
+    category: str = None,
     minPrice=None,
     maxPrice=None,
     sort_by: str = "",
@@ -103,8 +102,7 @@ def read_products(
         limit=limit,
         offset=offset,
         search=search,
-        arabica=arabica,
-        robusta=robusta,
+        category=category,
         minPrice=minPrice,
         maxPrice=maxPrice,
         sort_by=sort_by,
@@ -431,3 +429,16 @@ async def update_quantity_endpoint(
     db.commit()
     logger.info("Product quantities updated successfully")
     return {"status": "success", "message": "Quantities updated successfully"}
+
+
+@router.get(
+    "/categories",
+    response_model=list[str],
+    responses={200: {"description": "Categories retrieved successfully"}},
+    description="Retrieve all available categories for products.",
+)
+def get_categories(db: Session = Depends(get_db)):
+    logger.info("Request to retrieve all categories")
+    categories = get_categories_db(db)
+    logger.info("Categories retrieved successfully")
+    return categories

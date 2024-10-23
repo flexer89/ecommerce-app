@@ -24,7 +24,7 @@ const ProceedPaymentPage = () => {
         const paymentIntentResponse = await PaymentsServiceClient.post("/create-payment-intent", {
           user_id: keycloak.subject,
           order_id: location.state.orderId,
-          total: cart.total + 9.99, // Add delivery fee
+          total: cart.total > 200 ? cart.total : cart.total + 9.99,
         });
 
         const paymentData = paymentIntentResponse.data;

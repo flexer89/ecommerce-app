@@ -41,7 +41,6 @@ def test_read_order_success(mock_db_session, mock_get_order_db):
                 "weight": 0.0,
                 "id": 0,
                 "created_at": "2024-10-04T17:25:29.413458",
-                "grind": "string",
             }
         ],
     }

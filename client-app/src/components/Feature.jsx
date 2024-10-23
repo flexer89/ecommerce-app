@@ -17,12 +17,12 @@ const Feature = () => {
                 width="204"
                 height="236"
                 loading="lazy"
-                alt="Guaranteed PURE"
+                alt="Innowacyjne podejście"
                 className="card-icon"
               />
-              <h3 className="h3 card-title">Innowacyjne Metody</h3>
+              <h3 className="h3 card-title">Innowacyjne Podejście</h3>
               <p className="card-text">
-              Stale poszukujemy nowych, innowacyjnych metod obróbki i parzenia kawy, aby dostarczać Ci najlepsze doznania smakowe.
+                Stale poszukujemy nowych, innowacyjnych metod produkcji i dystrybucji, aby dostarczać Ci produkty najwyższej jakości.
               </p>
             </div>
           </li>
@@ -33,12 +33,12 @@ const Feature = () => {
                 width="204"
                 height="236"
                 loading="lazy"
-                alt="Completely Cruelty-Free"
+                alt="Szybka Dostawa"
                 className="card-icon"
               />
               <h3 className="h3 card-title">Szybka Dostawa</h3>
               <p className="card-text">
-              Zapewniamy szybką i niezawodną dostawę, abyś mógł cieszyć się świeżą kawą bez żadnych opóźnień.
+                Zapewniamy szybką i niezawodną dostawę, abyś mógł cieszyć się naszymi produktami bez zbędnych opóźnień.
               </p>
             </div>
           </li>
@@ -49,12 +49,12 @@ const Feature = () => {
                 width="204"
                 height="236"
                 loading="lazy"
-                alt="Ingredient Sourcing"
+                alt="Szeroki Asortyment"
                 className="card-icon"
               />
-              <h3 className="h3 card-title">Bogata Oferta</h3>
+              <h3 className="h3 card-title">Szeroki Asortyment</h3>
               <p className="card-text">
-              Oferujemy szeroki wybór kaw, od klasycznych po ekskluzywne mieszanki, aby każdy miłośnik kawy znalazł coś dla siebie.
+                Oferujemy bogaty wybór produktów, które spełnią potrzeby nawet najbardziej wymagających klientów.
               </p>
             </div>
           </li>

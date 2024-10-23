@@ -31,8 +31,8 @@ def test_create_order_success(mock_db_session, mock_create_order_db):
     order_data = {
         "user_id": "c8940d5e-2fa4-4f10-a3e8-1eb4d05876a1",
         "items": [
-            {"id": 1, "quantity": 2, "price": 50, "weight": 500, "grind": "medium"},
-            {"id": 2, "quantity": 1, "price": 50, "weight": 500, "grind": "medium"},
+            {"id": 1, "quantity": 2, "price": 50, "weight": 500},
+            {"id": 2, "quantity": 1, "price": 50, "weight": 500},
         ],
         "total_price": 100.0,
     }
@@ -50,8 +50,8 @@ def test_create_order_db_error(mock_db_session, mock_create_order_db):
     order_data = {
         "user_id": "c8940d5e-2fa4-4f10-a3e8-1eb4d05876a1",
         "items": [
-            {"id": 1, "quantity": 2, "price": 50.0, "weight": 500, "grind": "medium"},
-            {"id": 2, "quantity": 1, "price": 50.0, "weight": 500, "grind": "medium"},
+            {"id": 1, "quantity": 2, "price": 50.0, "weight": 500},
+            {"id": 2, "quantity": 1, "price": 50.0, "weight": 500},
         ],
         "total_price": 100.0,
     }
