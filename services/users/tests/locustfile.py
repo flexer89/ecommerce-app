@@ -68,7 +68,8 @@ class UserBehavior(HttpUser):
     @task(10)
     def get_user_data(self):
         self.client.get(
-            f"/api/users/get/{self.user_id}", headers={"Authorization": f"{self.token}"}
+            f"/api/users/get/{self.user_id}",
+            headers={"Authorization": f"{self.token}"},
         )
 
     @task(5)

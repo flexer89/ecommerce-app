@@ -24,7 +24,10 @@ voivodeships = [
 
 class UserAttributes(BaseModel):
     phoneNumber: str = Field(
-        None, min_length=9, max_length=9, description="The phone number, 9 characters."
+        None,
+        min_length=9,
+        max_length=9,
+        description="The phone number, 9 characters.",
     )
     Address: str = Field(
         None,
@@ -39,7 +42,10 @@ class UserAttributes(BaseModel):
         description="The city, between 1 and 100 characters.",
     )
     PostCode: str = Field(
-        None, min_length=6, max_length=6, description="The post code, 6 characters."
+        None,
+        min_length=6,
+        max_length=6,
+        description="The post code, 6 characters.",
     )
     voivodeship: str = Field(None, description="The voivodeship.")
 
@@ -86,7 +92,10 @@ class ErrorResponse(BaseModel):
 
 class UserUpdateRequestAttributes(BaseModel):
     phoneNumber: Optional[str] = Field(
-        None, min_length=9, max_length=9, description="The phone number, 9 characters."
+        None,
+        min_length=9,
+        max_length=9,
+        description="The phone number, 9 characters.",
     )
     Address: Optional[str] = Field(
         None,
@@ -101,7 +110,10 @@ class UserUpdateRequestAttributes(BaseModel):
         description="The city, between 1 and 100 characters.",
     )
     PostCode: Optional[str] = Field(
-        None, min_length=6, max_length=6, description="The post code, 6 characters."
+        None,
+        min_length=6,
+        max_length=6,
+        description="The post code, 6 characters.",
     )
     voivodeship: Optional[str] = Field(None, description="The voivodeship.")
 

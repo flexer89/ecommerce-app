@@ -24,7 +24,9 @@ def mock_get_shipment_by_user_id_db():
         yield mock
 
 
-def test_get_shipment_by_user_success(mock_db_session, mock_get_shipment_by_user_id_db):
+def test_get_shipment_by_user_success(
+    mock_db_session, mock_get_shipment_by_user_id_db
+):
     shipment_response = [
         {
             "id": 0,
@@ -47,7 +49,9 @@ def test_get_shipment_by_user_success(mock_db_session, mock_get_shipment_by_user
     mock_get_shipment_by_user_id_db.assert_called_once()
 
 
-def test_get_shipment_by_user_fail(mock_db_session, mock_get_shipment_by_user_id_db):
+def test_get_shipment_by_user_fail(
+    mock_db_session, mock_get_shipment_by_user_id_db
+):
     shipment_response = None
 
     mock_get_shipment_by_user_id_db.return_value = shipment_response

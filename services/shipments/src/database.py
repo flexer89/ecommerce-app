@@ -17,9 +17,7 @@ DATABASE_NAME = os.getenv("DATABASE_NAME")
 if os.getenv("ENV") == "test":
     DATABASE_URL = "sqlite:///./test.db"
 else:
-    DATABASE_URL = (
-        f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@shipments-db/{DATABASE_NAME}"
-    )
+    DATABASE_URL = f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@shipments-db/{DATABASE_NAME}"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -33,7 +31,9 @@ def create_shipment_db(db: Session, shipment: ShipmentCreate):
     return db_shipment
 
 
-def update_shipment_db(db: Session, shipment_id: int, shipment: ShipmentUpdate):
+def update_shipment_db(
+    db: Session, shipment_id: int, shipment: ShipmentUpdate
+):
     db_shipment = db.query(Shipment).filter(Shipment.id == shipment_id).first()
     if db_shipment:
         update_data = shipment.dict(exclude_unset=True)

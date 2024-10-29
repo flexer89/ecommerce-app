@@ -20,7 +20,7 @@ mock_user = {
         "PostCode": ["12-345"],
         "voivodeship": ["małopolskie"],
     },
-    "enabled": 1
+    "enabled": 1,
 }
 
 
@@ -102,10 +102,13 @@ def test_update_user_invalid_payload():
     """Test with invalid request payload."""
 
     with patch(
-        "src.keycloak_client.keycloak_admin.update_user", return_value=mock_user
+        "src.keycloak_client.keycloak_admin.update_user",
+        return_value=mock_user,
     ) as mock_get_user:
         invalid_payload = {"firstName": 123}
 
-        response = client.patch(f"/update/{mock_user['id']}", json=invalid_payload)
+        response = client.patch(
+            f"/update/{mock_user['id']}", json=invalid_payload
+        )
 
         assert response.status_code == 422

@@ -69,7 +69,9 @@ def test_update_shipment_fail(mock_db_session, mock_update_shipment_db):
     mock_update_shipment_db.assert_called_once()
 
 
-def test_update_shipment_malformed_request(mock_db_session, mock_update_shipment_db):
+def test_update_shipment_malformed_request(
+    mock_db_session, mock_update_shipment_db
+):
     shipment_data = {
         "shipment_address": 123,
         "current_location": "string",

@@ -9,7 +9,9 @@ from src.routes import get_db
 # Create a test database
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+TestingSessionLocal = sessionmaker(
+    autocommit=False, autoflush=False, bind=engine
+)
 
 
 # Override the get_db dependency to use the test database
@@ -50,7 +52,10 @@ def setup_database():
 
 def test_update_quantity_success(setup_database):
     request_data = {
-        "items": [{"product_id": 1, "quantity": 3}, {"product_id": 2, "quantity": 2}]
+        "items": [
+            {"product_id": 1, "quantity": 3},
+            {"product_id": 2, "quantity": 2},
+        ]
     }
     response = client.post("/update-quantity", json=request_data)
     assert response.status_code == 200
@@ -73,7 +78,8 @@ def test_update_quantity_insufficient_stock(setup_database):
     response = client.post("/update-quantity", json=request_data)
     assert response.status_code == 400
     assert (
-        "Insufficient quantity for the following products" in response.json()["detail"]
+        "Insufficient quantity for the following products"
+        in response.json()["detail"]
     )
 
 

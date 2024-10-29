@@ -31,7 +31,9 @@ def mock_get_shipments_count():
 
 
 def test_get_shipment_count_success(
-    mock_db_session, mock_get_all_shipments_db_paginated, mock_get_shipments_count
+    mock_db_session,
+    mock_get_all_shipments_db_paginated,
+    mock_get_shipments_count,
 ):
     mock_get_shipments_count.return_value = 1
     mock_get_all_shipments_response = [
@@ -47,10 +49,15 @@ def test_get_shipment_count_success(
             "company": "string",
         }
     ]
-    mock_get_all_shipments_db_paginated.return_value = mock_get_all_shipments_response
+    mock_get_all_shipments_db_paginated.return_value = (
+        mock_get_all_shipments_response
+    )
     response = client.get("/get")
 
     assert response.status_code == 200
-    assert response.json() == {"total": 1, "shipments": mock_get_all_shipments_response}
+    assert response.json() == {
+        "total": 1,
+        "shipments": mock_get_all_shipments_response,
+    }
     mock_get_shipments_count.assert_called_once()
     mock_get_all_shipments_db_paginated.assert_called_once()

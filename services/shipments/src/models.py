@@ -24,5 +24,7 @@ class Shipment(Base):
     current_location = Column(String, nullable=False)
     shipment_date = Column(TIMESTAMP, default=datetime.utcnow)
     delivery_date = Column(TIMESTAMP, default=datetime.utcnow)
-    status = Column(Enum(ShipmentStatusEnum), default=ShipmentStatusEnum.pending)
+    status = Column(
+        Enum(ShipmentStatusEnum), default=ShipmentStatusEnum.pending
+    )
     company = Column(String, nullable=False)

@@ -20,14 +20,16 @@ mock_user = {
         "PostCode": ["12-345"],
         "voivodeship": ["małopolskie"],
     },
-    "enabled": 1
+    "enabled": 1,
 }
 
 
 def test_get_user_success():
     """Test successful retrieval of user data."""
 
-    with patch("src.keycloak_client.keycloak_admin.get_user", return_value=mock_user):
+    with patch(
+        "src.keycloak_client.keycloak_admin.get_user", return_value=mock_user
+    ):
 
         response = client.get(f"/get/{mock_user['id']}")
 
@@ -38,13 +40,18 @@ def test_get_user_success():
         assert json_response["users"][0]["id"] == mock_user["id"]
         assert json_response["users"][0]["email"] == mock_user["email"]
         assert json_response["users"][0]["firstName"] == mock_user["firstName"]
-        assert json_response["users"][0]["attributes"]["phoneNumber"] == "123456789"
+        assert (
+            json_response["users"][0]["attributes"]["phoneNumber"]
+            == "123456789"
+        )
 
 
 def test_get_user_not_found():
     """Test the scenario where the user is not found."""
 
-    with patch("src.keycloak_client.keycloak_admin.get_user", return_value=None):
+    with patch(
+        "src.keycloak_client.keycloak_admin.get_user", return_value=None
+    ):
 
         response = client.get("/get/872a2f20-8873-4e47-ac70-b5562e26231f")
 
@@ -56,7 +63,8 @@ def test_get_user_internal_server_error():
     """Test internal server error during user retrieval."""
 
     with patch(
-        "src.keycloak_client.keycloak_admin.get_user", side_effect=KeycloakError
+        "src.keycloak_client.keycloak_admin.get_user",
+        side_effect=KeycloakError,
     ):
 
         response = client.get(f"/get/{mock_user['id']}")

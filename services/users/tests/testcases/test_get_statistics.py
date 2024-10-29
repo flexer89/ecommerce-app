@@ -52,8 +52,11 @@ total_users_mock = 100
 def test_get_user_statistics_success():
     """Test successful retrieval of user statistics."""
 
-    with patch("src.keycloak_client.keycloak_admin.get_users") as mock_get_users, patch(
-        "src.keycloak_client.keycloak_admin.users_count", return_value=total_users_mock
+    with patch(
+        "src.keycloak_client.keycloak_admin.get_users"
+    ) as mock_get_users, patch(
+        "src.keycloak_client.keycloak_admin.users_count",
+        return_value=total_users_mock,
     ):
         mock_get_users.side_effect = [mock_active_users, mock_new_users]
 
@@ -62,7 +65,9 @@ def test_get_user_statistics_success():
         assert response.status_code == 200
         json_response = response.json()
         assert json_response["total_users"] == total_users_mock
-        assert json_response["active_users_last_30_days"] == len(mock_active_users)
+        assert json_response["active_users_last_30_days"] == len(
+            mock_active_users
+        )
         assert json_response["new_users_last_30_days"] == len(mock_new_users)
 
 
@@ -70,7 +75,8 @@ def test_get_user_statistics_keycloak_error():
     """Test KeycloakError handling when fetching user statistics fails."""
 
     with patch(
-        "src.keycloak_client.keycloak_admin.get_users", side_effect=KeycloakError
+        "src.keycloak_client.keycloak_admin.get_users",
+        side_effect=KeycloakError,
     ):
 
         response = client.get("/statistics")
@@ -82,7 +88,9 @@ def test_get_user_statistics_keycloak_error():
 def test_get_user_statistics_general_exception():
     """Test general exception handling for bad request or failed request."""
 
-    with patch("src.keycloak_client.keycloak_admin.get_users", side_effect=Exception):
+    with patch(
+        "src.keycloak_client.keycloak_admin.get_users", side_effect=Exception
+    ):
 
         response = client.get("/statistics")
 

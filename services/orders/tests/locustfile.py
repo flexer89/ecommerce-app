@@ -22,8 +22,10 @@ keycloak_connection = KeycloakOpenIDConnection(
 
 keycloak_admin = KeycloakAdmin(connection=keycloak_connection)
 
+
 def get_token():
     return keycloak_admin.token["access_token"]
+
 
 def create_test_user():
     """Simulates the creation of a test user"""
@@ -64,30 +66,38 @@ class UserBehavior(HttpUser):
 
     @task(5)
     def get_user_orders(self):
-        self.client.get(f"/api/orders/getbyuser/{self.user_id}", headers={"Authorization": f"{self.token}"})
+        self.client.get(
+            f"/api/orders/getbyuser/{self.user_id}",
+            headers={"Authorization": f"{self.token}"},
+        )
 
     @task(5)
     def create_order(self):
         self.client.post(
             "/api/orders/create",
             headers={"Authorization": f"{self.token}"},
-            json= {
+            json={
                 "user_id": self.user_id,
                 "items": [
                     {"id": 1, "quantity": 2, "price": 50.0, "weight": 500},
                     {"id": 2, "quantity": 1, "price": 50.0, "weight": 500},
                 ],
                 "total_price": 100.0,
-            }
+            },
         )
-        
+
     @task(2)
     def get_order_by_id(self):
-        self.client.get(f"/api/orders/get/1", headers={"Authorization": f"{self.token}"})
-        
+        self.client.get(
+            f"/api/orders/get/1", headers={"Authorization": f"{self.token}"}
+        )
+
     @task(10)
     def get_bestsellers(self):
-        self.client.get("/api/orders/bestsellers", headers={"Authorization": f"{self.token}"})
-    
+        self.client.get(
+            "/api/orders/bestsellers",
+            headers={"Authorization": f"{self.token}"},
+        )
+
     def on_stop(self):
         keycloak_admin.delete_user(self.user_id)

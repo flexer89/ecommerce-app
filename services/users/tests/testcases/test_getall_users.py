@@ -21,7 +21,7 @@ mock_users = [
             "PostCode": ["12-345"],
             "voivodeship": ["śląskie"],
         },
-        "enabled": 1
+        "enabled": 1,
     },
     {
         "id": "user-2",
@@ -36,7 +36,7 @@ mock_users = [
             "PostCode": ["54-321"],
             "voivodeship": ["wielkopolskie"],
         },
-        "enabled": 1
+        "enabled": 1,
     },
 ]
 
@@ -44,7 +44,9 @@ mock_users = [
 def test_get_user_data_success():
     """Test successful retrieval of users with pagination and search."""
 
-    with patch("src.keycloak_client.keycloak_admin.get_users", return_value=mock_users):
+    with patch(
+        "src.keycloak_client.keycloak_admin.get_users", return_value=mock_users
+    ):
         with patch(
             "src.keycloak_client.keycloak_admin.users_count",
             return_value=len(mock_users),
@@ -81,8 +83,12 @@ def test_get_user_data_by_ids_success():
 def test_get_user_data_no_users_found():
     """Test the scenario where no users are found."""
 
-    with patch("src.keycloak_client.keycloak_admin.get_users", return_value=[]):
-        with patch("src.keycloak_client.keycloak_admin.users_count", return_value=0):
+    with patch(
+        "src.keycloak_client.keycloak_admin.get_users", return_value=[]
+    ):
+        with patch(
+            "src.keycloak_client.keycloak_admin.users_count", return_value=0
+        ):
 
             response = client.get("/get?search=nonexistent")
 
@@ -102,7 +108,8 @@ def test_get_user_data_internal_server_error():
     """Test internal server error during user retrieval."""
 
     with patch(
-        "src.keycloak_client.keycloak_admin.get_users", side_effect=KeycloakError
+        "src.keycloak_client.keycloak_admin.get_users",
+        side_effect=KeycloakError,
     ):
 
         response = client.get("/get?limit=10&offset=0")

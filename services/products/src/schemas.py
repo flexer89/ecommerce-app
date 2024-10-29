@@ -17,7 +17,9 @@ class ProductBase(BaseModel):
         description="The description of the product, up to 255 characters.",
     )
     price: float = Field(
-        ..., gt=0, description="The price of the product, must be greater than 0."
+        ...,
+        gt=0,
+        description="The price of the product, must be greater than 0.",
     )
     stock: Optional[int] = Field(
         None,
@@ -25,7 +27,10 @@ class ProductBase(BaseModel):
         description="The stock of the product, must be greater than or equal to 0.",
     )
     discount: Optional[float] = Field(
-        None, ge=0, le=1, description="The discount percentage, between 0 and 1."
+        None,
+        ge=0,
+        le=1,
+        description="The discount percentage, between 0 and 1.",
     )
     category: Optional[str] = "uncategorized"
 
@@ -48,7 +53,9 @@ class ProductResponse(BaseModel):
         description="The description of the product, up to 255 characters.",
     )
     price: float = Field(
-        ..., gt=0, description="The price of the product, must be greater than 0."
+        ...,
+        gt=0,
+        description="The price of the product, must be greater than 0.",
     )
     stock: Optional[int] = Field(
         None,
@@ -58,7 +65,10 @@ class ProductResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
     discount: Optional[float] = Field(
-        None, ge=0, le=1, description="The discount percentage, between 0 and 1."
+        None,
+        ge=0,
+        le=1,
+        description="The discount percentage, between 0 and 1.",
     )
     category: Optional[str]
 

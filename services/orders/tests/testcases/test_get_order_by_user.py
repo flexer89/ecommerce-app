@@ -55,7 +55,9 @@ def test_get_order_by_user_success(mock_db_session, mock_get_order_by_user_db):
     mock_get_order_by_user_db.assert_called_once()
 
 
-def test_get_order_by_user_not_found(mock_db_session, mock_get_order_by_user_db):
+def test_get_order_by_user_not_found(
+    mock_db_session, mock_get_order_by_user_db
+):
     order_data = None
     mock_get_order_by_user_db.return_value = order_data
     response = client.get("/getbyuser/f9df0b92-4a6f-4ec7-80a0-364d15481998")

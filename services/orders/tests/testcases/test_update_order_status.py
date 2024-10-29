@@ -55,7 +55,9 @@ def test_update_order_success(mock_db_session, mock_update_order_status_db):
     mock_update_order_status_db.assert_called_once()
 
 
-def test_update_status_order_not_found(mock_db_session, mock_update_order_status_db):
+def test_update_status_order_not_found(
+    mock_db_session, mock_update_order_status_db
+):
     order_data = None
     mock_update_order_status_db.return_value = order_data
     response = client.put("/update/1/status", json={"status": "shipped"})

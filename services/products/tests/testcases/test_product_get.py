@@ -11,7 +11,9 @@ SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+TestingSessionLocal = sessionmaker(
+    autocommit=False, autoflush=False, bind=engine
+)
 
 
 # Override the get_db dependency to use the test database
@@ -88,7 +90,11 @@ def test_get_products_list_db_not_found(test_db):
     response = client.get("/get?limit=1&offset=0&search=Non-existent Product")
 
     assert response.status_code == 200
-    assert response.json() == {"products": [], "total": 0, "total_max_price": 20}
+    assert response.json() == {
+        "products": [],
+        "total": 0,
+        "total_max_price": 20,
+    }
 
 
 def test_get_products_list_db_malformed_request(test_db):

@@ -12,16 +12,22 @@ class CartItemSchema(BaseModel):
         description="The name of the product, between 1 and 100 characters.",
     )
     price: float = Field(
-        ..., gt=0, description="The price of the product, must be greater than 0."
+        ...,
+        gt=0,
+        description="The price of the product, must be greater than 0.",
     )
     discount: float = Field(
         0, ge=0, le=1, description="The discount percentage, between 0 and 1."
     )
     weight: float = Field(
-        ..., gt=0, description="The weight of the product, must be greater than 0."
+        ...,
+        gt=0,
+        description="The weight of the product, must be greater than 0.",
     )
     quantity: int = Field(
-        ..., ge=1, description="The quantity of the product, must be at least 1."
+        ...,
+        ge=1,
+        description="The quantity of the product, must be at least 1.",
     )
 
 

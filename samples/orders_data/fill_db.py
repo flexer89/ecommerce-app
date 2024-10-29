@@ -114,7 +114,9 @@ def main():
             "current_location": "Warszawska 24, Kraków, małopolskie, 31-155",
         }
 
-        shipment = requests.post(f"{shipments_service_url}/create", json=shipping_info)
+        shipment = requests.post(
+            f"{shipments_service_url}/create", json=shipping_info
+        )
         if shipment.status_code != 201:
             print(f"Failed to create shipment: {shipment.json()}")
             continue

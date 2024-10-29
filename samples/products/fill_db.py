@@ -21,7 +21,10 @@ def resize_image(image_path, scale_factor=0.5):
     """Resize the image by the given scale factor and save to a tempora ry file."""
     try:
         img = Image.open(image_path)
-        new_size = (int(img.width * scale_factor), int(img.height * scale_factor))
+        new_size = (
+            int(img.width * scale_factor),
+            int(img.height * scale_factor),
+        )
         resized_img = img.resize(new_size, Image.ANTIALIAS)
 
         # Create a temporary file for the resized image
