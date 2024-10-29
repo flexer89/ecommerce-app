@@ -26,9 +26,9 @@ def mock_create_shipment_db():
 
 def test_create_shipment_success(mock_db_session, mock_create_shipment_db):
     shipment_response = {
-        "id": 0,
-        "order_id": 0,
-        "user_id": "string",
+        "id": 1,
+        "order_id": 1,
+        "user_id": "da541c59-1cd0-4b8e-ad09-51192d83f8fc",
         "shipment_address": "string",
         "current_location": "string",
         "shipment_date": "2024-10-05T13:14:36.330000",
@@ -38,8 +38,8 @@ def test_create_shipment_success(mock_db_session, mock_create_shipment_db):
     }
 
     shipment_data = {
-        "order_id": 0,
-        "user_id": "string",
+        "order_id": 1,
+        "user_id": "da541c59-1cd0-4b8e-ad09-51192d83f8fc",
         "shipment_address": "string",
         "current_location": "string",
         "status": "pending",
@@ -54,11 +54,11 @@ def test_create_shipment_success(mock_db_session, mock_create_shipment_db):
     mock_create_shipment_db.assert_called_once()
 
 
-def test_create_order_db_error(mock_db_session, mock_create_shipment_db):
+def test_create_shipment_db_error(mock_db_session, mock_create_shipment_db):
     shipment_response = {
         "id": 0,
         "order_id": 0,
-        "user_id": "string",
+        "user_id": "da541c59-1cd0-4b8e-ad09-51192d83f8fc",
         "shipment_address": "string",
         "current_location": "string",
         "shipment_date": "2024-10-05T13:14:36.330000",

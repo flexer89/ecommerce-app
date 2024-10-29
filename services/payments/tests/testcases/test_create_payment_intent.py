@@ -52,7 +52,7 @@ async def test_create_payment_intent_invalid_total():
             "/create-payment-intent", json=invalid_request_data
         )
 
-    assert response.status_code == 400
+    assert response.status_code == 422
     assert response.json() == {"detail": "Total amount must be greater than 0."}
 
 

@@ -28,7 +28,7 @@ def test_update_shipment_success(mock_db_session, mock_update_shipment_db):
     shipment_response = {
         "id": 0,
         "order_id": 0,
-        "user_id": "string",
+        "user_id": "da541c59-1cd0-4b8e-ad09-51192d83f8fc",
         "shipment_address": "string",
         "current_location": "string",
         "shipment_date": "2024-10-05T13:17:18.346000",

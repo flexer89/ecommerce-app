@@ -3,6 +3,7 @@ prometheus_fastapi_instrumentator
 uvicorn
 psycopg2
 pydantic
+pydantic[email]
 typing
 python-dotenv
 python-multipart

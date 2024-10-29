@@ -29,14 +29,14 @@ def test_get_orders_status_success(mock_db_session, mock_get_orders_db):
         "orders": [
             {
                 "created_at": "2024-10-05T12:35:52.658Z",
-                "id": 0,
+                "id": 1,
                 "status": "pending",
-                "total_price": 0,
+                "total_price": 10,
                 "updated_at": "2024-10-05T12:35:52.658Z",
                 "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
             }
         ],
-        "total": 0,
+        "total": 10,
     }
     mock_get_orders_db.return_value = order_data_response
 
@@ -64,12 +64,12 @@ def test_get_orders_search_success(mock_db_session, mock_get_orders_db):
                 "created_at": "2024-10-05T12:35:52.658Z",
                 "id": 1,
                 "status": "pending",
-                "total_price": 0,
+                "total_price": 10,
                 "updated_at": "2024-10-05T12:35:52.658Z",
                 "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
             }
         ],
-        "total": 0,
+        "total": 10,
     }
     mock_get_orders_db.return_value = order_data_response
 

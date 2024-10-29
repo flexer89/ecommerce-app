@@ -28,18 +28,18 @@ def mock_get_order_db():
 def test_read_order_success(mock_db_session, mock_get_order_db):
     order_data = {
         "user_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "total_price": 0,
+        "total_price": 10,
         "status": "pending",
         "id": 1,
         "created_at": "2024-10-04T17:25:29.413458",
         "updated_at": "2024-10-04T17:25:29.413458",
         "items": [
             {
-                "product_id": 0,
-                "quantity": 0,
-                "price": 0.0,
-                "weight": 0.0,
-                "id": 0,
+                "product_id": 1,
+                "quantity": 1,
+                "price": 10.0,
+                "weight": 5.0,
+                "id": 1,
                 "created_at": "2024-10-04T17:25:29.413458",
             }
         ],

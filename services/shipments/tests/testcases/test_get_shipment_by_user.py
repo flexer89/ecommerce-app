@@ -28,14 +28,13 @@ def test_get_shipment_by_user_success(mock_db_session, mock_get_shipment_by_user
     shipment_response = [
         {
             "id": 0,
-            "user_id": 0,
-            "user_id": "string",
+            "user_id": "da541c59-1cd0-4b8e-ad09-51192d83f8fc",
             "shipment_address": "string",
             "current_location": "string",
             "shipment_date": "2024-10-05T13:22:02.335000",
             "delivery_date": "2024-10-05T13:22:02.335000",
             "status": "pending",
-            "order_id": 0,
+            "order_id": 1,
             "company": "string",
         }
     ]
