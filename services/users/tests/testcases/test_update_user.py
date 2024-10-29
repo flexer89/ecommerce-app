@@ -17,9 +17,10 @@ mock_user = {
         "phoneNumber": ["123456789"],
         "Address": ["123 Main St"],
         "City": ["Springfield"],
-        "PostCode": ["12345"],
-        "voivodeship": ["Illinois"],
+        "PostCode": ["12-345"],
+        "voivodeship": ["małopolskie"],
     },
+    "enabled": 1
 }
 
 

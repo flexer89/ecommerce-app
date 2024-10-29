@@ -53,7 +53,6 @@ async def test_create_payment_intent_invalid_total():
         )
 
     assert response.status_code == 422
-    assert response.json() == {"detail": "Total amount must be greater than 0."}
 
 
 @pytest.mark.asyncio

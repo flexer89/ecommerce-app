@@ -21,23 +21,23 @@ async def test_remove_from_cart_success(mock_redis):
     """Test successfully removing items from a user's cart (quantity updated)."""
     user_id = str(uuid.uuid4())
     cart_key = f"cart:{user_id}"
-    product_key = "1:500"
+    product_key = "1:500.0"
 
     existing_cart = {
-        "1:500": json.dumps(
+        "1:500.0": json.dumps(
             {
                 "id": "1",
                 "name": "Product 1",
                 "price": 10.0,
                 "quantity": 2,
-                "weight": 500,
+                "weight": 500.0,
                 "discount": 0.0,
             }
         )
     }
     mock_redis.hgetall.return_value = existing_cart
 
-    remove_request = RemoveItemRequest(product_id=1, weight=500, quantity=1)
+    remove_request = RemoveItemRequest(product_id=1, weight=500.0, quantity=1)
 
     async with AsyncClient(app=app, base_url="http://test") as client:
         response = await client.post(f"/remove/{user_id}", json=remove_request.dict())
@@ -63,23 +63,23 @@ async def test_remove_from_cart_item_deleted(mock_redis):
     """Test removing an item from the cart completely (quantity reaches zero)."""
     user_id = str(uuid.uuid4())
     cart_key = f"cart:{user_id}"
-    product_key = "1:500"
+    product_key = "1:500.0"
 
     existing_cart = {
-        "1:500": json.dumps(
+        "1:500.0": json.dumps(
             {
                 "id": "1",
                 "name": "Product 1",
                 "price": 10.0,
                 "quantity": 2,
-                "weight": 500,
+                "weight": 500.0,
                 "discount": 0.0,
             }
         )
     }
     mock_redis.hgetall.return_value = existing_cart
 
-    remove_request = RemoveItemRequest(product_id=1, weight=500, quantity=2)
+    remove_request = RemoveItemRequest(product_id=1, weight=500.0, quantity=2)
 
     async with AsyncClient(app=app, base_url="http://test") as client:
         response = await client.post(f"/remove/{user_id}", json=remove_request.dict())

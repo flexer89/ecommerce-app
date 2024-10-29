@@ -18,9 +18,10 @@ mock_users = [
             "phoneNumber": ["123456789"],
             "Address": ["123 Main St"],
             "City": ["Springfield"],
-            "PostCode": ["12345"],
-            "voivodeship": ["Illinois"],
+            "PostCode": ["12-345"],
+            "voivodeship": ["śląskie"],
         },
+        "enabled": 1
     },
     {
         "id": "user-2",
@@ -32,9 +33,10 @@ mock_users = [
             "phoneNumber": ["987654321"],
             "Address": ["456 Elm St"],
             "City": ["Greenville"],
-            "PostCode": ["54321"],
-            "voivodeship": ["Texas"],
+            "PostCode": ["54-321"],
+            "voivodeship": ["wielkopolskie"],
         },
+        "enabled": 1
     },
 ]
 
