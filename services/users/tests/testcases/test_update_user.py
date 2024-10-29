@@ -41,7 +41,7 @@ def test_update_user_success():
                 "phoneNumber": "987654321",
                 "Address": "456 Another St",
                 "City": "Metropolis",
-                "PostCode": "54321",
+                "PostCode": "54-321",
                 "voivodeship": "małopolskie",
             },
         }
