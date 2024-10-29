@@ -24,7 +24,7 @@ async def test_remove_from_cart_success(mock_redis):
     product_key = "1:500:ground"
 
     existing_cart = {
-        "1:500:ground": json.dumps(
+        "1:500": json.dumps(
             {
                 "id": "1",
                 "name": "Product 1",
@@ -63,7 +63,7 @@ async def test_remove_from_cart_item_deleted(mock_redis):
     """Test removing an item from the cart completely (quantity reaches zero)."""
     user_id = str(uuid.uuid4())
     cart_key = f"cart:{user_id}"
-    product_key = "1:500:ground"
+    product_key = "1:500"
 
     existing_cart = {
         "1:500:ground": json.dumps(

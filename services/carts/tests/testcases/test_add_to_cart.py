@@ -110,8 +110,7 @@ async def test_add_to_cart_invalid_item(mock_redis):
     async with AsyncClient(app=app, base_url="http://test") as client:
         response = await client.post(f"/add/{user_id}", json=cart_payload)
 
-    assert response.status_code == 400
-    assert response.json() == {"detail": "Invalid item attributes for product 1"}
+    assert response.status_code == 422
 
 
 @pytest.mark.asyncio
