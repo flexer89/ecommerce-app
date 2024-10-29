@@ -1,13 +1,11 @@
-FROM python:3.11-slim
+FROM python:3.11
 
 WORKDIR /app
 
-COPY src/ /app/src/
-
-COPY tests/ /app/tests/
+COPY . .
 
 RUN pip install --no-cache-dir -r tests/requirements.txt
 
 ENV ENV=test
 
-CMD ["pytest", "--color=yes"]
+CMD ["pytest", "--color=yes", "--cov=.", "--cov-report=term-missing", "--cov-report=html:/app/tests/htmlcov", "--cov-report=xml:/app/tests/coverage.xml", "/app/tests"]

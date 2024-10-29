@@ -1,6 +1,7 @@
+from typing import Literal, Optional
+
 from fastapi import HTTPException as BaseHTTPException
 from fastapi import status
-from typing import Literal, Optional
 
 
 class HTTPException(BaseHTTPException):
@@ -23,7 +24,8 @@ class ProductsNotFound(HTTPException):
 class ProductNotModified(HTTPException):
     def __init__(self, details: Optional[str] = None):
         super().__init__(
-            status.HTTP_404_NOT_FOUND, f"Product not found or not modified. {details}"
+            status.HTTP_404_NOT_FOUND,
+            f"Product not found or not modified. {details}",
         )
 
 

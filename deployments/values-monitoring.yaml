@@ -1,46 +1,86 @@
----
 prometheus:
   prometheusSpec:
-    scrapeInterval: 10s
+    scrapeInterval: 30s
     evaluationInterval: 30s
     podMonitorSelectorNilUsesHelmValues: false
     serviceMonitorSelectorNilUsesHelmValues: false
     additionalScrapeConfigs:
-      - job_name: 'products'
+      - job_name: "products"
+        scrape_interval: 5s
+        scrape_timeout: 3s
         kubernetes_sd_configs:
           - role: service
         relabel_configs:
           - source_labels: [__meta_kubernetes_service_name]
             action: keep
             regex: products-service
-      - job_name: 'orders'
-        kubernetes_sd_configs:
-          - role: service
-        relabel_configs:
-          - source_labels: [__meta_kubernetes_service_name]
-            action: keep
-            regex: orders-service
-      - job_name: 'payments'
-        kubernetes_sd_configs:
-          - role: service
-        relabel_configs:
-          - source_labels: [__meta_kubernetes_service_name]
-            action: keep
-            regex: payments-service
-      - job_name: 'users'
+      - job_name: "users"
+        scrape_interval: 5s
+        scrape_timeout: 3s
         kubernetes_sd_configs:
           - role: service
         relabel_configs:
           - source_labels: [__meta_kubernetes_service_name]
             action: keep
             regex: users-service
-      - job_name: 'carts'
+      - job_name: "orders"
+        scrape_interval: 5s
+        scrape_timeout: 3s
+        kubernetes_sd_configs:
+          - role: service
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: orders-service
+      - job_name: "payments"
+        scrape_interval: 5s
+        scrape_timeout: 3s
+        kubernetes_sd_configs:
+          - role: service
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: payments-service
+      - job_name: "shipments"
+        scrape_interval: 5s
+        scrape_timeout: 3s
+        kubernetes_sd_configs:
+          - role: service
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: shipments-service
+      - job_name: "carts"
+        scrape_interval: 5s
+        scrape_timeout: 3s
         kubernetes_sd_configs:
           - role: service
         relabel_configs:
           - source_labels: [__meta_kubernetes_service_name]
             action: keep
             regex: carts-service
+      - job_name: "keycloak"
+        scrape_interval: 5s
+        scrape_timeout: 3s
+        metrics_path: /realms/jolszak/metrics
+        kubernetes_sd_configs:
+          - role: service
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: keycloak
+      - job_name: "kraken"
+        scrape_interval: 5s
+        scrape_timeout: 3s
+        kubernetes_sd_configs:
+          - role: service
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: kraken
+          - source_labels: [__meta_kubernetes_service_port_name]
+            action: keep
+            regex: metrics
   grafana:
     persistence:
       enabled: true
@@ -48,9 +88,9 @@ prometheus:
       dashboardproviders.yaml:
         apiVersion: 1
         providers:
-          - name: 'default'
+          - name: "default"
             orgId: 1
-            folder: ''
+            folder: ""
             type: file
             disableDeletion: false
             editable: true
@@ -58,10 +98,9 @@ prometheus:
               path: /var/lib/grafana/dashboards/default
     dashboards:
       default:
-        kong-dash:
-          gnetId: 7424
-          revision: 11
-          datasource: Prometheus
         kic-dash:
           gnetId: 15662
+          datasource: Prometheus
+        krakend:
+          gnetId: 20651
           datasource: Prometheus

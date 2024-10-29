@@ -1,0 +1,9 @@
+fastapi
+prometheus_fastapi_instrumentator
+uvicorn
+psycopg2
+pydantic
+typing
+python-dotenv
+python-multipart
+sqlalchemy

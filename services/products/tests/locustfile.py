@@ -1,53 +1,41 @@
-from locust import HttpUser, task, constant_throughput
-from time import time_ns
-import random
+from random import choice
+
+from locust import HttpUser, between, task
 
 
-class User(HttpUser):
-    service = "/products"
-    wait_time = constant_throughput(1)  # type: ignore
+class UserBehavior(HttpUser):
+    wait_time = between(1, 3)
 
-    @task
-    def send_add_request(self) -> None:
-        product_data = {
-            "name": f"Test Product update {time_ns()}",
-            "price": random.randint(1, 100),
-            "quantity": random.randint(1, 100),
-            "description": "Test description",
-            "category": "uncategorized",
-            "brand": "default",
-            "images": [],
-            "weight": random.uniform(0.1, 10.0),
-            "dimensions": [random.uniform(1.0, 10.0) for _ in range(3)],
-        }
-        self.client.post(f"{self.service}/add", json=product_data)
+    def on_start(self):
+        self.client.verify = False
 
-    @task
-    def send_update_request(self) -> None:
-        product_data = {
-            "price": random.randint(1, 100),
-            "quantity": random.randint(1, 100),
-            "description": "Test description",
-            "category": "uncategorized",
-            "brand": "default",
-            "images": [],
-            "weight": random.uniform(0.1, 10.0),
-            "dimensions": [random.uniform(1.0, 10.0) for _ in range(3)],
-        }
-        self.client.patch(
-            f"{self.service}/update/65e588bf2dc79d953066597a", json=product_data
-        )
+    @task(10)
+    def get_products(self):
+        category = choice(["arabica", "robusta", ""])
+        maxPrice = choice([0, 20, 40, 60, 80, 100, 120, 140])
+        if category and maxPrice:
+            self.client.get(
+                f"/api/products/get?limit=20&offset=0&category={category}&maxPrice={maxPrice}"
+            )
+        elif category:
+            self.client.get(f"/api/products/get?limit=20&offset=0&category={category}")
+        elif maxPrice:
+            self.client.get(f"/api/products/get?limit=20&offset=0&maxPrice={maxPrice}")
+        else:
+            self.client.get(f"/api/products/get?limit=20&offset=0")
 
-    @task
-    def send_filter_request(self) -> None:
-        product_data = {
-            "category": "uncategorized",
-        }
-        self.client.post(f"{self.service}/filter", json=product_data)
+    @task(10)
+    def get_product_by_id(self):
+        self.client.get("/api/products/getbyid/1")
 
-    @task
-    def send_get_request(self) -> None:
-        self.client.get(f"{self.service}/get/65e588bf2dc79d953066597a")
+    @task(10)
+    def download_images(self):
+        self.client.get("/api/products/download/images?product_ids=1%2C2%2C3%2C4%2C5")
 
-    def send_get_all_request(self) -> None:
-        self.client.get(f"{self.service}/get")
+    @task(5)
+    def download_binary_image(self):
+        self.client.get("/api/products/download/bin/1")
+
+    @task(5)
+    def get_categories(self):
+        self.client.get("/api/products/categories")

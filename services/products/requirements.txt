@@ -1,8 +1,9 @@
 fastapi
 prometheus_fastapi_instrumentator
 uvicorn
-motor
-mongomock-motor
-pymongo
+sqlalchemy
+psycopg2
 pydantic
 typing
+python-dotenv
+python-multipart

@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client-app
+  template:
+    metadata:
+      labels:
+        app: client-app
+    spec:
+      containers:
+        - name: client-app
+          image: client-app
+          ports:
+            - containerPort: 8080
+          env:
+            - name: VITE_KEYCLOAK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: client-app-secret
+                  key: keycloak-url
+            - name: VITE_KEYCLOAK_REALM
+              valueFrom:
+                secretKeyRef:
+                  name: client-app-secret
+                  key: keycloak-realm
+            - name: VITE_KEYCLOAK_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: client-app-secret
+                  key: keycloak-client-id
+            - name: VITE_KEYCLOAK_REDIRECT_URI
+              valueFrom:
+                secretKeyRef:
+                  name: client-app-secret
+                  key: keycloak-redirect-uri
+            - name: VITE_KEYCLOAK_CHECKOUT_REDIRECT_URI
+              valueFrom:
+                secretKeyRef:
+                  name: client-app-secret
+                  key: keycloak-checkout-redirect-uri
+            - name: VITE_STRIPE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: client-app-secret
+                  key: stripe-api-key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-app
+spec:
+  selector:
+    app: client-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

@@ -6,7 +6,6 @@ metadata:
   labels:
     app: carts
 spec:
-  replicas: 2
   selector:
     matchLabels:
       app: carts
@@ -21,9 +20,12 @@ spec:
           ports:
             - containerPort: 5040
           resources:
+            requests:
+              memory: "80Mi"
+              cpu: "50m"
             limits:
-              memory: "128Mi"
-              cpu: "500m"
+              memory: "320Mi"
+              cpu: "150m"
 
 ---
 apiVersion: v1
@@ -38,23 +40,23 @@ spec:
       protocol: TCP
       name: tcp-5040
       targetPort: 5040
-
 ---
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
 metadata:
-  name: carts
-  annotations:
-    konghq.com/strip-path: 'true'
+  name: carts-hpa
+  namespace: default
 spec:
-  parentRefs:
-    - name: kong
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /carts
-      backendRefs:
-        - name: carts-service
-          kind: Service
-          port: 5040
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: carts
+  minReplicas: 1
+  maxReplicas: 4
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70

@@ -1,0 +1,558 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "FastAPI",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/health": {
+            "get": {
+                "summary": "Health",
+                "operationId": "health_health_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/create": {
+            "post": {
+                "summary": "Create Shipment",
+                "description": "Create a new shipment for an order. This endpoint allows creating a shipment record by providing the necessary shipment details.",
+                "operationId": "create_shipment_create_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ShipmentCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Shipment created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShipmentResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/update/{shipment_id}": {
+            "patch": {
+                "summary": "Update Shipment",
+                "description": "Update an existing shipment by providing the shipment ID and the updated shipment data.",
+                "operationId": "update_shipment_update__shipment_id__patch",
+                "parameters": [
+                    {
+                        "name": "shipment_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Shipment Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ShipmentUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Shipment updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShipmentResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Shipment not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/getbyorder/{order_id}": {
+            "get": {
+                "summary": "Read Shipment By Order Id",
+                "description": "Retrieve shipment details for a specific order by providing the `order_id`. If the shipment exists, it returns the shipment details.",
+                "operationId": "read_shipment_by_order_id_getbyorder__order_id__get",
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Order Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Shipment retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShipmentResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Shipment not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/getbyuser/{user_id}": {
+            "get": {
+                "summary": "Read Shipment By User Id",
+                "description": "Retrieve all shipments associated with a specific user by providing their `user_id`. If shipments exist, it returns a list of shipment details.",
+                "operationId": "read_shipment_by_user_id_getbyuser__user_id__get",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Shipments retrieved successfully for the user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ShipmentResponse"
+                                    },
+                                    "title": "Response Read Shipment By User Id Getbyuser  User Id  Get"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No shipments found for the user"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/count": {
+            "get": {
+                "summary": "Count Shipments",
+                "description": "Retrieve the total count of all shipments in the system.",
+                "operationId": "count_shipments_count_get",
+                "responses": {
+                    "200": {
+                        "description": "Total number of shipments retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CountResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/get": {
+            "get": {
+                "summary": "Get Shipments",
+                "description": "Retrieve a paginated list of shipments, optionally filtered by status and search parameters.",
+                "operationId": "get_shipments_get_get",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0,
+                            "title": "Offset"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "title": "Status"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Search"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Shipments retrieved successfully with pagination",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetShipmentResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CountResponse": {
+                "properties": {
+                    "total": {
+                        "type": "integer",
+                        "title": "Total"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "total"
+                ],
+                "title": "CountResponse"
+            },
+            "ErrorResponse": {
+                "properties": {
+                    "detail": {
+                        "type": "string",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "detail"
+                ],
+                "title": "ErrorResponse"
+            },
+            "GetShipmentResponse": {
+                "properties": {
+                    "total": {
+                        "type": "integer",
+                        "title": "Total"
+                    },
+                    "shipments": {
+                        "items": {
+                            "$ref": "#/components/schemas/ShipmentResponse"
+                        },
+                        "type": "array",
+                        "title": "Shipments"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "total",
+                    "shipments"
+                ],
+                "title": "GetShipmentResponse"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "ShipmentCreate": {
+                "properties": {
+                    "order_id": {
+                        "type": "integer",
+                        "title": "Order Id"
+                    },
+                    "user_id": {
+                        "type": "string",
+                        "title": "User Id"
+                    },
+                    "shipment_address": {
+                        "type": "string",
+                        "title": "Shipment Address"
+                    },
+                    "current_location": {
+                        "type": "string",
+                        "title": "Current Location",
+                        "default": "Warszawska 24, Kraków, małopolskie, 31-155"
+                    },
+                    "status": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ShipmentStatusEnum"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "default": "pending"
+                    },
+                    "company": {
+                        "type": "string",
+                        "title": "Company"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "order_id",
+                    "user_id",
+                    "shipment_address",
+                    "company"
+                ],
+                "title": "ShipmentCreate"
+            },
+            "ShipmentResponse": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "order_id": {
+                        "type": "integer",
+                        "title": "Order Id"
+                    },
+                    "user_id": {
+                        "type": "string",
+                        "title": "User Id"
+                    },
+                    "shipment_address": {
+                        "type": "string",
+                        "title": "Shipment Address"
+                    },
+                    "current_location": {
+                        "type": "string",
+                        "title": "Current Location"
+                    },
+                    "shipment_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Shipment Date"
+                    },
+                    "delivery_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Delivery Date"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/ShipmentStatusEnum"
+                    },
+                    "company": {
+                        "type": "string",
+                        "title": "Company"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "order_id",
+                    "user_id",
+                    "shipment_address",
+                    "current_location",
+                    "shipment_date",
+                    "delivery_date",
+                    "status",
+                    "company"
+                ],
+                "title": "ShipmentResponse"
+            },
+            "ShipmentStatusEnum": {
+                "type": "string",
+                "enum": [
+                    "pending",
+                    "shipped",
+                    "delivered",
+                    "cancelled"
+                ],
+                "title": "ShipmentStatusEnum"
+            },
+            "ShipmentUpdate": {
+                "properties": {
+                    "shipment_address": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Shipment Address"
+                    },
+                    "current_location": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Current Location"
+                    },
+                    "status": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/ShipmentStatusEnum"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "delivery_date": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Delivery Date"
+                    }
+                },
+                "type": "object",
+                "title": "ShipmentUpdate"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}

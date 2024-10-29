@@ -6,17 +6,11 @@
 5. helm
 6. tilt
 
-# Create tunnel
-```
-minikube tunnel
-```
-
 # Ports
 
 - products service - 5000
 - orders service - 5010
 - payments service - 5020
-- users service - 5030
 - carts service - 5040
 
 # Services
@@ -24,22 +18,10 @@ minikube tunnel
 ## Products service
 ### Description
 This service is responsible for managing products in the store. It allows to add, update, delete and filter products.
-
-### Routes
-- **GET** Health Status: `products/health`
-- **POST** Add a Product: `products/add`
-- **POST** Filter Products: `products/filter`
-- **GET** Get Product by ID: `products/get/{product_id}`
-- **GET** Get All Products: `products/get`
-- **PATCH** Update Product by ID: `products/update/{product_id}`
-- **DELETE** Delete Product by ID: `products/delete/{product_id}`
+See the [API documentation](https://bump.sh/jolszak/hub/ecommerce-app/doc/products-service) for more details.
 
 ## Orders service
 - GET Health Status `orders/health`
-- ...
-
-## Users service
-- GET Health Status `users/health`
 - ...
 
 ## Carts service
@@ -57,6 +39,41 @@ This service is responsible for managing user carts. It allows to add, remove an
 ## Payments service
 - GET Health Status `payments/health`
 - ...
+
+# Start/Setup Cluster
+To setup the cluster, you need to run the following command:
+```
+./cluster_setup.sh
+```
+It will start the minikube cluster and install all the required dependencies.
+If you want to start the cluster, you need to run the following command:
+```
+./start.sh
+```
+
+If cluster is running, you need to add ingress addon:
+```
+minikube addons enable ingress
+```
+Apply ingresses:
+```
+kubectl apply -f deployments/overlays/ingress.yaml
+```
+And then create a tunnel:
+```
+minikube tunnel
+```
+Then you need to add the following lines to the /etc/hosts file (Linux) or C:\Windows\System32\drivers\etc\hosts file (Windows)
+```
+127.0.0.1 auth.jolszak.test
+127.0.0.1 admin.jolszak.test
+127.0.0.1 jolszak.test
+127.0.0.1 monitoring.jolszak.test
+```
+If you want to stop the cluster, you need to run the following command:
+```
+./stop.sh
+```
 
 # Run as a standalone service
 To run the service as a standalone service, you need to run the following command:
@@ -97,13 +114,7 @@ Then you can set the number of users and hatch rate and start the test.
 
 
 # Access Grafana
-
-To access dashboards you need firstly forward a port
-```
-kubectl -n monitoring port-forward services/promstack-grafana 3000:80
-```
-
-Grafana is available at `http://localhost:3000`
+Grafana is available at `monitoring.jolszak.test`.
 
 To log in, type:
 - Username: admin
@@ -116,16 +127,30 @@ To log in, type:
 4. Set URL to `http://promstack-kube-prometheus-prometheus:9090`
 5. Click Save & Test
 
-## Creating a dashboard
+## Import dashboards
 1. Go to Dashboards
 2. Click Manage
 3. Click Import
-4. Choose a JSON file with a dashboard
-5. Click Import
+3.1. Enter dashboard ID for Krakend: `20651`
+3.2  Enter dashboard ID for Keycloak: `19659`
+3.2. Import deployments/dashboards/fastapi-dashboard.json
 
+# Secrets
+You need to provide the secrets for the services. You need to create a file called `.secrets.yaml` in the deploments/secrets directory. The file should look like .secrets-example.yaml file.
+You also need to fill .env files in the services directories. The file should look like .env-example file.
 
-# TODO
-- [ ] make tests asynchrounous
-- [ ] add keycloak as an authentication service
-- [ ] add token validation to services
-- [ ] add dashboard for keycloak
+# Keycloak setup
+To setup Keycloak, you need to go to `http://auth.jolszak.test` and log in with admin/admin credentials.
+Then you need to create a new realm (keycloak json is available under /keycloak folder) You can do it by going to Master Realm -> Add Realm.
+
+Keycloak requires an SMTP server to send emails. You can go to Realm Settings -> Email -> SMTP Server and fill the form.
+I am using Mailgun in Github Student Developer Pack. You can use it as well.
+SMTP Server is needed to send email confirmation to the user, password reset and other emails.
+
+You also need to go to authentication -> required actions and enable VERIFY_EMAIL
+
+# Sample data
+To add sample data to all services, you need to run `./port_forward.sh` and then run `./sample_data.sh` in another terminal.
+
+# Sources
+free-psd-templates.com

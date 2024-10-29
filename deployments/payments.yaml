@@ -21,9 +21,12 @@ spec:
           ports:
             - containerPort: 5020
           resources:
+            requests:
+              memory: "70Mi"
+              cpu: "20m"
             limits:
-              memory: "128Mi"
-              cpu: "500m"
+              memory: "150Mi"
+              cpu: "100m"
 ---
 apiVersion: v1
 kind: Service
@@ -38,21 +41,22 @@ spec:
       name: tcp-5000
       targetPort: 5020
 ---
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
 metadata:
-  name: payments
-  annotations:
-    konghq.com/strip-path: 'true'
+  name: payments-hpa
+  namespace: default
 spec:
-  parentRefs:
-    - name: kong
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /payments
-      backendRefs:
-        - name: payments-service
-          kind: Service
-          port: 5020
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: payments
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
