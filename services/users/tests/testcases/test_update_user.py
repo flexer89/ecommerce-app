@@ -42,7 +42,7 @@ def test_update_user_success():
                 "Address": "456 Another St",
                 "City": "Metropolis",
                 "PostCode": "54321",
-                "voivodeship": "Metropolis State",
+                "voivodeship": "małopolskie",
             },
         }
 
@@ -107,8 +107,6 @@ def test_update_user_invalid_payload():
     ) as mock_get_user:
         invalid_payload = {"firstName": 123}
 
-        response = client.patch(
-            f"/update/{mock_user['id']}", json=invalid_payload
-        )
+        response = client.patch(f"/update/{mock_user['id']}", json=invalid_payload)
 
         assert response.status_code == 422

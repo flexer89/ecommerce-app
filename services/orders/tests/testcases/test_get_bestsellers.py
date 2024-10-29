@@ -39,9 +39,7 @@ def test_get_bestsellers_success(mock_db_session, mock_get_bestsellers_db):
     mock_get_bestsellers_db.assert_called_once()
 
 
-def test_get_bestsellers_malformed_request(
-    mock_db_session, mock_get_bestsellers_db
-):
+def test_get_bestsellers_malformed_request(mock_db_session, mock_get_bestsellers_db):
     response = client.get("/bestsellers?limit=abc")
     assert response.status_code == 422
     mock_get_bestsellers_db.assert_not_called()

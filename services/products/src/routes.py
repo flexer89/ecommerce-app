@@ -147,9 +147,7 @@ async def create_product(
 
     if discount < 0 or discount > 1:
         logger.warning("Invalid discount value provided")
-        raise HTTPException(
-            status_code=400, detail="Discount must be between 0 and 1"
-        )
+        raise HTTPException(status_code=400, detail="Discount must be between 0 and 1")
 
     product_data = ProductCreate(
         name=name,
@@ -186,9 +184,7 @@ async def update_product(
         discount=product.discount,
         category=product.category,
     )
-    db_product = update_product_db(
-        db=db, product_id=product_id, product=product_data
-    )
+    db_product = update_product_db(db=db, product_id=product_id, product=product_data)
     if db_product is None:
         logger.warning(f"Product with ID {product_id} not found for update")
         raise HTTPException(status_code=404, detail="Product not found")
@@ -200,9 +196,7 @@ async def update_product(
     "/count",
     response_model=int,
     responses={
-        200: {
-            "description": "The total count of products was retrieved successfully"
-        }
+        200: {"description": "The total count of products was retrieved successfully"}
     },
     description="Retrieve the total number of products available in the database.",
 )
@@ -229,13 +223,9 @@ async def update_product_image(
 ):
     logger.info(f"Request to update image for product ID {product_id}")
     image_data = await image.read() if image else None
-    db_product = update_product_image_db(
-        db=db, product_id=product_id, image=image_data
-    )
+    db_product = update_product_image_db(db=db, product_id=product_id, image=image_data)
     if db_product is None:
-        logger.warning(
-            f"Product with ID {product_id} not found for image update"
-        )
+        logger.warning(f"Product with ID {product_id} not found for image update")
         raise HTTPException(status_code=404, detail="Product not found")
     logger.info(f"Product image for ID {product_id} updated successfully")
     return db_product
@@ -278,9 +268,7 @@ async def download_binary_product_image(
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
 ):
-    logger.info(
-        f"Request to download binary image for product ID {product_id}"
-    )
+    logger.info(f"Request to download binary image for product ID {product_id}")
     product = get_product_db(db, product_id=product_id)
     if not product or not product.image:
         logger.warning(f"Image not found for product ID {product_id}")
@@ -291,9 +279,7 @@ async def download_binary_product_image(
         file.write(product.image)
 
     background_tasks.add_task(os.remove, temp_file_path)
-    logger.info(
-        f"Binary image for product ID {product_id} downloaded successfully"
-    )
+    logger.info(f"Binary image for product ID {product_id} downloaded successfully")
     return FileResponse(
         temp_file_path,
         media_type="application/octet-stream",
@@ -304,9 +290,7 @@ async def download_binary_product_image(
 @router.get(
     "/download/images",
     responses={
-        200: {
-            "description": "Images retrieved and encoded in Base64 successfully"
-        },
+        200: {"description": "Images retrieved and encoded in Base64 successfully"},
         404: {
             "model": ErrorResponse,
             "description": "No product IDs provided or no images found for the provided product IDs",
@@ -323,9 +307,7 @@ async def download_multiple_images(
         logger.warning("No product IDs provided")
         raise HTTPException(status_code=404, detail="No product IDs provided")
 
-    product_ids = product_ids.split(
-        ","
-    )  # Split the string into a list of product IDs
+    product_ids = product_ids.split(",")  # Split the string into a list of product IDs
     images_data = {}
     for product_id in product_ids:
         product = get_product_db(db, product_id=product_id)
@@ -434,9 +416,7 @@ async def update_quantity_endpoint(
 
     for item in request.items:
         product = (
-            db.query(ProductModel)
-            .filter(ProductModel.id == item.product_id)
-            .first()
+            db.query(ProductModel).filter(ProductModel.id == item.product_id).first()
         )
 
         if product:
@@ -445,14 +425,10 @@ async def update_quantity_endpoint(
             else:
                 product.stock -= item.quantity
         else:
-            unavailable_products.append(
-                f"Product with ID {item.product_id} not found"
-            )
+            unavailable_products.append(f"Product with ID {item.product_id} not found")
 
     if unavailable_products:
-        logger.warning(
-            f"Insufficient quantity for products: {unavailable_products}"
-        )
+        logger.warning(f"Insufficient quantity for products: {unavailable_products}")
         raise HTTPException(
             status_code=400,
             detail=f"Insufficient quantity for the following products: {', '.join(unavailable_products)}",

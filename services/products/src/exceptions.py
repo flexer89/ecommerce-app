@@ -13,16 +13,12 @@ class HTTPException(BaseHTTPException):
 
 class ProductNotFound(HTTPException):
     def __init__(self, details: Optional[str] = None):
-        super().__init__(
-            status.HTTP_404_NOT_FOUND, f"Product not found. {details}"
-        )
+        super().__init__(status.HTTP_404_NOT_FOUND, f"Product not found. {details}")
 
 
 class ProductsNotFound(HTTPException):
     def __init__(self, details: Optional[str] = None):
-        super().__init__(
-            status.HTTP_404_NOT_FOUND, f"Products not found. {details}"
-        )
+        super().__init__(status.HTTP_404_NOT_FOUND, f"Products not found. {details}")
 
 
 class ProductNotModified(HTTPException):

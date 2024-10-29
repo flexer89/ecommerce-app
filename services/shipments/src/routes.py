@@ -48,9 +48,7 @@ def create_shipment(shipment: ShipmentCreate, db: Session = Depends(get_db)):
 def update_shipment(
     shipment_id: int, shipment: ShipmentUpdate, db: Session = Depends(get_db)
 ):
-    db_shipment = update_shipment_db(
-        db=db, shipment_id=shipment_id, shipment=shipment
-    )
+    db_shipment = update_shipment_db(db=db, shipment_id=shipment_id, shipment=shipment)
     if db_shipment is None:
         raise HTTPException(status_code=404, detail="Shipment not found")
     return db_shipment
@@ -94,9 +92,7 @@ def read_shipment_by_user_id(user_id: UUID, db: Session = Depends(get_db)):
     "/count",
     response_model=CountResponse,
     responses={
-        200: {
-            "description": "Total number of shipments retrieved successfully"
-        },
+        200: {"description": "Total number of shipments retrieved successfully"},
     },
     description="Retrieve the total count of all shipments in the system.",
 )
@@ -108,9 +104,7 @@ def count_shipments(db: Session = Depends(get_db)):
     "/get",
     response_model=GetShipmentResponse,
     responses={
-        200: {
-            "description": "Shipments retrieved successfully with pagination"
-        },
+        200: {"description": "Shipments retrieved successfully with pagination"},
     },
     description="Retrieve a paginated list of shipments, optionally filtered by status and search parameters.",
 )

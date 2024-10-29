@@ -11,9 +11,7 @@ from .schemas import (
 )
 
 # Set up logging configuration
-basicConfig(
-    level=INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+basicConfig(level=INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = Logger(__name__)
 
 stripe.api_key = "sk_test_51PdvfxHm9ZvcVN2EHa7Ulxugn22qjBP5i0ajZeVXISn4Bf4LQaZEpvFIvM2yIeQ8f8MylsSWQEJaSJvXXi91LzEF00gSm3rlCL"
@@ -72,9 +70,7 @@ async def create_payment_intent(request: CreatePaymentIntentRequest):
             f"Payment intent created successfully for order {request.order_id} with payment ID {intent.id}"
         )
     except stripe.error.StripeError as e:
-        logger.error(
-            f"Stripe error occurred while creating payment intent: {e}"
-        )
+        logger.error(f"Stripe error occurred while creating payment intent: {e}")
         raise HTTPException(status_code=500, detail=f"Stripe error: {str(e)}")
 
     return {"payment_id": intent.id, "client_secret": intent.client_secret}
@@ -114,7 +110,5 @@ async def cancel_payment(payment_id: str):
         raise HTTPException(status_code=403, detail=f"Stripe error: {str(e)}")
 
     except stripe.error.StripeError as e:
-        logger.error(
-            f"Stripe error occurred while canceling payment {payment_id}: {e}"
-        )
+        logger.error(f"Stripe error occurred while canceling payment {payment_id}: {e}")
         raise HTTPException(status_code=500, detail=f"Stripe error: {str(e)}")

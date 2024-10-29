@@ -75,13 +75,9 @@ class CartBehavior(HttpUser):
                     {
                         "id": randint(1, 1000),
                         "name": f"Product-{randint(1, 1000)}",
-                        "price": round(
-                            randint(50, 200) + randint(0, 99) / 100, 2
-                        ),
+                        "price": round(randint(50, 200) + randint(0, 99) / 100, 2),
                         "discount": randint(0, 1),
-                        "weight": round(
-                            randint(1, 10) + randint(0, 99) / 100, 2
-                        ),
+                        "weight": round(randint(1, 10) + randint(0, 99) / 100, 2),
                         "quantity": randint(1, 5),
                     }
                 ]
@@ -104,9 +100,7 @@ class CartBehavior(HttpUser):
             "weight": round(randint(1, 10) + randint(0, 99) / 100, 2),
             "quantity": randint(1, 3),
         }
-        self.client.post(
-            f"/api/carts/remove/{self.user_id}", json=remove_request
-        )
+        self.client.post(f"/api/carts/remove/{self.user_id}", json=remove_request)
 
     def on_stop(self):
         self.client.delete(f"/delete/{self.user_id}")

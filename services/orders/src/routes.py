@@ -92,9 +92,7 @@ async def create_order(
 
     except RuntimeError as e:
         logger.error(f"Error occurred while creating order: {e}")
-        raise HTTPException(
-            status_code=500, detail=f"Database error: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
 
 @router.put(
@@ -115,9 +113,7 @@ def update_order_status(
     logger.info(
         f"Request received to update status of order {order_id} to {order_update.status}"
     )
-    order = update_order_status_db(
-        db, order_id=order_id, status=order_update.status
-    )
+    order = update_order_status_db(db, order_id=order_id, status=order_update.status)
     if order is None:
         logger.warning(f"Order {order_id} not found for status update")
         raise HTTPException(status_code=404, detail="Order not found")
@@ -139,16 +135,12 @@ def update_order_status(
     description="Retrieve all orders for a specific user by their user ID. A limit can be provided to restrict the "
     "number of returned orders.",
 )
-def read_orders_by_user(
-    user_id: UUID, limit: int = 10, db: Session = Depends(get_db)
-):
+def read_orders_by_user(user_id: UUID, limit: int = 10, db: Session = Depends(get_db)):
     logger.info(f"Request received to retrieve orders for user {user_id}")
     orders = get_orders_by_user_id_db(db, user_id=str(user_id), limit=limit)
     if not orders:
         logger.warning(f"No orders found for user {user_id}")
-        raise HTTPException(
-            status_code=404, detail="No orders found for this user"
-        )
+        raise HTTPException(status_code=404, detail="No orders found for this user")
     logger.info(f"Orders for user {user_id} retrieved successfully")
     return orders
 
@@ -164,9 +156,7 @@ def read_orders_by_user(
     "You can limit the number of bestsellers returned by specifying the `limit` parameter.",
 )
 def get_bestsellers(limit: int = 3, db: Session = Depends(get_db)):
-    logger.info(
-        f"Request received to retrieve bestsellers with a limit of {limit}"
-    )
+    logger.info(f"Request received to retrieve bestsellers with a limit of {limit}")
     result = get_bestsellers_db(db, limit=limit)
     logger.info(f"Bestsellers retrieved successfully")
     return [
@@ -203,9 +193,7 @@ def get_order_trends(db: Session = Depends(get_db)):
     avg_processing_time = (
         db.query(
             func.avg(
-                func.extract(
-                    "epoch", OrderModel.updated_at - OrderModel.created_at
-                )
+                func.extract("epoch", OrderModel.updated_at - OrderModel.created_at)
                 / 3600
             )
         )
@@ -217,9 +205,7 @@ def get_order_trends(db: Session = Depends(get_db)):
         avg_processing_time = 0
 
     order_status_counts = (
-        db.query(
-            OrderModel.status, func.count(OrderModel.id).label("order_count")
-        )
+        db.query(OrderModel.status, func.count(OrderModel.id).label("order_count"))
         .group_by(OrderModel.status)
         .all()
     )
@@ -241,9 +227,7 @@ def get_order_trends(db: Session = Depends(get_db)):
 
     conversion_rate = db.query(
         cast(
-            func.sum(
-                case((OrderModel.status.in_(["shipped", "delivered"]), 1))
-            ),
+            func.sum(case((OrderModel.status.in_(["shipped", "delivered"]), 1))),
             Float,
         )
         / func.count(OrderModel.id)

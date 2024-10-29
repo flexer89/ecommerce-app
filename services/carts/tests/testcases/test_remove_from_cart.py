@@ -40,9 +40,7 @@ async def test_remove_from_cart_success(mock_redis):
     remove_request = RemoveItemRequest(product_id=1, weight=500.0, quantity=1)
 
     async with AsyncClient(app=app, base_url="http://test") as client:
-        response = await client.post(
-            f"/remove/{user_id}", json=remove_request.dict()
-        )
+        response = await client.post(f"/remove/{user_id}", json=remove_request.dict())
 
     assert response.json() == {"status": "ok"}
     assert response.status_code == 200
@@ -52,7 +50,7 @@ async def test_remove_from_cart_success(mock_redis):
         "name": "Product 1",
         "price": 10.0,
         "quantity": 1,
-        "weight": 500,
+        "weight": 500.0,
         "discount": 0.0,
     }
     mock_redis.hset.assert_called_once_with(
@@ -84,9 +82,7 @@ async def test_remove_from_cart_item_deleted(mock_redis):
     remove_request = RemoveItemRequest(product_id=1, weight=500.0, quantity=2)
 
     async with AsyncClient(app=app, base_url="http://test") as client:
-        response = await client.post(
-            f"/remove/{user_id}", json=remove_request.dict()
-        )
+        response = await client.post(f"/remove/{user_id}", json=remove_request.dict())
 
     assert response.json() == {"status": "ok"}
     assert response.status_code == 200
@@ -105,9 +101,7 @@ async def test_remove_from_cart_not_found(mock_redis):
     remove_request = RemoveItemRequest(product_id=1, weight=500, quantity=2)
 
     async with AsyncClient(app=app, base_url="http://test") as client:
-        response = await client.post(
-            f"/remove/{user_id}", json=remove_request.dict()
-        )
+        response = await client.post(f"/remove/{user_id}", json=remove_request.dict())
 
     assert response.status_code == 404
     assert response.json() == {"detail": "Cart not found"}
@@ -128,9 +122,7 @@ async def test_remove_from_cart_product_not_found(mock_redis):
     remove_request = RemoveItemRequest(product_id=1, weight=500, quantity=2)
 
     async with AsyncClient(app=app, base_url="http://test") as client:
-        response = await client.post(
-            f"/remove/{user_id}", json=remove_request.dict()
-        )
+        response = await client.post(f"/remove/{user_id}", json=remove_request.dict())
 
     assert response.status_code == 404
     assert response.json() == {"detail": "Product not found in cart"}

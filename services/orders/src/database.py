@@ -16,7 +16,9 @@ DATABASE_NAME = os.getenv("DATABASE_NAME")
 if os.getenv("ENV") == "test":
     DATABASE_URL = "sqlite:///./test.db"
 else:
-    DATABASE_URL = f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@orders-db/{DATABASE_NAME}"
+    DATABASE_URL = (
+        f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@orders-db/{DATABASE_NAME}"
+    )
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -73,9 +75,7 @@ def update_order_status_db(db: Session, order_id: int, status: StatusEnum):
 
 def get_orders_by_user_id_db(db: Session, user_id: str, limit: int = 0):
     if limit > 0:
-        return (
-            db.query(Order).filter(Order.user_id == user_id).limit(limit).all()
-        )
+        return db.query(Order).filter(Order.user_id == user_id).limit(limit).all()
     return db.query(Order).filter(Order.user_id == user_id).all()
 
 
@@ -98,24 +98,17 @@ def count_db(db: Session):
 
 def get_orders_by_user_id_db(db: Session, user_id: str, limit: int = 0):
     if limit > 0:
-        return (
-            db.query(Order).filter(Order.user_id == user_id).limit(limit).all()
-        )
+        return db.query(Order).filter(Order.user_id == user_id).limit(limit).all()
     return db.query(Order).filter(Order.user_id == user_id).all()
 
 
-def get_orders_db(
-    db: Session, limit: str, offset: str, status: str, search: int
-):
+def get_orders_db(db: Session, limit: str, offset: str, status: str, search: int):
     if not status:
         if not search:
             orders = db.query(Order).limit(limit).offset(offset)
         else:
             orders = (
-                db.query(Order)
-                .filter(Order.id == search)
-                .limit(limit)
-                .offset(offset)
+                db.query(Order).filter(Order.id == search).limit(limit).offset(offset)
             )
     else:
         if not search:

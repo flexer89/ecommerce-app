@@ -50,9 +50,7 @@ async def get_cart(user_id: uuid.UUID):
         "quantity": sum(item["quantity"] for item in cart_items),
     }
 
-    logger.info(
-        f"Successfully retrieved cart for user_id={user_id}: {response_data}"
-    )
+    logger.info(f"Successfully retrieved cart for user_id={user_id}: {response_data}")
     return response_data
 
 
@@ -69,8 +67,7 @@ async def add_to_cart(user_id: uuid.UUID, cart: CartItems) -> Dict[str, str]:
 
     existing_cart = await redis_client.hgetall(cart_key)
     existing_cart_items = {
-        item_key: json.loads(item_data)
-        for item_key, item_data in existing_cart.items()
+        item_key: json.loads(item_data) for item_key, item_data in existing_cart.items()
     }
 
     for item in cart.items:
@@ -91,9 +88,7 @@ async def add_to_cart(user_id: uuid.UUID, cart: CartItems) -> Dict[str, str]:
             )
         else:
             existing_cart_items[item_key] = item.dict()
-            logger.info(
-                f"Added new item {item_key} to user_id={user_id}'s cart."
-            )
+            logger.info(f"Added new item {item_key} to user_id={user_id}'s cart.")
 
     updated_cart = {
         str(item_key): json.dumps(item_data)
@@ -141,16 +136,12 @@ async def remove_from_cart(
             )
         else:
             await redis_client.hdel(cart_key, product_key)
-            logger.info(
-                f"Removed product {product_key} from cart of user_id={user_id}"
-            )
+            logger.info(f"Removed product {product_key} from cart of user_id={user_id}")
     else:
         logger.warning(
             f"Product not found in cart for user_id={user_id}, product_key={product_key}"
         )
-        raise HTTPException(
-            status_code=404, detail="Product not found in cart"
-        )
+        raise HTTPException(status_code=404, detail="Product not found in cart")
 
     return {"status": "ok"}
 

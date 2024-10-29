@@ -32,9 +32,7 @@ async def test_create_payment_intent_success():
         id="pi_test_intent_id", client_secret="test_client_secret"
     )
 
-    with patch(
-        "stripe.PaymentIntent.create", return_value=mock_intent_response
-    ):
+    with patch("stripe.PaymentIntent.create", return_value=mock_intent_response):
         async with AsyncClient(app=app, base_url="http://test") as client:
             response = await client.post(
                 "/create-payment-intent", json=valid_request_data

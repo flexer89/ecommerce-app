@@ -18,13 +18,9 @@ class UserBehavior(HttpUser):
                 f"/api/products/get?limit=20&offset=0&category={category}&maxPrice={maxPrice}"
             )
         elif category:
-            self.client.get(
-                f"/api/products/get?limit=20&offset=0&category={category}"
-            )
+            self.client.get(f"/api/products/get?limit=20&offset=0&category={category}")
         elif maxPrice:
-            self.client.get(
-                f"/api/products/get?limit=20&offset=0&maxPrice={maxPrice}"
-            )
+            self.client.get(f"/api/products/get?limit=20&offset=0&maxPrice={maxPrice}")
         else:
             self.client.get(f"/api/products/get?limit=20&offset=0")
 
@@ -34,9 +30,7 @@ class UserBehavior(HttpUser):
 
     @task(10)
     def download_images(self):
-        self.client.get(
-            "/api/products/download/images?product_ids=1%2C2%2C3%2C4%2C5"
-        )
+        self.client.get("/api/products/download/images?product_ids=1%2C2%2C3%2C4%2C5")
 
     @task(5)
     def download_binary_image(self):

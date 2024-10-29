@@ -25,15 +25,9 @@ class StatusEnum(str, Enum):
 
 class OrderItemBase(BaseModel):
     product_id: int
-    quantity: float = Field(
-        ..., gt=0, description="Quantity should be greater than 0"
-    )
-    price: float = Field(
-        ..., gt=0, description="Price should be greater than 0"
-    )
-    weight: float = Field(
-        ..., gt=0, description="Weight should be greater than 0"
-    )
+    quantity: float = Field(..., gt=0, description="Quantity should be greater than 0")
+    price: float = Field(..., gt=0, description="Price should be greater than 0")
+    weight: float = Field(..., gt=0, description="Weight should be greater than 0")
 
 
 class OrderItemCreate(OrderItemBase):
@@ -82,16 +76,12 @@ class OrderTrendResponse(BaseModel):
 
 class OrderStatusCountResponse(BaseModel):
     status: str
-    order_count: int = Field(
-        ..., ge=0, description="Order amount for the status"
-    )
+    order_count: int = Field(..., ge=0, description="Order amount for the status")
 
 
 class Bestseller(BaseModel):
     product_id: int
-    order_count: int = Field(
-        ..., ge=0, description="Order amount for the product"
-    )
+    order_count: int = Field(..., ge=0, description="Order amount for the product")
 
 
 class BestsellersResponse(BaseModel):
@@ -100,15 +90,9 @@ class BestsellersResponse(BaseModel):
 
 class OrderItem(BaseModel):
     id: int
-    quantity: int = Field(
-        ..., gt=0, description="Quantity should be greater than 0"
-    )
-    price: float = Field(
-        ..., gt=0, description="Price should be greater than 0"
-    )
-    weight: float = Field(
-        ..., gt=0, description="Weight should be greater than 0"
-    )
+    quantity: int = Field(..., gt=0, description="Quantity should be greater than 0")
+    price: float = Field(..., gt=0, description="Price should be greater than 0")
+    weight: float = Field(..., gt=0, description="Weight should be greater than 0")
 
 
 class CreateOrderRequest(BaseModel):

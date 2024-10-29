@@ -55,9 +55,7 @@ def get_user_data(user_id: uuid.UUID):
             "users": [user_data],
         }
     except KeycloakError:
-        raise HTTPException(
-            status_code=500, detail="Failed to retrieve user data."
-        )
+        raise HTTPException(status_code=500, detail="Failed to retrieve user data.")
 
 
 @router.patch(
@@ -120,9 +118,7 @@ def update_user_data(user_id: uuid.UUID, update_data: UserUpdateRequest):
 
         user_update_payload["attributes"] = attributes
     try:
-        keycloak_admin.update_user(
-            user_id=user_id, payload=user_update_payload
-        )
+        keycloak_admin.update_user(user_id=user_id, payload=user_update_payload)
     except KeycloakPutError as e:
         raise HTTPException(status_code=400, detail="Error updating user")
 
@@ -259,17 +255,13 @@ def get_user_statistics():
         200: {
             "description": "User blocked successfully",
             "content": {
-                "application/json": {
-                    "example": {"detail": "User blocked successfully"}
-                }
+                "application/json": {"example": {"detail": "User blocked successfully"}}
             },
         },
         400: {
             "description": "Bad request - error blocking user",
             "content": {
-                "application/json": {
-                    "example": {"detail": "Error blocking user"}
-                }
+                "application/json": {"example": {"detail": "Error blocking user"}}
             },
         },
     },
@@ -283,9 +275,7 @@ def block_user(user_id: uuid.UUID):
         logger.error(f"Error blocking user with user_id={user_id}")
         raise HTTPException(status_code=400, detail="Error blocking user")
     except Exception as e:
-        logger.error(
-            f"Unexpected error blocking user with user_id={user_id}: {e}"
-        )
+        logger.error(f"Unexpected error blocking user with user_id={user_id}: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
@@ -306,9 +296,7 @@ def block_user(user_id: uuid.UUID):
         400: {
             "description": "Bad request - error unblocking user",
             "content": {
-                "application/json": {
-                    "example": {"detail": "Error unblocking user"}
-                }
+                "application/json": {"example": {"detail": "Error unblocking user"}}
             },
         },
     },
@@ -321,7 +309,5 @@ def unblock_user(user_id: uuid.UUID):
         logger.error(f"Error unblocking user with user_id={user_id}")
         raise HTTPException(status_code=400, detail="Error unblocking user")
     except Exception as e:
-        logger.error(
-            f"Unexpected error unblocking user with user_id={user_id}: {e}"
-        )
+        logger.error(f"Unexpected error unblocking user with user_id={user_id}: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")

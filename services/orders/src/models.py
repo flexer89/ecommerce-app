@@ -31,9 +31,7 @@ class Order(Base):
     user_id = Column(String, nullable=False)
     total_price = Column(Float)
     created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
-    )
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     status = Column(Enum(StatusEnum), default=StatusEnum.pending)
     items = relationship(
         "OrderItem", back_populates="order", cascade="all, delete-orphan"

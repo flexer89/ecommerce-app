@@ -50,9 +50,7 @@ instrumentator.instrument(app, latency_lowr_buckets=latency_buckets).expose(
 async def log_requests_and_responses(
     request: Request, call_next: Callable[[Request], Awaitable[Response]]
 ) -> Any:
-    request_id: contextvars.ContextVar[str] = contextvars.ContextVar(
-        "Request id"
-    )
+    request_id: contextvars.ContextVar[str] = contextvars.ContextVar("Request id")
     if "/metrics" in request.url.path:
         return await call_next(request)
     req_id = str(uuid.uuid4())

@@ -34,15 +34,11 @@ def test_download_images_success(mock_db_session, mock_get_product_db):
     data = response.json()
     assert "1" in data
     assert "2" in data
-    assert (
-        data["1"] == "ZmFrZV9pbWFnZV9kYXRh"
-    )  # Base64 encoded "fake_image_data"
+    assert data["1"] == "ZmFrZV9pbWFnZV9kYXRh"  # Base64 encoded "fake_image_data"
     assert data["2"] == "ZmFrZV9pbWFnZV9kYXRh"
 
 
-def test_download_multiple_images_partial_success(
-    mock_db_session, mock_get_product_db
-):
+def test_download_multiple_images_partial_success(mock_db_session, mock_get_product_db):
     mock_product_with_image = MagicMock()
     mock_product_with_image.image = b"fake_image_data"
 
@@ -58,34 +54,24 @@ def test_download_multiple_images_partial_success(
     data = response.json()
     assert "1" in data
     assert "2" not in data
-    assert (
-        data["1"] == "ZmFrZV9pbWFnZV9kYXRh"
-    )  # Base64 encoded "fake_image_data"
+    assert data["1"] == "ZmFrZV9pbWFnZV9kYXRh"  # Base64 encoded "fake_image_data"
 
 
 def test_download_images_no_image(mock_db_session, mock_get_product_db):
     mock_get_product_db.return_value = None
     response = client.get("/download/images", params={"product_ids": "1,2,3"})
     assert response.status_code == 404
-    assert response.json() == {
-        "detail": "No images found for the provided product IDs"
-    }
+    assert response.json() == {"detail": "No images found for the provided product IDs"}
 
 
-def test_download_multiple_images_no_product_ids(
-    mock_db_session, mock_get_product_db
-):
+def test_download_multiple_images_no_product_ids(mock_db_session, mock_get_product_db):
     response = client.get("/download/images", params={"product_ids": ""})
     assert response.status_code == 404
     assert response.json() == {"detail": "No product IDs provided"}
 
 
-def test_get_products_list_db_malformed_request(
-    mock_db_session, mock_get_product_db
-):
-    response = client.get(
-        "/download/images", params={"product_idserror": "1,2,3"}
-    )
+def test_get_products_list_db_malformed_request(mock_db_session, mock_get_product_db):
+    response = client.get("/download/images", params={"product_idserror": "1,2,3"})
 
     assert response.status_code == 422
     mock_get_product_db.assert_not_called()

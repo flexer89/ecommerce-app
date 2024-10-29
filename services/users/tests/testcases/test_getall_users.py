@@ -44,9 +44,7 @@ mock_users = [
 def test_get_user_data_success():
     """Test successful retrieval of users with pagination and search."""
 
-    with patch(
-        "src.keycloak_client.keycloak_admin.get_users", return_value=mock_users
-    ):
+    with patch("src.keycloak_client.keycloak_admin.get_users", return_value=mock_users):
         with patch(
             "src.keycloak_client.keycloak_admin.users_count",
             return_value=len(mock_users),
@@ -83,12 +81,8 @@ def test_get_user_data_by_ids_success():
 def test_get_user_data_no_users_found():
     """Test the scenario where no users are found."""
 
-    with patch(
-        "src.keycloak_client.keycloak_admin.get_users", return_value=[]
-    ):
-        with patch(
-            "src.keycloak_client.keycloak_admin.users_count", return_value=0
-        ):
+    with patch("src.keycloak_client.keycloak_admin.get_users", return_value=[]):
+        with patch("src.keycloak_client.keycloak_admin.users_count", return_value=0):
 
             response = client.get("/get?search=nonexistent")
 

@@ -54,9 +54,7 @@ def generate_user_data(index):
             "PostCode": ["00-901"],
             "voivodeship": ["mazowieckie"],
         },
-        "credentials": [
-            {"type": "password", "value": password, "temporary": False}
-        ],
+        "credentials": [{"type": "password", "value": password, "temporary": False}],
     }
     return user_data
 

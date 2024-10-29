@@ -49,9 +49,7 @@ def test_get_shipment_count_success(
             "company": "string",
         }
     ]
-    mock_get_all_shipments_db_paginated.return_value = (
-        mock_get_all_shipments_response
-    )
+    mock_get_all_shipments_db_paginated.return_value = mock_get_all_shipments_response
     response = client.get("/get")
 
     assert response.status_code == 200
