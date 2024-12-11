@@ -44,6 +44,7 @@ docker_build('shipments', 'services/shipments',
 
 docker_build('kraken','kraken/')
 docker_build('keycloak','keycloak/')
+docker_build('playwright','/')
 
 k8s_yaml('deployments/products.yaml')
 k8s_yaml('deployments/orders.yaml')
@@ -55,6 +56,7 @@ k8s_yaml('deployments/client-app.yaml')
 k8s_yaml('deployments/admin-app.yaml')
 k8s_yaml('deployments/kraken.yaml')
 k8s_yaml('deployments/keycloak.yaml')
+# k8s_yaml('deployments/playwright.yaml')
 
 k8s_yaml('deployments/databases/products_db.yaml')
 k8s_yaml('deployments/databases/carts_db.yaml')

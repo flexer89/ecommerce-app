@@ -24,18 +24,18 @@ class UserBehavior(HttpUser):
         else:
             self.client.get(f"/api/products/get?limit=20&offset=0")
 
-    @task(10)
-    def get_product_by_id(self):
-        self.client.get("/api/products/getbyid/1")
+    # @task(10)
+    # def get_product_by_id(self):
+    #     self.client.get("/api/products/getbyid/1")
 
-    @task(10)
-    def download_images(self):
-        self.client.get("/api/products/download/images?product_ids=1%2C2%2C3%2C4%2C5")
+    # @task(10)
+    # def download_images(self):
+    #     self.client.get("/api/products/download/images?product_ids=1%2C2%2C3%2C4%2C5")
 
-    @task(5)
-    def download_binary_image(self):
-        self.client.get("/api/products/download/bin/1")
+    # @task(5)
+    # def download_binary_image(self):
+    #     self.client.get("/api/products/download/bin/1")
 
-    @task(5)
-    def get_categories(self):
-        self.client.get("/api/products/categories")
+    # @task(5)
+    # def get_categories(self):
+    #     self.client.get("/api/products/categories")

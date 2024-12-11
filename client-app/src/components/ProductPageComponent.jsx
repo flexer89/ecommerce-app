@@ -163,20 +163,22 @@ const ProductPageComponent = () => {
         <div className="product-options">
           <div className="option-group">
             <h2>Waga</h2>
-            <button
-              className={selectedWeight === 250 ? 'selected' : ''}
-              onClick={() => handleWeightClick(250)}
-              disabled={product.stock <= 0}
-            >
-              250g
-            </button>
-            <button
-              className={selectedWeight === 500 ? 'selected' : ''}
-              onClick={() => handleWeightClick(500)}
-              disabled={product.stock <= 0}
-            >
-              500g
-            </button>
+            <div className='option-group-container'>
+              <button
+                className={selectedWeight === 250 ? 'selected' : ''}
+                onClick={() => handleWeightClick(250)}
+                disabled={product.stock <= 0}
+              >
+                250g
+              </button>
+              <button
+                className={selectedWeight === 500 ? 'selected' : ''}
+                onClick={() => handleWeightClick(500)}
+                disabled={product.stock <= 0}
+              >
+                500g
+              </button>
+            </div>
           </div>
         </div>
         <div className="product-actions">

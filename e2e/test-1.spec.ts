@@ -1,0 +1,36 @@
+import { test, expect } from '@playwright/test';
+
+test('test', async ({ page }) => {
+  await page.goto('chrome-error://chromewebdata/');
+  await page.getByRole('button', { name: 'Zaawansowane' }).click();
+  await page.getByRole('link', { name: 'Otwórz stronę jolszak.test (' }).click();
+  await page.getByLabel('login', { exact: true }).click();
+  await page.getByRole('button', { name: 'Zaawansowane' }).click();
+  await page.getByRole('link', { name: 'Otwórz stronę auth.jolszak.' }).click();
+  await page.getByLabel('Password', { exact: true }).click();
+  await page.getByLabel('Password', { exact: true }).fill('Password123!');
+  await page.getByRole('button', { name: 'Sign In' }).click();
+  await page.getByRole('link', { name: 'Oferta' }).click();
+  await page.getByRole('button', { name: 'Otwórz Filtry' }).click();
+  await page.getByRole('slider').fill('72.91');
+  await page.getByRole('combobox').selectOption('robusta');
+  await page.getByRole('button', { name: 'Zastosuj filtry' }).click();
+  await page.getByRole('img', { name: 'India Cherry Robusta' }).click();
+  await page.getByRole('button', { name: '×' }).click();
+  await page.locator('div').filter({ hasText: /^India Cherry Robusta34\.90 złPodgląd$/ }).getByRole('link').click();
+  await page.getByRole('button', { name: '250g' }).click();
+  await page.getByRole('button', { name: 'Dodaj do koszyka' }).click();
+  await page.getByLabel('cart item').click();
+  await page.getByRole('button', { name: 'Dodaj' }).click();
+  await page.getByRole('button', { name: 'Przejdź do zapłaty' }).click();
+  await page.getByLabel('Kurier - 9.99 zł (Dostawa w').check();
+  await page.getByRole('button', { name: 'Przejdź do płatności' }).click();
+  await page.locator('iframe[name="__privateStripeFrame7426"]').contentFrame().getByTestId('paypal').click();
+  await page.getByRole('button', { name: 'Zapłać teraz' }).click();
+  await page.goto('https://stripe.com/payment_methods/test_payment?payment_attempt=payatt_3QLWOEHm9ZvcVN2E0PNjq01L');
+  await page.getByRole('link', { name: 'Authorize Test Payment' }).click();
+  await page.getByRole('heading', { name: 'Potwierdzenie zamówienia' }).click();
+  await page.getByText('Dziękujemy za zakup! Zamó').click();
+  await page.getByRole('button', { name: 'Kontynuuj Zakupy' }).click();
+  await page.getByRole('heading', { name: 'Wyjątkowy wybór. Każde zamó' }).click();
+});

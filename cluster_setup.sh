@@ -33,6 +33,8 @@ kubectl apply -f deployments/databases/shipments_db.yaml
 kubectl apply -f deployments/overlays/ingress.yaml
 kubectl apply -f deployments/kraken.yaml
 
+minikube addons enable metrics-server
+
 # Deploy Monitoring
 helm repo update
 kubectl create namespace monitoring

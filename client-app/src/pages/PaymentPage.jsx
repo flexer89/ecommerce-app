@@ -68,7 +68,7 @@ export default function PaymentPage({ clientSecret }) {
           id="submit"
         >
           <span id="button-text">
-            {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+            {isLoading ? <div className="spinner" id="spinner"></div> : "Zapłać teraz"}
           </span>
         </button>
         {message && <div id="payment-message">{message}</div>}

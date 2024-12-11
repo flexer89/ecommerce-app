@@ -6,7 +6,6 @@ metadata:
   labels:
     app: orders
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: orders
@@ -22,11 +21,11 @@ spec:
             - containerPort: 5010
           resources:
             requests:
-              memory: "120Mi"
-              cpu: "50m"
+              memory: "150Mi"
+              cpu: "30m"
             limits:
-              memory: "250Mi"
-              cpu: "150m"
+              memory: "300Mi"
+              cpu: "80m"
 ---
 apiVersion: v1
 kind: Service
@@ -60,3 +59,9 @@ spec:
         target:
           type: Utilization
           averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80

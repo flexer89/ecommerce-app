@@ -85,3 +85,6 @@ data:
         status shipment_status_enum DEFAULT 'pending',
         company VARCHAR NOT NULL
     );
+    CREATE INDEX idx_shipments_user_id ON shipments (user_id);
+    CREATE INDEX idx_shipments_order_id ON shipments (order_id);
+    CREATE INDEX idx_shipments_status ON shipments (status);

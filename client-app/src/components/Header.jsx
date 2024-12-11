@@ -121,7 +121,7 @@ const Header = () => {
         {isLogin ? (
           <button
             className="header-action-btn log-in-out"
-            aria-label="logout"
+            aria-label="logoutt"
             onClick={handleLogout}
           >
             <IonIcon className='in-out-icon' icon="log-out-outline" aria-hidden="true" />
@@ -129,7 +129,7 @@ const Header = () => {
         ) : (
           <button
             className="header-action-btn log-in-out"
-            aria-label="login"
+            aria-label="loginn"
             onClick={login}
           >
             <IonIcon className='in-out-icon' icon={personOutline} aria-hidden="true" />

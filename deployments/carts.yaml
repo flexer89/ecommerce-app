@@ -6,6 +6,7 @@ metadata:
   labels:
     app: carts
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: carts
@@ -21,11 +22,11 @@ spec:
             - containerPort: 5040
           resources:
             requests:
-              memory: "80Mi"
-              cpu: "50m"
+              memory: "120Mi"
+              cpu: "80m"
             limits:
-              memory: "320Mi"
-              cpu: "150m"
+              memory: "600Mi"
+              cpu: "320m"
 
 ---
 apiVersion: v1
@@ -57,6 +58,12 @@ spec:
     - type: Resource
       resource:
         name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
         target:
           type: Utilization
           averageUtilization: 70

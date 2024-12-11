@@ -1,0 +1,31 @@
+# playwright-test-job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: playwright-tests
+spec:
+  template:
+    spec:
+      containers:
+        - name: playwright
+          image: playwright
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "1"
+          # Grant access to add necessary dependencies (if using Chromium, for example)
+          securityContext:
+            capabilities:
+              add:
+                - SYS_ADMIN
+          # Playwright requires shared memory to run effectively in some cases
+          volumeMounts:
+            - mountPath: /tmp
+              name: dshm
+      restartPolicy: Never
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+  backoffLimit: 0

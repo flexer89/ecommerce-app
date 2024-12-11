@@ -22,11 +22,11 @@ spec:
             - containerPort: 5020
           resources:
             requests:
-              memory: "70Mi"
-              cpu: "20m"
+              memory: "300Mi"
+              cpu: "80m"
             limits:
-              memory: "150Mi"
-              cpu: "100m"
+              memory: "800Mi"
+              cpu: "240m"
 ---
 apiVersion: v1
 kind: Service
@@ -60,3 +60,9 @@ spec:
         target:
           type: Utilization
           averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
